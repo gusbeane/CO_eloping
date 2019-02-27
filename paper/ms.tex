@@ -80,6 +80,38 @@ P_{\mynu{l}{o}} = P_{l} + \sum_{i} P_{i}\text{.}
 Since $P_l$ is the object of interest, we must robustly measure and subtract
 each of $P_i$.
 
+Now consider an arbitrary triple of the interloping lines $(i, j, k)$ where
+none of $i$, $j$, or $k$ are equal (and in particular none of $z_i$, $z_j$, or
+$z_k$ are equal). Now consider the case of removing emission from line $i$,
+which is interloping at redshift $z_i$. One can cross-correlate line $i$ with
+line $j$ if the frequency at which line $j$ is emitted at redshift $z_i$ is
+within the observed frequency band. That is, we'd like to observe line $j$ at
+a different frequency $\mynu{j}{o}'$ such that the emitted redshift $z_j'$ is
+equal to $z_i$, so that we can cross-correlate the two. In other words, we
+need $\mynu{j}{o}'$ to satisfy,
+\beq\label{eq:nu_obs}
+\begin{split}
+\mynu{j}{o}' &= \mynu{i}{o} \frac{\mynu{j}{e}}{\mynu{i}{e}} \\
+&= \mynu{i}{o} \frac{1+z_j}{1+z_i}\text{.}
+\end{split}
+\eeq
+If the frequency $\mynu{j}{o}'$ is in the observing band of an instrument
+(though in a different bin than $\mynu{i}{o}$), then a cross-corelation
+between line $i$ and line $j$ can be made. This can be used to measure the
+product $B_iB_j$. However, this does not allow us to remove either line $i$ or
+line $j$ reliably, since the relevant quantity to subtract from
+Equation~\ref{eq:observed_with_int} is $B_i^2 + B_j^2$, for which a direct
+constraint cannot be made. Perhaps measurements of the cross-bispectrum may be
+possible and allow us to measure $B_i$ and $B_j$ independently
+\citep{2018ApJ...867...26B}, but measuring cross-bispectra is difficult in
+practice and a reliable cross-spectrum measurement will probably be possible
+with less survey area.
+
+However, in the case that $\mynu{k}{o}'$ (defined similarly to
+Equation~\ref{eq:nu_obs}) also lies in the observing band, then a three-field
+approach can be employed to directly measure each of $B_i^2$, $B_j^2$, and
+$B_k^2$.
+
 
 \bibliography{references}
 
