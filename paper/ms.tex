@@ -112,6 +112,31 @@ Equation~\ref{eq:nu_obs}) also lies in the observing band, then a three-field
 approach can be employed to directly measure each of $B_i^2$, $B_j^2$, and
 $B_k^2$.
 
+One could proceed as we did previously \citep{2018arXiv181110609B}, estimating
+the auto-spectra in each line by forming suitable products and ratios of the
+various cross-spectra. However, we instead take a slightly different approach
+here by performing a joint fit for all of the various auto-spectra. First, we
+assume a measurement of each of $\xps{i}{j}$. Then the relevant variance and
+covariances are \citep[e.g.][]{2015JCAP...03..034V},
+\beq
+\begin{split}
+\Var{\xps{i}{j}} &= \xps{i}{j}^2 + \pstot{i}\pstot{j} \\
+\Cov{\xps{i}{j}}{\xps{i}{k}} &= \pstot{i}\xps{j}{k} + \xps{i}{j}\xps{i}{k}\text{.}
+\end{split}
+\eeq
+We are then making a measurement of each of $\xps{i}{j}$, $\xps{j}{k}$,
+and $\xps{k}{i}$. We further model each of these power spectra as,
+\beq
+\xps{i}{j}(k) = B_i(k) B_j(k) \denps(k)\text{.}
+\eeq
+That is, we are only working in the regime where $r_{i,j}=1$. What this
+translates to is that we may only perform this interloper removal on
+sufficiently large scales, i.e. where $k<k_{\text{max}}$, where
+$k_{\text{max}}$ is set by wherever the lines $i$ and $j$ start to
+decorrelate. The value of $k_{\text{max}}$ is the only aspect of our analysis
+that is model dependent. 
+
+
 
 \bibliography{references}
 
