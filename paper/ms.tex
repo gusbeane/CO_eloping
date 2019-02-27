@@ -71,6 +71,15 @@ emitted frequencies at redshift $z_i$ that satisfy the constraint $\mynu{l}{o}
 \mynu{i}{e} = \mynu{l}{e}\frac{1+z_i}{1+z_l}\text{.}
 \eeq
 
+Assuming perfect foreground removal, if one makes a naive power spectrum
+estimate of the observed intensity at a frequency $\mynu{l}{o}$, then the
+observed power spectrum will be,
+\beq\label{eq:observed_with_int}
+P_{\mynu{l}{o}} = P_{l} + \sum_{i} P_{i}\text{.}
+\eeq
+Since $P_l$ is the object of interest, we must robustly measure and subtract
+each of $P_i$.
+
 
 \bibliography{references}
 
