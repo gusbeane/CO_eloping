@@ -3,14 +3,16 @@
 \usepackage{graphicx}
 \usepackage{gensymb}
 \usepackage{bm}
+\usepackage{amsmath}
 
 \newcommand{\Gus}[1]{\textcolor{red}{#1}}
 
 \newcommand{\Msun}{\ensuremath{\text{M}_\odot}}
-\newcommand{\pc}{\text{pc}}
-\newcommand{\kpc}{\text{kpc}}
-\newcommand{\Myr}{\text{Myr}}
-\newcommand{\Gyr}{\text{Gyr}}
+\newcommand{\pc}{\ensuremath{\text{pc}}}
+\newcommand{\kpc}{\ensuremath{\text{kpc}}}
+\newcommand{\Mpc}{\ensuremath{\text{Mpc}}}
+\newcommand{\Myr}{\ensuremath{\text{Myr}}}
+\newcommand{\Gyr}{\ensuremath{\text{Gyr}}}
 
 \newcommand{\CII}{C~\textsc{ii}}
 
@@ -20,6 +22,16 @@
 
 \newcommand{\beq}{\begin{equation}}
 \newcommand{\eeq}{\end{equation}}
+
+\newcommand{\mynu}[2]{\ensuremath{\nu_{#1,\text{#2}}}}
+\newcommand{\denps}{\ensuremath{P_{\delta,\delta}}}
+\newcommand{\xps}[2]{\ensuremath{P_{#1,#2}}}
+\newcommand{\pstot}[1]{\ensuremath{P_{#1,\text{tot}}}}
+
+\newcommand{\E}[1]{\mathrm{E}[#1]}
+\newcommand{\Var}[1]{\mathrm{Var}[#1]}
+\newcommand{\Cov}[2]{\mathrm{Cov}[#1,#2]}
+\newcommand{\avg}[1]{\ensuremath{\langle #1 \rangle}}
 
 \begin{document}
 
