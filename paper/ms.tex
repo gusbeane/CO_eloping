@@ -35,6 +35,32 @@
 
 \begin{document}
 
+The primary data is the observed intensity in a collection of voxels. In
+practice, one will make measurements in sky coordinates and frequency space,
+but to simplify the discussion we consider the observation of a finite
+comoving box with volume $V$. The box is small enough that if one length is
+assumed to lie along frequency space that the corresponding redshift extent of
+that axis is small enough that the observed voxels can be considered
+co-evolving. We are then interested in measuring $I_{l}(\bm{x})$, or the
+collective emission from line $l$ from each voxel. In order to understand the
+statistical properties of $I(\bm{x})$, we can compute the power spectrum which
+is related to the Fourier transform of $I$,
+\beq
+P_{l}(k) = \avg{I(\bm{k}) I^{*}(\bm{k})}\text{.}
+\eeq
+Since the line intensity is a biased tracer of the underlying density field,
+it is useful to parametrize the power spectrum as,
+\beq
+P_l(k) = b_l^2 \avg{I_l}^2 \denps{P_{\delta}}(k)\text{,}
+\eeq
+where $\denps{P_{\delta}}$ is the matter density power spectrum. Measuring
+$b_l$ and $\avg{I_l}$ independently is a useful endeavour, but not the focus
+of our study. Therefore, we will simplify and define $B_l \equiv b_l
+\avg{I_l}$, such that,
+\beq
+P_{l}(k) = B_l^2 \denps(k)
+\eeq
+
 Suppose we have a line $l$ which we are attempting to measure emission from at
 some target redshift $z_t$. Then, the interloper problem is that at various other redshifts $z_i$ for $i=1,2,3,...$
 
