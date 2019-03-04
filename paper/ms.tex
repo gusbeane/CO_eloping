@@ -176,9 +176,26 @@ translates to is that we may only perform this interloper removal on
 sufficiently large scales, i.e. where $k<k_{\text{max}}$, where
 $k_{\text{max}}$ is set by wherever the lines $i$ and $j$ start to
 decorrelate. The value of $k_{\text{max}}$ is the only aspect of our analysis
-that is model dependent. 
+that is model dependent.
 
-
+\section{CO Modelling} \label{sec:co_modelling}
+To model the statistical fluctuation and amplitude of the CO intensity maps we
+follow \citet{2016ApJ...825..143L}, and briefly summarize the procedure here.
+We begin by assuming a Schechter form for the star formation rate function,
+\beq\label{eq:schechter}
+\phi(\SFR)\,\text{d}\SFR = \phi_*
+\left(\frac{\SFR}{\SFR_*}\right)^{\alpha}\exp{\left[-\frac{\SFR}{\SFR_*}\right]}
+\frac{\text{d}\SFR}{\SFR_*}
+\eeq
+where $\alpha$ is the faint-end slope, $\SFR_*$ is the characteristic
+star-formation rate, and $\phi_*$ is the characteristic number density. The
+average specific intensity in a line $l$ can be related to the comoving
+emissivity by \citep{2011ApJ...741...70L, 2013ApJ...768...15P},
+\beq\label{eq:emiss_to_int}
+\avg{I_l} = \frac{\epsilon_l}{4\pi \nu_{\text{rest},l}}\frac{c}{H(z)}\text{,}
+\eeq
+where $\nu_{\text{rest},l}$ is the rest-frame emission frequency and
+$\epsilon_l$ is the comoving emissivity, each of line $l$. 
 
 \bibliography{references}
 
