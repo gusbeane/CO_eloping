@@ -209,6 +209,63 @@ follows that \citep{2013ApJ...768...15P},
 We adopt the value of $L_0^{\CO}$ for each line transition from
 \citet{2010JCAP...11..016V}.
 
+\subsection{Something} \label{ssec:co_}
+We now consider the prospects of measuring the \CO{} transition using the
+three-field approach for CONCERTO and CCAT-p. First, let us consider the
+concrete example of jointly measuring the CO(5-4), CO(4-3), and CO(3-2) lines
+in the redshift range $0.6 < z < 0.725$ with CONCERTO. We label each line with
+the upper transitional level, e.g. CO(3-2) is referred to as ``3''. The
+relevant Fisher matrix is then,
+\beq\label{eq:co_fisher}
+F_{i,j} = 
+\int \frac{\text{d}k\,k^2}{2\pi^2} 
+V_{\text{surv}} \sum_{l} \sum_{m} 
+\frac{\partial \hat{P}_l(k)}{\partial B_i}
+\frac{1}{\Cov{\hat{P}_i(k)}{\hat{P}_j(k)}} 
+\frac{\partial \hat{P}_m(k)}{\partial B_j}\text{,}
+\eeq
+where $l$ and $m$ sum over all three cross-spectra. In our specific case where
+the partial derivatives are quite simple, we can simplify this expression for
+the off-diagonal elements as,
+\beq\label{eq:fisher_simple}
+F_{i,j} =
+\int \frac{\text{d}k\,k^2}{2\pi^2} 
+V_{\text{surv}}
+\left[
+\frac{B_i B_j}{(B_i B_j)^2 + B_{i,\text{tot}}^2B_{j,\text{tot}}^2}
++\sum_{i', j', k'\,\text{perm.}}
+\frac{B_{i'} B_k}{B_{i', \text{tot}}^2 B_{j'} B_{k'} + B_{i'} B_i B_j B_k}
+\right]\text{,}
+\eeq
+where the sum on $i', j', k'$ is over all permutations, i.e. over the three
+combinations $(i', j', k') = (1, 2, 3), (2, 3, 1), (3, 1, 2)$. Strikingly the
+integrand is independent of $k$, and as a result we can further simplify,
+resulting in,
+\beq\label{eq:fisher_super_simple}
+F_{i,j} = 
+\tilde{V_k}
+\left(
+\frac{B_i B_j}{(B_i B_j)^2 + B_{i,\text{tot}}^2B_{j,\text{tot}}^2}
++\sum_{i', j', k'\,\text{perm.}}
+\frac{B_{i'} B_k}{B_{i', \text{tot}}^2 B_{j'} B_{k'} + B_{i'} B_i B_j B_k}
+\right)\text{,}
+\eeq
+where,
+\beq\label{eq:Vk}
+\tilde{V_k} = \frac{k_{\text{max}}^3}{6\pi^2} V_{\text{surv}}\text{.}
+\eeq
+
+We can write down the diagonal elements similarly as,
+\beq\label{eq:fisher_offdiagonal}
+F_{i,i} = \tilde{V_k}
+\left(
+\frac{B_j^2}{(B_iB_j)^2+B_{i,\text{tot}}^2B_{j,\text{tot}}^2}
++\frac{B_k^2}{(B_iB_k)^2+B_{i,\text{tot}}^2B_{k,\text{tot}}^2}
++\frac{2B_j B_k}{B_{i,\text{tot}}^2B_jB_k + B_i^2B_jB_k}
+\right)\text{.}
+\eeq
+
+
 
 \bibliography{references}
 
