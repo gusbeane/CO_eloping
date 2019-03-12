@@ -77,3 +77,36 @@ class chisq(object):
         
         return chisq
 
+def corner_plot(B1, B2, B3, N1, N2, N3, kmax, Vsurv):
+    fisher_mat = gen_fisher(B1, B2, B3, N1, N2, N3, kmax, Vsurv)
+
+    cov_mat = np.inverse(fisher_mat)
+
+    b1list = np.linspace(0.7*B1, 1.3*B1, 100)
+    b2list = np.linspace(0.7*B2, 1.3*B2, 100)
+    b3list = np.linspace(0.7*B3, 1.3*B3, 100)
+
+    b12_1, b12_2 = np.meshgrid(b1list, b2list)
+    b23_2, b23_3 = np.meshgrid(b2list, b3list)
+    b31_3, b31_1 = np.meshgrid(b3list, b1list)
+
+    chisq_b12 = chisq()
+
+    p1sigma = 0.68269   # probability inside 1 sigma
+    p2sigma = 0.95449   # probability inside 2 sigma
+    df = 3
+
+    delta1chisq = chi2.isf(1.-p1sigma, df=df)
+    delta2chisq = chi2.isf(1.-p2sigma, df=df)
+    contour_list = [delta1chisq, delta2chisq]
+
+    fig = plt.figure()
+    ax1 = plt.subplot(3, 3, 1)
+    ax2 = plt.subplot(3, 3, 5)
+    ax3 = plt.subplot(3, 3, 9)
+
+    ax12 = plt.subplot(3, 3, 4, sharex=ax1)
+    ax23 = plt.subplot(3, 3, 8, sharex=ax2)
+    ax13 = plt.subplot(3, 3, 7, sharex=ax1, sharey=ax23)
+
+    ax12.contour()
