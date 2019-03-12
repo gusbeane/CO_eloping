@@ -198,7 +198,17 @@ emissivity by \citep{2011ApJ...741...70L, 2013ApJ...768...15P},
 \avg{I_l} = \frac{\epsilon_l}{4\pi \nu_{\text{rest},l}}\frac{c}{H(z)}\text{,}
 \eeq
 where $\nu_{\text{rest},l}$ is the rest-frame emission frequency and
-$\epsilon_l$ is the comoving emissivity, each of line $l$. 
+$\epsilon_l$ is the comoving emissivity, each of line $l$. Assuming a linear
+luminosity-SFR relation with a constant of proportionality of $L_0^l$, along
+with the Schechter form for the SFR function (Equation~\ref{eq:schechter}), it
+follows that \citep{2013ApJ...768...15P},
+\beq\label{eq:com_emiss}
+\epsilon_l = \phi_* L_0^{l}
+\frac{\SFR_*}{1\,\Msun\text{yr}^{-1}}\Gamma{(2+\alpha)}\text{.}
+\eeq
+We adopt the value of $L_0^{\CO}$ for each line transition from
+\citet{2010JCAP...11..016V}.
+
 
 \bibliography{references}
 
