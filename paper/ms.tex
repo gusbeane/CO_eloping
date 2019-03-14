@@ -91,19 +91,19 @@ collective emission from line $l$ from each voxel. In order to understand the
 statistical properties of $I(\bm{x})$, we can compute the power spectrum which
 is related to the Fourier transform of $I$,
 \beq
-P_{l}(k) = \avg{I(\bm{k}) I^{*}(\bm{k})}\text{.}
+P_{l,l}(k) = \avg{I_l(\bm{k}) I_l^{*}(\bm{k})}\text{.}
 \eeq
 Since the line intensity is a biased tracer of the underlying density field,
 it is useful to parametrize the power spectrum as,
 \beq
-P_l(k) = b_l^2 \avg{I_l}^2 \denps(k)\text{,}
+P_{l,l}(k) = b_l^2 \avg{I_l}^2 \denps(k)\text{,}
 \eeq
-where $\denps{P_{\delta}}$ is the matter density power spectrum. Measuring
+where $\denps(k)$ is the matter density power spectrum. Measuring
 $b_l$ and $\avg{I_l}$ independently is a useful endeavour, but not the focus
 of our study. Therefore, we will simplify and define $B_l \equiv b_l
 \avg{I_l}$, such that,
 \beq
-P_{l}(k) = B_l^2 \denps(k)
+P_{l,l}(k) = B_l^2 \denps(k)
 \eeq
 
 Suppose we have a line $l$ which we are attempting to measure emission from at
