@@ -125,6 +125,26 @@ P_{\mynu{l}{o}} = P_{l} + \sum_{i} P_{i}\text{.}
 Since $P_l$ is the object of interest, we must robustly measure and subtract
 each of $P_i$.
 
+\subsection{Three-Field Approach}\label{ssec:three_field}
+
+Consider one of the interloping lines, and assume that there exists two other
+lines emitted at the same redshift but by virtue of having a different
+emission frequency have a different observed frequency. For example, CO(6-5)
+emitted at $z=1$ will be observed at $345\,\GHz$, while CO(5-4) would be
+observed at $288\,\GHz$ and CO(4-3) at $230\,\GHz$. As long as these
+frequencies are in the observing band of some instrument, then we have enough
+freedom to directly constrain the auto-spectrum of each line. We could proceed
+as we did previously, forming suitable products and ratios to measure the
+relevant cross-spectra \citep{2018arXiv181110609B},
+\beq\label{eq:old_way}
+P_{\text{CO(6-5),CO(6-5)}} = 
+\frac{ \xps{\text{CO(6-5)}}{\text{CO(5-4)}} 
+       \xps{\text{CO(4-3)}}{\text{CO(6-5)}} }
+     { \xps{\text{CO(5-4)}}{\text{CO(4-3)}}}\text{.}
+\eeq
+However, this is a bit unconventional and extending to more than three lines
+is cumbersome.
+
 Now consider an arbitrary triple of the interloping lines $(i, j, k)$ where
 none of $i$, $j$, or $k$ are equal (and in particular none of $z_i$, $z_j$, or
 $z_k$ are equal). Now consider the case of removing emission from line $i$,
