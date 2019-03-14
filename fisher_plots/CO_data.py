@@ -11,7 +11,7 @@ CO_lines_wave = {'1-0': 2610, '2-1': 1300, '3-2': 866, '4-3': 651,
 # Convert CO wavelengths to GHz
 speed_of_light = c.to_value(u.micron*u.GHz)
 
-CO_lines = { key: speed_of_light/wave for key, wave in CO_lines_wave }
+CO_lines = { key: speed_of_light/wave for key, wave in CO_lines_wave.items() }
 
 # CO luminosity constant in Lsolar
 CO_L0 = {'1-0': 3.7E3, '2-1': 2.8E4, '3-2': 7E4, '4-3': 9.7E4,
