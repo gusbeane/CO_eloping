@@ -1,6 +1,9 @@
 import numpy as np 
 import astropy.units as u
 from astropy.constants import c
+from scipy.special import gamma
+
+# basic info about the lines
 
 # CO line wavelengths in microns
 CO_lines_wave = {'1-0': 2610, '2-1': 1300, '3-2': 866, '4-3': 651,
@@ -24,6 +27,38 @@ CO_L0 = {'1-0': 3.7E3, '2-1': 2.8E4, '3-2': 7E4, '4-3': 9.7E4,
          '5-4': 9.6E4, '6-5': 9.5E4, '7-6': 8.9E4, '8-7': 7.7E4,
          '9-8': 6.9E4, '10-9': 5.3E4, '11-10': 3.8E4,
          '12-11': 2.6E4, '13-12': 1.4E4}
+
+def _find_nearest_(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return idx
+
+def epsilon_l(L0, z, smit_table, log=False):
+    key = _find_nearest_(smit_table[:,0], z)
+    smit = smit_table[key]
+    
+    SFR = smit[1]
+    phi = smit[2]
+    alpha = smit[3]
+
+    if log:
+        SFR = 10.**SFR
+        phi = 10.**phi
+
+    eps = phi * L0 * SFR * gamma(2.+alpha)
+    return eps # Lsolar / Mpc^3
+
+def avg_int(L0, z, smit_table, nurest_l, cosmo, log=False):
+    eps = epsilon_l(L0, z, smit_table, log=log)
+
+    avg = (eps/(4.*np.pi*nurest_l))
+    avg *= c.to_value(u.km/u.s)/cosmo.Hz(z)
+
+    r = 1. * u.Lsun/ (u.Mpc**2 * u.GHz) 
+    r = r.to_value(u.Jansky)
+    avg *= r
+    
+    return avg
 
 smit_table = np.array( [[0.0, 0.91, -3.80, -1.51], 
                         [0.2, 0.88, -3.01, -1.45], 
