@@ -172,3 +172,11 @@ def calc_Vpix(nu_obs, nu_emit, pixel_nu, survey, cosmo):
     dlow_pix = comoving_distance_at_freq(nu_obs + pixel_nu/2, nu_emit, cosmo)
     Vpix = (omegabeam/totaldeg) * (4.*np.pi/3.) * (dup_pix**3 - dlow_pix**3)
     return Vpix
+
+def calc_Vsurv(nu_obs, nu_emit, bandwidth, survey_area, cosmo):
+    totaldeg = 4.*np.pi*(180./np.pi)**2
+
+    dup = comoving_distance_at_freq(nu_obs - bandwidth/2, nu_emit, cosmo)
+    dlow = comoving_distance_at_freq(nu_obs + bandwidth/2, nu_emit, cosmo)
+    Vsurv = (survey_area/totaldeg) * (4.*np.pi/3.) * (dup**3 - dlow**3)
+    return Vsurv
