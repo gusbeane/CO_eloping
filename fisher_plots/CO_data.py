@@ -110,6 +110,39 @@ survey_area = { 'TIME': 1.3*0.0083,
                 'CONCERTO': 1.4,
                 'CCAT-p': 2 }
 
+def spixtpix(freq, survey):
+    assert survey in ['TIME', 'CONCERTO', 'CCAT-p'], "Survey not recognized!"
+
+    if survey=='TIME':
+        if freq > 245 and freq <= 307.5:
+            return 1.6E4
+        elif freq > 212 and freq <= 245:
+            return 5.7E3
+        else:
+            return np.nan
+
+    if survey=='CONCERTO':
+        if freq > 307.5 and freq <= 376.5:
+            return 4.7E4
+        elif freq > 245 and freq <= 307.5:
+            return 1.8E4
+        elif freq > 212 and freq <= 245:
+            return 8E3
+        else:
+            return np.nan
+
+    if survey=='CCAT-p':
+        if freq > 376.5 and freq <= 428:
+            return 2.2E4
+        elif freq > 307.5 and freq <= 376.5:
+            return 1.2E4
+        elif freq > 245 and freq <= 307.5:
+            return 6.2E3
+        elif freq > 212 and freq <= 245:
+            return 3.9E3
+        else:
+            return np.nan
+
 survey_z_spixtpix = { 'TIME': np.array([[6.0, 1.6E4], [7.4, 5.7E3]]),
                       'CONCERTO': np.array([[4.5, 4.7E4], [6.0, 1.8E4], [7.4, 8.0E3]]),
                       'CCAT-p': np.array([[3.7, 2.2E4], [4.5, 1.2E4], [6.0, 6.2E3]]) }
