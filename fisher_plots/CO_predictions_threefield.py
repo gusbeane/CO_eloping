@@ -7,3 +7,38 @@ from colossus.cosmology import cosmology
 params = {'flat': True, 'H0': 70, 'Om0': 0.27, 'Ob0': 0.046, 'sigma8': 0.8, 'ns': 1.0}
 cosmo = cosmology.setCosmology('myCosmo', params)
 
+survey = 'CCAT-p'
+lines = ['6-5', '5-4', '4-3']
+
+b = 3
+bandwidth = 28
+kmax = 1
+
+zobs = 0.88
+nuemit = np.array([CO_data.CO_lines[l] for l in lines])
+nuobs = nuemit / (1.+zobs)
+
+resolution = np.array([CO_data.survey_res_func[survey](n) for n in nuobs])
+
+avg_int = []
+for l,n in zip(lines, nuemit):
+    L0 = CO_data.CO_L0[l]
+    stable = CO_data.smit_unlog_table
+
+    I = CO_data.avg_int(L0, zobs, stable, n, cosmo)
+    avg_int.append(I)
+avg_int = np.array(avg_int)
+
+Blist = avg_int * b
+
+Nlist = []
+for r,no,ne in zip(resolution,nuobs,nuemit):
+    Vpix = CO_data.calc_Vpix(no, ne, r, survey, cosmo)
+    N = CO_data.spixtpix(no, survey)**2 * Vpix
+    Nlist.append(N)
+Nlist = np.array(Nlist)
+
+Vsurv = CO_data.calc_Vsurv(nuobs[0], nuemit[0], bandwidth, CO_data.survey_area[survey], cosmo)
+
+fish = gen_fisher_matrix(Blist[0], Blist[1], Blist[2],
+                         Nlist[0], Nlist[1], Nlist[2], kmax, Vsurv)
