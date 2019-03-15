@@ -145,6 +145,30 @@ def spixtpix(freq, survey):
 
 survey_z_spixtpix = { 'TIME': np.array([[6.0, 1.6E4], [7.4, 5.7E3]]),
                       'CONCERTO': np.array([[4.5, 4.7E4], [6.0, 1.8E4], [7.4, 8.0E3]]),
-                      'CCAT-p': np.array([[3.7, 2.2E4], [4.5, 1.2E4], [6.0, 6.2E3]]) }
+                      'CCAT-p': np.array([[3.7, 2.2E4], [4.5, 1.2E4], 
+                                          [6.0, 6.2E3], [7.4, 3.9E3]]) }
 
+def comoving_distance_at_freq(freq_obs, freq_emit, cosmo):
+    z = (freq_emit - freq_obs) / freq_obs
+    return cosmo.comovingDistance(0, z) / cosmo.h
 
+def calc_Vpix(nu_obs, nu_emit, pixel_nu, survey, cosmo):
+    assert survey in ['TIME', 'CONCERTO', 'CCAT-p'], "Survey not recognized!"
+
+    totaldeg = 4.*np.pi*(180./np.pi)**2
+    z = (nu_emit - nu_obs) / nu_obs
+
+    if survey=='CCAT-p':
+        thetabeam = 53./3600.
+        omegabeam = 2.*np.pi*(thetabeam/2.355)**2
+    else:
+        D = 12 # m
+        line = c.to_value(u.m*u.GHz)/nu_obs
+        thetabeam = 1.22 * line/D
+        thetabeam *= (180./np.pi)
+        omegabeam = 2.*np.pi*(thetabeam/2.355)**2
+
+    dup_pix = comoving_distance_at_freq(nu_obs - pixel_nu/2, nu_emit, cosmo)
+    dlow_pix = comoving_distance_at_freq(nu_obs + pixel_nu/2, nu_emit, cosmo)
+    Vpix = (omegabeam/totaldeg) * (4.*np.pi/3.) * (dup_pix**3 - dlow_pix**3)
+    return Vpix
