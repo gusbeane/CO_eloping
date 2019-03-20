@@ -14,12 +14,6 @@ class threefield(object):
                                                     self.nint, self.cosmo)
 
         # check Blist, Nlist, make sure lengths match
-        self.Blist = np.asarray(Blist)
-        self.Nlist = np.asarray(Nlist)
-        assert len(self.Blist) == len(self.Nlist), "Bias and noise lists \
-                                                    are different length!"
-        self.nparam = len(Blist)
-
         # generate dPdB matrix
         self.dPdB = np.zeros((self.nparam, self.nparam))
         for i in range(self.nparam):
@@ -27,6 +21,8 @@ class threefield(object):
             self.dPdB[i][np.mod(i+1,self.nparam)] = Blist[i]
         self.dPdB = np.transpose(self.dPdB)
         self.dPdB = np.tensordot(self.dPdB, self.Pklist, axes=0)
+        self.Blist, self.Nlist, self.nparam = self._check_BN_param_(Blist, Nlist)
+
 
         # generate covariance matrix
         self.cov = np.zeros((self.nparam, self.nparam, nint))
@@ -61,6 +57,15 @@ class threefield(object):
         Pklist /= cosmo.h**3
 
         return klist, Pklist
+
+    def _check_BN_param_(self, Blist, Nlist):
+        # check Blist, Nlist, make sure lengths match
+        Blist = np.asarray(Blist)
+        Nlist = np.asarray(Nlist)
+        assert len(Blist) == len(Nlist), "Bias and noise lists are different length!"
+                                                    
+        nparam = len(Blist)
+        return Blist, Nlist, nparam
 
 
 def gen_Vk(kmax, Vsurv):
