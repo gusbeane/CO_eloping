@@ -20,19 +20,8 @@ class threefield(object):
         self.dPdB = self._gen_dPdB_(self.Blist, self.nparam)
 
         # generate covariance matrix
-        self.cov = np.zeros((self.nparam, self.nparam, nint))
-        for i in range(self.nparam):
-            inext = np.mod(i+1, self.nparam)
-            self.cov[i][i] = (self.Blist[i]*self.Blist[inext]*self.Pklist)**2
-            self.cov[i][i] += (self.Blist[i]**2*self.Pklist + self.Nlist[i])*\
-                              (self.Blist[inext]**2*self.Pklist + self.Nlist[inext])
-            
-            inext2 = np.mod(i+2, self.nparam)
-            self.cov[i][inext] = (self.Blist[inext]**2*self.Pklist + self.Nlist[inext])*\
-                                 (self.Blist[i]*self.Blist[inext2]*self.Pklist)
-            self.cov[i][inext] += self.Blist[i]*self.Blist[inext]**2*self.Blist[inext2]*\
-                                  self.Pklist**2
-            self.cov[inext][i] = self.cov[i][inext].copy()
+        self.cov = self._gen_cov_(self.Blist, self.Nlist, self.Pklist, 
+                                  self.nparam, self.nint)
 
         self.fmat_int = np.zeros((self.nparam, self.nparam, nint))
         self.sum_dPdB = np.sum(self.dPdB, axis=0)
@@ -69,6 +58,24 @@ class threefield(object):
 
         return dPdB
 
+    def _gen_cov_(Blist, Nlist, Pklist, nparam, nint):
+        cov = np.zeros((nparam, nparam, nint))
+        for i in range(nparam):
+            # diagonal elements
+            inext = np.mod(i+1, nparam)
+            cov[i][i] = (Blist[i]*Blist[inext]*Pklist)**2
+            cov[i][i] += (Blist[i]**2*Pklist + Nlist[i])*\
+                         (Blist[inext]**2*Pklist + Nlist[inext])
+            
+            # off-diagonal elements
+            inext2 = np.mod(i+2, nparam)
+            cov[i][inext] = (Blist[inext]**2*Pklist + Nlist[inext])*\
+                            (Blist[i]*Blist[inext2]*Pklist)
+            cov[i][inext] += Blist[i]*Blist[inext]**2*Blist[inext2]*\
+                             Pklist**2
+            cov[inext][i] = cov[i][inext].copy()
+
+        return cov
 
 def gen_Vk(kmax, Vsurv):
     ans = kmax**3/(6.*np.pi**2)
