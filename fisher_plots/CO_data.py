@@ -180,3 +180,30 @@ def calc_Vsurv(nu_obs, nu_emit, bandwidth, survey_area, cosmo):
     dlow = comoving_distance_at_freq(nu_obs + bandwidth/2, nu_emit, cosmo)
     Vsurv = (survey_area/totaldeg) * (4.*np.pi/3.) * (dup**3 - dlow**3)
     return Vsurv
+
+def gen_Blist_Nlist(b, bandwidth, kmax, zobs, lines, survey, cosmo):
+
+    nuemit = np.array([CO_lines[l] for l in lines])
+    nuobs = nuemit / (1.+zobs)
+
+    resolution = np.array([survey_res_func[survey](n) for n in nuobs])
+
+    avg_int_list = []
+    for l,n in zip(lines, nuemit):
+        L0 = CO_L0[l]
+        stable = smit_unlog_table
+
+        I = avg_int(L0, zobs, stable, n, cosmo)
+        avg_int_list.append(I)
+    avg_int_list = np.array(avg_int_list)
+
+    Blist = avg_int_list * b
+
+    Nlist = []
+    for r,no,ne in zip(resolution,nuobs,nuemit):
+        Vpix = calc_Vpix(no, ne, r, survey, cosmo)
+        N = spixtpix(no, survey)**2 * Vpix
+        Nlist.append(N)
+    Nlist = np.array(Nlist)
+
+    return Blist, Nlist
