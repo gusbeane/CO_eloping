@@ -10,9 +10,8 @@ class threefield(object):
         self.cosmo = cosmo
 
         # construct linear matter power spectrum
-        self.klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
-        self.Pklist = cosmo.matterPowerSpectrum(self.klist*cosmo.h, z)
-        self.Pklist /= cosmo.h**3
+        self.klist, self.Pklist = self._gen_lin_ps_(self.kmin, self.kmax, 
+                                                    self.nint, self.cosmo)
 
         # check Blist, Nlist, make sure lengths match
         self.Blist = np.asarray(Blist)
@@ -55,6 +54,13 @@ class threefield(object):
         self.fmat_int = np.multiply(self.fmat_int, int_factor)
 
         self.fmat = np.trapz(self.fmat_int, self.klist, axis=2)
+
+    def _gen_lin_ps_(self, kmin, kmax, nint, cosmo):
+        klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
+        Pklist = cosmo.matterPowerSpectrum(klist*cosmo.h, z)
+        Pklist /= cosmo.h**3
+
+        return klist, Pklist
 
 
 def gen_Vk(kmax, Vsurv):
