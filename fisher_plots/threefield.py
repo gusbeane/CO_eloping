@@ -161,3 +161,21 @@ def corner_plot(B1, B2, B3, N1, N2, N3, kmax, Vsurv):
     ax13 = plt.subplot(3, 3, 7, sharex=ax1, sharey=ax23)
 
     ax12.contour()
+
+if __name__ == '__main__':
+    from colossus.cosmology import cosmology
+    from CO_data import gen_Blist_Nlist
+
+    params = {'flat': True, 'H0': 70, 'Om0': 0.27, 'Ob0': 0.046, 'sigma8': 0.8, 'ns': 1.0}
+    cosmo = cosmology.setCosmology('myCosmo', params)
+
+    survey = 'CCAT-p'
+    lines = ['6-5', '5-4', '4-3']
+    z = 0.88
+    kmax = 1
+    bandwidth = 28
+    b = 3
+
+    Blist, Nlist = gen_Blist_Nlist(3, 28, kmax, z, lines, survey, cosmo)
+
+    tf = threefield(z, Blist, Nlist, kmax, cosmo)
