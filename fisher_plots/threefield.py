@@ -1,6 +1,57 @@
 import numpy as np
 from scipy.stats import chi2
 
+class threefield(object):
+    def __init__(self, z, Blist, Nlist, kmax, cosmo, kmin=1E-3, nint=1000):
+        
+        # construct linear matter power spectrum
+        self.klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
+        self.Pklist = cosmo.matterPowerSpectrum(self.klist*cosmo.h, z)
+        self.Pklist /= cosmo.h**3
+
+        # check Blist, Nlist, make sure lengths match
+        self.Blist = np.asarray(Blist)
+        self.Nlist = np.asarray(Nlist)
+        assert len(self.Blist) == len(self.Nlist), "Bias and noise lists \
+                                                    are different length!"
+        self.nparam = len(Blist)
+
+        # generate dPdB matrix
+        self.dPdB = np.zeros((self.nparam, self.nparam))
+        for i in range(self.nparam):
+            self.dPdB[i][i] = Blist[np.mod(i+1,self.nparam)]
+            self.dPdB[i][np.mod(i+1,self.nparam)] = Blist[i]
+        self.dPdB = np.transpose(self.dPdB)
+        self.dPdB = np.tensordot(self.dPdB, self.Pklist, axes=0)
+
+        # generate covariance matrix
+        self.cov = np.zeros((self.nparam, self.nparam, nint))
+        for i in range(self.nparam):
+            inext = np.mod(i+1, self.nparam)
+            self.cov[i][i] = (self.Blist[i]*self.Blist[inext]*self.Pklist)**2
+            self.cov[i][i] += (self.Blist[i]**2*self.Pklist + self.Nlist[i])*\
+                              (self.Blist[inext]**2*self.Pklist + self.Nlist[inext])
+            
+            inext2 = np.mod(i+2, self.nparam)
+            self.cov[i][inext] = (self.Blist[inext]**2*self.Pklist + self.Nlist[inext])*\
+                                 (self.Blist[i]*self.Blist[inext2]*self.Pklist)
+            self.cov[i][inext] += self.Blist[i]*self.Blist[inext]**2*self.Blist[inext2]*\
+                                  self.Pklist**2
+            self.cov[inext][i] = self.cov[i][inext].copy()
+
+        self.fmat_int = np.zeros((self.nparam, self.nparam, nint))
+        self.sum_dPdB = np.sum(self.dPdB, axis=0)
+        for i in range(self.nparam):
+            for j in range(self.nparam):
+                self.fmat_int[i][j] = np.multiply(self.sum_dPdB[i], self.sum_dPdB[j])
+                self.fmat_int[i][j] = np.divide(self.fmat_int[i][j], self.cov[i][j])
+
+        int_factor = np.divide(np.square(self.klist), 2.*np.pi**2)
+        self.fmat_int = np.multiply(self.fmat_int, int_factor)
+
+        self.fmat = np.trapz(self.fmat_int, self.klist, axis=2)
+
+
 def gen_Vk(kmax, Vsurv):
     ans = kmax**3/(6.*np.pi**2)
     return Vsurv*ans
