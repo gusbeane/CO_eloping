@@ -4,6 +4,11 @@ from scipy.stats import chi2
 class threefield(object):
     def __init__(self, z, Blist, Nlist, kmax, cosmo, kmin=1E-3, nint=1000):
         
+        # store some parameters
+        self.kmin, self.kmax = kmin, kmax
+        self.z, self.nint = z, nint
+        self.cosmo = cosmo
+
         # construct linear matter power spectrum
         self.klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
         self.Pklist = cosmo.matterPowerSpectrum(self.klist*cosmo.h, z)
