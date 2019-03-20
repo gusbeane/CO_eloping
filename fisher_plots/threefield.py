@@ -14,15 +14,10 @@ class threefield(object):
                                                     self.nint, self.cosmo)
 
         # check Blist, Nlist, make sure lengths match
-        # generate dPdB matrix
-        self.dPdB = np.zeros((self.nparam, self.nparam))
-        for i in range(self.nparam):
-            self.dPdB[i][i] = Blist[np.mod(i+1,self.nparam)]
-            self.dPdB[i][np.mod(i+1,self.nparam)] = Blist[i]
-        self.dPdB = np.transpose(self.dPdB)
-        self.dPdB = np.tensordot(self.dPdB, self.Pklist, axes=0)
         self.Blist, self.Nlist, self.nparam = self._check_BN_param_(Blist, Nlist)
 
+        # generate Bsum - Bi list
+        self.dPdB = self._gen_dPdB_(self.Blist, self.nparam)
 
         # generate covariance matrix
         self.cov = np.zeros((self.nparam, self.nparam, nint))
@@ -66,6 +61,13 @@ class threefield(object):
                                                     
         nparam = len(Blist)
         return Blist, Nlist, nparam
+
+    def _gen_dPdB_(self, Blist, nparam):
+        Btot = np.sum(Blist)
+        dPdB = np.full(nparam, Btot)
+        dPdB = np.subtract(dPdB, Blist)
+
+        return dPdB
 
 
 def gen_Vk(kmax, Vsurv):
