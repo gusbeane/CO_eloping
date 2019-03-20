@@ -58,7 +58,7 @@ class threefield(object):
 
         return dPdB
 
-    def _gen_cov_(Blist, Nlist, Pklist, nparam, nint):
+    def _gen_cov_(self, Blist, Nlist, Pklist, nparam, nint):
         cov = np.zeros((nparam, nparam, nint))
         for i in range(nparam):
             # diagonal elements
