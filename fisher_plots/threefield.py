@@ -193,13 +193,15 @@ if __name__ == '__main__':
     params = {'flat': True, 'H0': 70, 'Om0': 0.27, 'Ob0': 0.046, 'sigma8': 0.8, 'ns': 1.0}
     cosmo = cosmology.setCosmology('myCosmo', params)
 
-    survey = 'CCAT-p'
-    lines = ['6-5', '5-4', '4-3']
+    # survey = 'CCAT-p'
+    # lines = ['6-5', '5-4', '4-3']
     z = 0.88
     kmax = 1
-    bandwidth = 28
-    b = 3
+    # bandwidth = 28
+    # b = 3
 
-    Blist, Nlist = gen_Blist_Nlist(3, 28, kmax, z, lines, survey, cosmo)
+    # Blist, Nlist = gen_Blist_Nlist(3, 28, kmax, z, lines, survey, cosmo)
+    Blist = [1, 2, 3]
+    Nlist = [1, 2, 3]
 
     tf = threefield(z, Blist, Nlist, kmax, cosmo)
