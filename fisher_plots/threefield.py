@@ -27,8 +27,7 @@ class threefield(object):
         self.sum_dPdB = np.sum(self.dPdB, axis=0)
         for i in range(self.nparam):
             for j in range(self.nparam):
-                self.fmat_int[i][j] = np.multiply(self.sum_dPdB[i], self.sum_dPdB[j])
-                self.fmat_int[i][j] = np.divide(self.fmat_int[i][j], self.cov[i][j])
+                print('lol')
 
         int_factor = np.divide(np.square(self.klist), 2.*np.pi**2)
         self.fmat_int = np.multiply(self.fmat_int, int_factor)
