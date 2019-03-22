@@ -63,8 +63,8 @@ class threefield(object):
             # diagonal elements
             inext = np.mod(i+1, nparam)
             cov[i][i] = (Blist[i]*Blist[inext]*Pklist)**2
-            cov[i][i] += (Blist[i]**2*Pklist + Nlist[i])*\
-                         (Blist[inext]**2*Pklist + Nlist[inext])
+            cov[i][i] += (Blist[i]**2 + Nlist[i])*\
+                         (Blist[inext]**2 + Nlist[inext])*np.square(Pklist)
             
             # off-diagonal elements
             inext2 = np.mod(i+2, nparam)
