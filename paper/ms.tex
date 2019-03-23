@@ -239,38 +239,35 @@ transitional level, e.g. CO(3-2) is referred to as ``3.'' The relevant Fisher
 matrix is then,
 \beq\label{eq:co_fisher}
 F_{i,j} = 
-\int \frac{\text{d}k\,k^2}{2\pi^2} 
-V_{\text{surv}} \sum_{l} \sum_{m} 
-\frac{\partial \hat{P}_l(k)}{\partial B_i}
-\frac{1}{\Cov{\hat{P}_i(k)}{\hat{P}_j(k)}} 
-\frac{\partial \hat{P}_m(k)}{\partial B_j}\text{,}
+\int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{\substack{l,l'\\l > l'}} \sum_{\substack{m,m'\\m > m'}}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
+\frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} 
+\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{,}
 \eeq
 where $i$ and $j$ each refer to a line by its upper transitional level and the
-$l$ and $m$ sum over all \textit{combinations} of $i$ (or $j$).
+$l$, $l'$, $m$ and $m'$ sum over all lines considered.
 
-However, we can greatly simplify this expression by noticing that in the sum
-over $l$ all terms not involving $i$ will vanish in the derivative. Therefore,
-if we define the total sum of all bias factors as
-\beq\label{eq:sum_bias}
-\Bsum = \sum_k B_k\text{,}
+Ignoring interlopers and foreground contamination for a moment, we can
+simplify this expression as
+\beq\label{eq:fisher_nocontam}
+\begin{split}
+F_{i,j} =&
+\int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} \denps^2(k) \\
+\times & \left[ 
+\sum_{l\neq i,j} \frac{B_l^2}{\pstot{l}\xps{i}{j} + \xps{i}{l}\xps{l}{j}}
++ \delta_{ij} \left( 
+\sum_{l\neq i} \frac{B_l^2}{\xps{i}{l}^2 + \pstot{i}\pstot{l}}
++ \frac{1}{\pstot{i}\xps{\delta}{\delta} + \xps{i}{\delta}^2}
+\right) \right. \\
+& + (1-\delta_{ij}) \left(
+\frac{B_i}{\pstot{i}\xps{j}{\delta} + \xps{i}{\delta}\xps{i}{j}}
++ \frac{B_j}{\pstot{j}\xps{i}{\delta} + \xps{j}{\delta}\xps{i}{j}}
++ \frac{B_iB_j}{\xps{i}{j}^2 + \pstot{i}\pstot{j}}
+\right)
+\Bigg]
+\end{split}
 \eeq
-then we can write the sum portion of Equation~\ref{eq:co_fisher} as,
-\beq\label{eq:sum_part_of_fisher}
-\sum_l \frac{\partial \hat{P}_l(k)}{\partial B_i}
-= (\Bsum - B_i) \denps(k)\text{.}
-\eeq
-Therefore, we can simplify Equation~\ref{eq:co_fisher} and simply write,
-\beq\label{eq:co_fisher_simple}
-F_{i,j} = 
-\int \frac{\text{d}k\,k^2}{2\pi^2} 
-V_{\text{surv}}
-\frac{(\Bsum - B_i)(\Bsum - B_j)}
-{\Cov{\hat{P}_i(k)}{\hat{P}_j(k)}} \denps(k)^2
-\text{.}
-\eeq
-Interestingly, if one wishes to modify this approach and include the
-auto-power spectra in the analysis, the only modification is to make the
-substitution $(\Bsum - B_i) \rightarrow (\Bsum + B_i)$, and similarly for $j$.
 
 \bibliography{references}
 
