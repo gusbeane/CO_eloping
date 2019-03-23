@@ -249,7 +249,8 @@ where $i$ and $j$ each refer to a line by its upper transitional level and the
 $l$, $l'$, $m$ and $m'$ sum over all lines considered.
 
 Ignoring interlopers and foreground contamination for a moment, we can
-simplify this expression as
+simplify this expression as (see Appendix~\ref{app:fisher_deriv} for a
+derivation):
 \beq\label{eq:fisher_nocontam}
 \begin{split}
 F_{i,j} =&
@@ -272,6 +273,78 @@ Including the auto-spectra in this analysis simply requires summing over all
 $l$ values, replacing $\xps{i}{i}$ with $\pstot{i}$ \Gus{I think this is
 correct?}.
 
+\appendix
+
+\section{Fisher Matrix Derivation}\label{app:fisher_deriv}
+We show a derivation of Equation~\ref{eq:fisher_nocontam}. First, consider the
+Fisher matrix from Equation~\ref{eq:co_fisher}.
+\beq\label{eq:co_fisher_2}
+F_{i,j} = 
+\int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{\substack{l,l'\\l > l'}} \sum_{\substack{m,m'\\m > m'}}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
+\frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} 
+\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{,}
+\eeq
+where $i$ and $j$ each refer to a line by its upper transitional level and the
+$l$, $l'$, $m$ and $m'$ sum over all lines considered. We exploit the fact
+that the Fisher matrix is unchanged under the substitution,
+\begin{equation*}
+\sum_{\substack{l,l'\\l > l'}} \rightarrow 
+\frac{1}{2} \sum_{\substack{l,l'\\l \neq l'}}\text{.}
+\end{equation*}
+Next, we can write down the derivatives of the power spectra as,
+\beq\label{eq:psderiv}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
+= \left( B_{l'} \delta_{il} + B_l\delta_{il'} \right) \denps(k)\text{.}
+\eeq
+Now we can also write down the covariance formula as,
+\beq\label{eq:cov}
+\begin{aligned}
+\left(\Cov{\hat{P}_{l,l'}}{\hat{P}_{m,m'}}\right)^{-1} = 
+&(\pstot{l}\xps{l'}{m'} + \xps{l}{l'}\xps{l}{m'})^{-1} &&\times \delta_{lm} (1-\delta_{l'm'}) \\
+&+ (\pstot{l}\xps{l'}{m} + \xps{l'}{l}\xps{l}{m})^{-1} &&\times \delta_{lm'} (1-\delta_{l'm}) \\
+&+ (\pstot{l'}\xps{l}{m'} + \xps{l'}{l}\xps{l'}{m'})^{-1} &&\times \delta_{l'm} (1-\delta_{lm'}) \\
+&+ (\pstot{l'}\xps{l}{m} + \xps{l'}{l}\xps{l'}{m})^{-1} &&\times \delta_{l'm'} (1-\delta_{lm}) \\
+&+ (\xps{l}{l'}^2 + \pstot{l}\pstot{l'})^{-1} &&\times \delta_{lm} \delta_{l'm'} \\
+&+ (\xps{l}{l'}^2 + \pstot{l}\pstot{l'})^{-1} &&\times \delta_{lm'} \delta_{l'm}\text{.}
+\end{aligned}
+\eeq
+We are at liberty to distribute the inverse to all terms since upon inspection
+of the Kronecker delta's one and only one term will contribute to the sum. In
+the case that the covariance vanishes (e.g.
+$\Cov{\hat{P}_{1,2}}{\hat{P}_{3,4}}=0$) we exclude this term from the sum in
+Equation~\ref{eq:co_fisher_2}. Since the product,
+\begin{equation*}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
+% \frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} 
+\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}
+\end{equation*}
+is symmetric under $(l,l',m,m') \rightarrow (l',l,m',m)$\footnote{and the
+summation is as well}, we can equivalently use the following formula for the
+covariance:
+\beq\label{eq:cov_simple}
+\begin{aligned}
+\left(\Cov{\hat{P}_{l,l'}}{\hat{P}_{m,m'}}\right)^{-1} = 
+&4 (\pstot{l}\xps{l'}{m'} + \xps{l}{l'}\xps{l}{m'})^{-1} &&\times \delta_{lm} (1-\delta_{l'm'}) \\
+&+ 2(\xps{l}{l'}^2 + \pstot{l}\pstot{l'})^{-1} &&\times \delta_{lm} \delta_{l'm'}\text{.}
+\end{aligned}
+\eeq
+Combining these facts we can arrive at the following formula for the Fisher matrix:
+\beq\label{eq:co_fisher_explicity}
+\begin{split}
+F_{i,j} = 
+\frac{1}{4} \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\denps(k)^2
+\sum_{\substack{l,l'\\l \neq l'}} \sum_{\substack{m,m'\\m \neq m'}}
+&\left( B_{l'} \delta_{il} + B_l\delta_{il'} \right)
+\left( B_{m'} \delta_{jm} + B_m\delta_{jm'} \right) \\
+\times&\left( \frac{4}{\pstot{l}\xps{l'}{m'} + \xps{l}{l'}\xps{l}{m'}} \delta_{lm} (1-\delta_{l'm'})
++ \frac{2}{\xps{l}{l'}^2 + \pstot{l}\pstot{l'}} \delta_{lm} \delta_{l'm'}\right)
+\text{.}
+\end{split}
+\eeq
+This formula can be expanded and simplified to give Equation~\ref{eq:fisher_nocontam}.
 
 \bibliography{references}
 
