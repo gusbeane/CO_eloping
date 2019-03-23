@@ -255,19 +255,23 @@ simplify this expression as
 F_{i,j} =&
 \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} \denps^2(k) \\
 \times & \left[ 
-\sum_{l\neq i,j} \frac{B_l^2}{\pstot{l}\xps{i}{j} + \xps{i}{l}\xps{l}{j}}
-+ \delta_{ij} \left( 
+\delta_{ij} \left( 
 \sum_{l\neq i} \frac{B_l^2}{\xps{i}{l}^2 + \pstot{i}\pstot{l}}
 + \frac{1}{\pstot{i}\xps{\delta}{\delta} + \xps{i}{\delta}^2}
 \right) \right. \\
-& + (1-\delta_{ij}) \left(
-\frac{B_i}{\pstot{i}\xps{j}{\delta} + \xps{i}{\delta}\xps{i}{j}}
+&\left. + (1-\delta_{ij}) \left( 
+\sum_{l\neq i,j} \frac{B_l^2}{\pstot{l}\xps{i}{j} + \xps{i}{l}\xps{l}{j}}
++\frac{B_i}{\pstot{i}\xps{j}{\delta} + \xps{i}{\delta}\xps{i}{j}}
 + \frac{B_j}{\pstot{j}\xps{i}{\delta} + \xps{j}{\delta}\xps{i}{j}}
 + \frac{B_iB_j}{\xps{i}{j}^2 + \pstot{i}\pstot{j}}
 \right)
-\Bigg]
+\right]\text{.}
 \end{split}
 \eeq
+Including the auto-spectra in this analysis simply requires summing over all
+$l$ values, replacing $\xps{i}{i}$ with $\pstot{i}$ \Gus{I think this is
+correct?}.
+
 
 \bibliography{references}
 
