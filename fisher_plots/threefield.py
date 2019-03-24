@@ -19,6 +19,8 @@ class threefield(object):
         self.fmat = self._gen_fmat_(self.Blist, self.Nlist, self.klist, self.Pklist, 
                                     self.nparam, self.nint)
 
+        self.explicit_fmat = self._explicit_fmat_(self.Blist, self.Nlist, self.klist, 
+                                                  self.Pklist, self.nparam, self.nint)
 
     def _gen_lin_ps_(self, kmin, kmax, nint, cosmo):
         klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
@@ -100,14 +102,63 @@ class threefield(object):
 
         return np.add(np.add(np.add(t1, t2), t3), t4)
 
-    def _gen_cov_(self, Blist, Nlist, Pklist, nparam, nint):
-        cov = np.zeros((nparam, nparam, nint))
+    def _explicit_fmat_(self, Blist, Nlist, klist, Pklist, nparam, nint):
+        fmat = np.zeros((nparam, nparam))
         for i in range(nparam):
-            # diagonal elements
-            inext = np.mod(i+1, nparam)
-            cov[i][i] = (Blist[i]*Blist[inext]*Pklist)**2
-            cov[i][i] += (Blist[i]**2 + Nlist[i])*\
-                         (Blist[inext]**2 + Nlist[inext])*np.square(Pklist)
+            for j in range(nparam):
+                fmat[i][j] = self._explicit_fmat_term_(i, j, Blist, Nlist, klist, Pklist, nparam, nint)
+        return fmat
+
+    def _explicit_fmat_term_(self, i, j, Blist, Nlist, klist, Pklist, nparam, nint):
+        Pbiilist = np.outer(np.square(Blist), Pklist)
+        Ptot = np.add(Pbiilist, Nlist[:,np.newaxis])
+
+        tot = 0
+        for l in range(nparam):
+            for lp in range(nparam):
+                if l <= lp:
+                    continue
+                if l==i:
+                    dPl = Blist[lp]*Pklist
+                elif lp==i:
+                    dPl = Blist[l]*Pklist
+                else:
+                    dPl = 0
+
+                for m in range(nparam):
+                    for mp in range(nparam):
+                        if m <= mp:
+                            continue
+                        if m==j:
+                            dPm = Blist[mp]*Pklist
+                        elif mp==j:
+                            dPm = Blist[m]*Pklist
+                        else:
+                            dPm = 0
+
+                        if l!=m and l!=mp and lp!=m and lp!=mp:
+                            continue
+                        elif l==m and lp==mp or l==mp and lp==m:
+                            cov = (Blist[i]*Blist[j]*Pklist)**2 + Ptot[i]*Ptot[j]
+                        elif l==m and lp!=mp:
+                            cov = (Ptot[l]*Blist[lp]*Blist[mp]*Pklist) + Blist[l]*Blist[lp]*Blist[m]*Blist[mp]*Pklist**2
+                        elif l==mp and lp!=m:
+                            cov = (Ptot[l]*Blist[lp]*Blist[m]*Pklist) + Blist[l]*Blist[lp]*Blist[m]*Blist[mp]*Pklist**2
+                        elif lp==m and l!=mp:
+                            cov = (Ptot[lp]*Blist[l]*Blist[mp]*Pklist) + Blist[l]*Blist[lp]*Blist[m]*Blist[mp]*Pklist**2
+                        elif lp==mp and l!=m:
+                            cov = (Ptot[lp]*Blist[l]*Blist[m]*Pklist) + Blist[l]*Blist[lp]*Blist[m]*Blist[mp]*Pklist**2
+                        else:
+                            continue
+
+                        tot += dPl*dPm/cov
+
+        tot *= np.square(klist)/(2.*np.pi**2)
+
+        return np.trapz(tot, klist)
+
+
+
             
             # off-diagonal elements
             inext2 = np.mod(i+2, nparam)
