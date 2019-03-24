@@ -159,16 +159,31 @@ class threefield(object):
 
 
 
-            
-            # off-diagonal elements
-            inext2 = np.mod(i+2, nparam)
-            cov[i][inext] = (Blist[inext]**2*Pklist + Nlist[inext])*\
-                            (Blist[i]*Blist[inext2]*Pklist)
-            cov[i][inext] += Blist[i]*Blist[inext]**2*Blist[inext2]*\
-                             Pklist**2
-            cov[inext][i] = cov[i][inext].copy()
+    # def _gen_dPdB_(self, Blist, nparam):
+    #     Btot = np.sum(Blist)
+    #     dPdB = np.full(nparam, Btot)
+    #     dPdB = np.subtract(dPdB, Blist)
 
-        return cov
+    #     return dPdB
+
+    # def _gen_cov_(self, Blist, Nlist, Pklist, nparam, nint):
+    #     cov = np.zeros((nparam, nparam, nint))
+    #     for i in range(nparam):
+    #         # diagonal elements
+    #         inext = np.mod(i+1, nparam)
+    #         cov[i][i] = (Blist[i]*Blist[inext]*Pklist)**2
+    #         cov[i][i] += (Blist[i]**2 + Nlist[i])*\
+    #                      (Blist[inext]**2 + Nlist[inext])*np.square(Pklist)
+            
+    #         # off-diagonal elements
+    #         inext2 = np.mod(i+2, nparam)
+    #         cov[i][inext] = (Blist[inext]**2*Pklist + Nlist[inext])*\
+    #                         (Blist[i]*Blist[inext2]*Pklist)
+    #         cov[i][inext] += Blist[i]*Blist[inext]**2*Blist[inext2]*\
+    #                          Pklist**2
+    #         cov[inext][i] = cov[i][inext].copy()
+
+    #     return cov
 
 def gen_Vk(kmax, Vsurv):
     ans = kmax**3/(6.*np.pi**2)
