@@ -16,23 +16,9 @@ class threefield(object):
         # check Blist, Nlist, make sure lengths match
         self.Blist, self.Nlist, self.nparam = self._check_BN_param_(Blist, Nlist)
 
-        # generate Bsum - Bi list
-        self.dPdB = self._gen_dPdB_(self.Blist, self.nparam)
+        self.fmat = self._gen_fmat_(self.Blist, self.Nlist, self.klist, self.Pklist, 
+                                    self.nparam, self.nint)
 
-        # generate covariance matrix
-        self.cov = self._gen_cov_(self.Blist, self.Nlist, self.Pklist, 
-                                  self.nparam, self.nint)
-
-        self.fmat_int = np.zeros((self.nparam, self.nparam, nint))
-        self.sum_dPdB = np.sum(self.dPdB, axis=0)
-        for i in range(self.nparam):
-            for j in range(self.nparam):
-                print('lol')
-
-        int_factor = np.divide(np.square(self.klist), 2.*np.pi**2)
-        self.fmat_int = np.multiply(self.fmat_int, int_factor)
-
-        self.fmat = np.trapz(self.fmat_int, self.klist, axis=2)
 
     def _gen_lin_ps_(self, kmin, kmax, nint, cosmo):
         klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
@@ -50,12 +36,69 @@ class threefield(object):
         nparam = len(Blist)
         return Blist, Nlist, nparam
 
-    def _gen_dPdB_(self, Blist, nparam):
-        Btot = np.sum(Blist)
-        dPdB = np.full(nparam, Btot)
-        dPdB = np.subtract(dPdB, Blist)
+    def _gen_fmat_(self, Blist, Nlist, klist, Pklist, nparam, nint):
+        fmat = np.zeros((nparam, nparam, nint))
+        for i in range(nparam):
+            for j in range(nparam):
+                fmat[i][j] = self._gen_fmat_int_(i, j, Blist, Nlist, klist, Pklist)
+        
+        fmat = np.trapz(fmat, klist, axis=2)
 
-        return dPdB
+        return fmat
+
+    def _gen_fmat_int_(self, i, j, Blist, Nlist, klist, Pklist):
+        Pbiilist = np.outer(np.square(Blist), Pklist)
+        Ptotlist = np.add(Pbiilist, Nlist[:,np.newaxis])
+
+        Pbijlist = np.multiply.outer(np.outer(Blist, Blist), Pklist)
+
+        Pbideltalist = np.outer(Blist, Pklist)
+
+        if i==j:
+            term = self._gen_fmat_diag_term_(i, Blist, Ptotlist, Pbijlist, Pbideltalist, Pklist)
+        else:
+            term = self._gen_fmat_offdiag_term_(i, j, Blist, Ptotlist, Pbijlist, Pbideltalist)
+
+        factor = np.divide(np.square(klist), 2.*np.pi**2)
+        factor = np.multiply(factor, np.square(Pklist))
+        term = np.multiply(term, factor)
+
+        return term
+
+    def _gen_fmat_diag_term_(self, i, Blist, Ptot, Pbij, Pbidelta, Pklist):
+        t1 = np.square(Pbij[i])
+        t1 = np.add(t1, np.multiply(Ptot[i], Ptot))
+        t1 = np.divide(np.square(Blist)[:,np.newaxis], t1)
+        t1[i] = 0
+        t1 = np.sum(t1, axis=0)
+
+        t2 = np.multiply(Ptot[i], Pklist)
+        t2 = np.add(t2, np.square(Pbidelta[i]))
+        t2 = np.divide(1, t2)
+
+        return np.add(t1, t2)
+
+    def _gen_fmat_offdiag_term_(self, i, j, Blist, Ptot, Pbij, Pbidelta):
+        t1 = np.multiply(Ptot, Pbij[i][j])
+        t1 = np.add(t1, np.multiply(Pbij[i], Pbij[j]))
+        t1 = np.divide(np.square(Blist)[:,np.newaxis], t1)
+        t1[i] = 0
+        t1[j] = 0
+        t1 = np.sum(t1, axis=0)
+
+        t2 = np.multiply(Ptot[i], Pbidelta[j])
+        t2 = np.add(t2, np.multiply(Pbidelta[i], Pbij[i][j]))
+        t2 = np.divide(Blist[i], t2)
+
+        t3 = np.multiply(Ptot[j], Pbidelta[i])
+        t3 = np.add(t3, np.multiply(Pbidelta[j], Pbij[j][i]))
+        t3 = np.divide(Blist[j], t3)
+
+        t4 = np.square(Pbij[i][j])
+        t4 = np.add(t4, np.multiply(Ptot[i], Ptot[j]))
+        t4 = np.divide(np.multiply(Blist[i], Blist[j]), t4)
+
+        return np.add(np.add(np.add(t1, t2), t3), t4)
 
     def _gen_cov_(self, Blist, Nlist, Pklist, nparam, nint):
         cov = np.zeros((nparam, nparam, nint))
