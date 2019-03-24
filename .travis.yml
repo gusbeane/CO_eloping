@@ -1,0 +1,8 @@
+sudo: required
+language: generic
+services: docker
+
+script:
+  - docker pull dxjoke/tectonic-docker
+  - docker run --mount src=$TRAVIS_BUILD_DIR/paper,target=/usr/src/tex,type=bind dxjoke/tectonic-docker /bin/sh -c "tectonic ms.tex"
+  - source .ci/build-paper.sh
