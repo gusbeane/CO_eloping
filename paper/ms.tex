@@ -128,6 +128,100 @@ F_{i,j} =
 \frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{,}
 \eeq
 
+\subsection{High Precision Regime}\label{ssec:high_precision}
+To build some intuition, we consider the idealized case with no interloper,
+foreground, or detector noise. This is achievable in principle, though
+certainly not with current techniques and instruments. In this case, we have
+that $\pstot{i} = \xps{i}{i}$. Therefore, we can modify the variance and
+covariance formulas from before as
+\beq
+\begin{split}
+\Var{\xps{i}{j}} &= 2(B_iB_j)^2 \denps(k)^2 \\
+\Cov{\xps{i}{j}}{\xps{i}{k}} &= 2B_i^2B_jB_k\denps(k)^2\text{.}
+\end{split}
+\eeq
+We are now in a position to write down a general formula for the covariance
+between two cross-spectra,
+\beq\label{eq:cov_kron}
+\frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} =
+\frac{1}{2B_l B_{l'} B_m B_{m'}}
+\left(\delta_{lm} + \delta_{lm'} + \delta_{l'm} + \delta_{l'm'} -
+\delta_{lm}\delta_{l'm'} - \delta_{lm'}\delta_{l'm}\right)
+\frac{1}{\denps(k)^2}\text{,}
+\eeq
+where the $\delta_{lm}$ is the Kronecker delta, and same for $\delta_{l'm}$,
+etc. We can also similarly write down a formula for the power spectrum
+derivative as
+\beq\label{eq:ps_deriv}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
+= \left( B_l \delta_{il'} + B_{l'}\delta_{il} \right) \denps(k)\text{.}
+\eeq
+Combining the two results gives
+\beq\label{eq:cov_and_deriv}
+\begin{split}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}&
+\frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} 
+\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\\ 
+&= 
+\frac{(B_l \delta_{il'} + B_{l'} \delta_{il})(B_m \delta_{jm'} + B_{m'} \delta_{jm})}
+{2 B_l B_{l'} B_m B_{m'}}
+\left(\delta_{lm} + \delta_{lm'} + \delta_{l'm} + \delta_{l'm'}
+-\delta_{lm}\delta_{l'm'} - \delta_{lm'}\delta_{l'm}\right)\text{.}
+\end{split}
+\eeq
+Note that this product is independent of $k$. As a result, we can pull it out of the integral in Equation~\ref{eq:fisher4}. We can then perform that integral. If we then define
+\begin{equation*}
+\tilde{V}_k \equiv \frac{k_{\text{max}}^3}{6\pi^2} V_{\text{surv}}\text{,}
+\end{equation*}
+then we can write the Fisher matrix as
+\beq
+F_{i,j} = \frac{\tilde{V}_k}{4}
+\sum_{\substack{l,l'\\l \neq l'}} \sum_{\substack{m,m'\\m \neq m'}}
+\frac{(B_l \delta_{il'} + B_{l'} \delta_{il})(B_m \delta_{jm'} + B_{m'} \delta_{jm})}
+{2 B_l B_{l'} B_m B_{m'}}
+\left(\delta_{lm} + \delta_{lm'} + \delta_{l'm} + \delta_{l'm'}
+-\delta_{lm}\delta_{l'm'} - \delta_{lm'}\delta_{l'm}\right)\text{.}
+\eeq
+
+Since the factor that comes before the $(\delta_{lm} + \delta_{lm'} +
+\delta_{l'm} + \delta_{l'm'})$ term is symmetric under $l\rightarrow l'$ and
+$m\rightarrow m'$, we can replace it by $4\delta_{lm}$. One can show by direct
+computation that the $\delta_{lm}\delta_{l'm'}$ and $\delta_{lm'}\delta_{l'm}$
+terms vanish, and so we can write
+\beq
+F_{i,j} = \tilde{V}_k
+\sum_{\substack{l,l'\\l \neq l'}} \sum_{\substack{m,m'\\m \neq m'}}
+\frac{(B_l \delta_{il'} + B_{l'} \delta_{il})(B_m \delta_{jm'} + B_{m'} \delta_{jm})}
+{2 B_l B_{l'} B_m B_{m'}}
+\delta_{lm}\text{.}
+\eeq
+It is then possible to show that
+\beq\label{eq:fisher_perfect}
+    F_{i,j}=\frac{\tilde{V}_k}{2B_iB_j} \times
+    \begin{cases}
+         N(N-1) & \text{if $i=j$} \\
+         3N-4 &\text{if $i\neq j$} \\
+    \end{cases}
+\eeq
+where $N$ is the number of lines being considered. This can be inverted by
+guessing a functional form after working out a few test cases to give
+\beq\label{eq:cov_perfect}
+    C_{i,j} = (F^{-1})_{i,j}=\frac{B_iB_j}{2\tilde{V}_k\left[(N-2)(N-1)\right]^2} \times
+    \begin{cases}
+         4N^2 - 11N + 8 & \text{if $i=j$} \\
+         4-3N &\text{if $i\neq j$} \\
+    \end{cases}
+\eeq
+Note that the diagonal elements scale like $1/N^2$ while the off-diagonal
+elements scale like $1/N^3$. What this means is that in the large $N$ limit,
+the covariance matrix approaches diagonality. In particular, we can write that
+\beq\label{eq:cov_perfect_largeN}
+C_{i,j} \rightarrow \frac{2B_i^2}{N^2 \tilde{V}_k} \delta_{ij}\text{.}
+\eeq
+Note that this is equivalent to a perfect auto-spectrum measurement of volume
+$N^2 V_{\text{surv}}$. Therefore, with $N$ measurements of a volume
+$V_{\text{surv}}$, one can have the constraining power of a volume $N^2
+V_{\text{surv}}$!
 
 \section{CO Measurements} \label{sec:co_measurements}
 \subsection{CO Modelling} \label{ssec:co_modelling}
