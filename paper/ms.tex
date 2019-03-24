@@ -103,6 +103,31 @@ that is model dependent. Only considering modes up to a $k_{\text{max}}$ is
 analogous to a similar procedure in galaxy surveys where only large-scale
 information up to a $k_{\text{max}}$ where linear theory is applicable is used.
 
+The Fisher matrix for our measurement is
+\beq\label{eq:fisher}
+F_{i,j} = 
+\int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{\substack{l,l'\\l > l'}} \sum_{\substack{m,m'\\m > m'}}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
+\frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} 
+\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{,}
+\eeq
+where $l$, $l'$, $m$, and $m'$ sum over all lines being considered. Note that
+we can make the substitution
+\begin{equation*}
+\sum_{\substack{l,l'\\l > l'}} \rightarrow 
+\frac{1}{2} \sum_{\substack{l,l'\\l \neq l'}}\text{,}
+\end{equation*}
+without changing the value of the Fisher matrix. Thus it will be easier to compute
+\beq\label{eq:fisher4}
+F_{i,j} = 
+\frac{1}{4} \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{\substack{l,l'\\l \neq l'}} \sum_{\substack{m,m'\\m \neq m'}}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
+\frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} 
+\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{,}
+\eeq
+
 
 \section{CO Measurements} \label{sec:co_measurements}
 \subsection{CO Modelling} \label{ssec:co_modelling}
