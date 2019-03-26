@@ -2,12 +2,17 @@ import numpy as np
 from scipy.stats import chi2
 
 class threefield(object):
-    def __init__(self, z, Blist, Nlist, kmax, cosmo, kmin=1E-3, nint=1000):
+    def __init__(self, z, Blist, Nlist, kmax, Vsurv, cosmo, kmin=1E-3, nint=1000,
+                 noisedominated=True, whitenoise=True):
         
+        if not noisedominated or not whitenoise:
+            raise NotImplementedError()
+
         # store some parameters
         self.kmin, self.kmax = kmin, kmax
         self.z, self.nint = z, nint
-        self.cosmo = cosmo
+        self.Vsurv, self.cosmo = Vsurv, cosmo
+        self.noisedominated, self.whitenoise = noisedominated, whitenoise
 
         # construct linear matter power spectrum
         self.klist, self.Pklist = self._gen_lin_ps_(self.kmin, self.kmax, 
@@ -17,6 +22,8 @@ class threefield(object):
         self.Blist, self.Nlist, self.nparam = self._check_BN_param_(Blist, Nlist)
 
         self.fmat = self._gen_fmat_(self.Blist, self.Nlist, self.klist, self.Pklist, 
+                                    self.Vsurv, self.nparam, self.nint,
+                                    self.noisedominated, self.whitenoise)
 
     def _gen_lin_ps_(self, kmin, kmax, nint, cosmo):
         klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
@@ -34,6 +41,31 @@ class threefield(object):
         nparam = len(Blist)
         return Blist, Nlist, nparam
 
+    def _compute_Vk_noisedom_whitenoise_(self, klist, Pklist, Vsurv):
+        integrand = np.divide(np.square(klist*Pklist), 2.*np.pi**2)
+        Vk = np.trapz(integrand, klist)
+        return Vsurv*Vk
+
+    def _fmat_offdiag_noisedom_whitenoise_(self, i, j, Blist, Nlist):
+        return (Blist[i]*Blist[j])/(Nlist[i]*Nlist[j])
+
+    def _fmat_diag_noisedom_whitenoise_(self, i, Blist, Nlist):
+        tosum = np.square(Blist)/(Nlist[i]*Nlist)
+        tosum[i] = 0
+        return np.sum(tosum)
+
+    def _gen_fmat_(self, Blist, Nlist, klist, Pklist, Vsurv, nparam, nint,
+                   noisedominated, whitenoise):
+        if noisedominated and whitenoise:
+            fisher = np.zeros((nparam, nparam))
+            Vk = self._compute_Vk_noisedom_whitenoise_(klist, Pklist, Vsurv)
+            for i in range(nparam):
+                for j in range(nparam):
+                    if i==j:
+                        fisher[i][j] = self._fmat_diag_noisedom_whitenoise_(i, Blist, Nlist)
+                    else:
+                        fisher[i][j] = self._fmat_offdiag_noisedom_whitenoise_(i, j, Blist, Nlist)
+            return Vk*fisher
 
 class chisq(object):
     def __init__(self, B1, B2, B3, cov_mat):
@@ -116,5 +148,6 @@ if __name__ == '__main__':
     # Blist, Nlist = gen_Blist_Nlist(3, 28, kmax, z, lines, survey, cosmo)
     Blist = [1, 2, 3]
     Nlist = [1, 2, 3]
+    Vsurv = 1
 
-    tf = threefield(z, Blist, Nlist, kmax, cosmo)
+    tf = threefield(z, Blist, Nlist, kmax, Vsurv, cosmo)
