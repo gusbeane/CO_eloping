@@ -82,7 +82,7 @@ hydrogen residing in the diffuse intergalactic medium (IGM).
 We describe the multi-field approach in full generality and state some
 results. First, we assume a measurement of each of $\xps{i}{j}$. The relevant
 variance and covariances are \citep[e.g.][]{2015JCAP...03..034V}
-\beq
+\beq\label{eq:var_cov}
 \begin{split}
 \Var{\xps{i}{j}} &= \xps{i}{j}^2 + \pstot{i}\pstot{j} \\
 \Cov{\xps{i}{j}}{\xps{i}{k}} &= \pstot{i}\xps{j}{k} +
@@ -118,7 +118,8 @@ we can make the substitution
 \sum_{\substack{l,l'\\l > l'}} \rightarrow 
 \frac{1}{2} \sum_{\substack{l,l'\\l \neq l'}}\text{,}
 \end{equation*}
-without changing the value of the Fisher matrix. Thus it will be easier to compute
+without changing the value of the Fisher matrix. Thus it will sometimes be
+easier to compute
 \beq\label{eq:fisher4}
 F_{i,j} = 
 \frac{1}{4} \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
