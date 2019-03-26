@@ -129,11 +129,71 @@ F_{i,j} =
 \frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{,}
 \eeq
 
+\subsection{Noise-limited Regime} \label{ssec:noise_limited}
+We consider the noise-limited regime. In this case, we assume that $N_i \gg
+P_i$, so that Equation~\ref{eq:var_cov} reduces to
+\beq \label{eq:var_cov_noise}
 \begin{split}
+\Var{\xps{i}{j}} &= N_iN_j \\
+\Cov{\xps{i}{j}}{\xps{i}{k}} &= 0 \text{.}
 \end{split}
 \eeq
+We will also assume a white noise spectrum, so that each $N_i$ is a constant
+value. In this case, the computation of the Fisher matrix is quite simple. In
+fact, we can rewrite it as
+\beq\label{eq:fisher_noisedom}
+F_{i,j} = 
+\int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{\substack{l,l'\\l > l'}}
 \frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
+\frac{1}{\Var{\hat{P}_{l,l'}(k)}}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_j}\text{.}
 \eeq
+For a diagonal element, we can see that we will only get terms when $l=i$ or $l'=i$. Therefore
+\beq\label{eq:fisher_noisedom2}
+F_{i,i} = 
+\int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{\substack{l\neq i}}
+\frac{B_l^2}{N_iN_l}\denps(k)^2\text{.}
+\eeq
+Since we are assuming a white noise power spectrum, if we define
+\begin{equation*}
+V_k = \int \frac{\text{d}k\,k^2}{2\pi^2} \denps(k)^2 V_{\text{surv}}\text{,}
+\end{equation*}
+then we can simplify Equation~\ref{eq:fisher_noisedom2} to
+\beq\label{eq:fisher_noisedom_diag}
+F_{i,i} = 
+V_k
+\sum_{\substack{l\neq i}}
+\frac{B_l^2}{N_iN_l}\text{.}
+\eeq
+For the off-diagonal case, we can see that the only term that will contribute
+is when $l=i$ and $l'=j$, or vice-versa. Therefore, we have that
+\beq\label{eq:fisher_noisedom_offdiag}
+F_{i,j} = V_k
+\frac{B_iB_j}{N_iN_j}\text{.}
+\eeq
+Note that as the number of fields increases, the diagonal elements become much
+larger than the off-diagonal elements, assuming the magnitudes of all the
+$B_i$'s and $N_i$'s are roughly similar. Therefore, the Fisher matrix becomes
+approximately diagonal, as does the covariance matrix, and the errors on the
+$B_i$'s become uncorrelated. This matches our naive expectation that
+considering additional fields should reduce the degeneracies between each
+$B_i$.
+
+\Gus{Inverting}
+
+In the case of three fields labeled $1$, $2$, and $3$, we can explicitly write
+down the Fisher matrix as
+\beq
+F = V_k
+\begin{pmatrix}
+\frac{B_2^2}{N_1N_2}+\frac{B_3^2}{N_1N_3} & \frac{B_1B_2}{N_1N_2} & \frac{B_1B_3}{N_1N_3} \\
+\frac{B_2B_1}{N_2N_1} & \frac{B_3^2}{N_2N_3}+\frac{B_1^2}{N_2N_1} & \frac{B_2B_3}{N_2N_3} \\
+\frac{B_3B_1}{N_3N_1} & \frac{B_3B_2}{N_3N_2} & \frac{B_1^2}{N_3N_1}+\frac{B_2^2}{N_3N_2}\text{.}
+\end{pmatrix}
+\eeq
+
 
 
 \section{CO Measurements} \label{sec:co_measurements}
