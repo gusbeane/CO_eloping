@@ -158,7 +158,7 @@ F_{i,i} =
 \eeq
 Since we are assuming a white noise power spectrum, if we define
 \begin{equation*}
-V_k = \int \frac{\text{d}k\,k^2}{2\pi^2} \denps(k)^2 V_{\text{surv}}\text{,}
+V_k \equiv \int \frac{\text{d}k\,k^2}{2\pi^2} \denps(k)^2 V_{\text{surv}}\text{,}
 \end{equation*}
 then we can simplify Equation~\ref{eq:fisher_noisedom2} to
 \beq\label{eq:fisher_noisedom_diag}
@@ -180,6 +180,26 @@ approximately diagonal, as does the covariance matrix, and the errors on the
 $B_i$'s become uncorrelated. This matches our naive expectation that
 considering additional fields should reduce the degeneracies between each
 $B_i$.
+
+Consider the extremely trivial case such that $B_i = B$ and $N_i = N$ for all
+lines $i$. In this case, if we have $n_l$ lines, the Fisher matrix reduces to
+\beq\label{eq:fisher_supertrivial}
+        F_{i,j} = V_k \frac{B^2}{N^2} \times
+        \begin{cases}
+             n_l-1 & \text{if $i=j$} \\
+             1 &\text{if $i\neq j$} \\
+        \end{cases}\text{.}
+\eeq
+In the large $n_l$ limit, the Fisher matrix becomes diagonal, and we can
+therefore write the covariance matrix as
+\beq\label{eq:cov_supertrivial_largen}
+C_{i,j} = \frac{N^2}{V_k B^2} \frac{1}{n_l-1} \delta_{ij}\text{,}
+\eeq
+where $\delta_{ij}$ is the Kronecker delta. This leads us to the conclusion
+that in the noise-dominated regime where each line has comparable
+$\text{S}/\text{N}$, the constraining power on each line $i$ scales as
+$1/n_l$. In other words, one can improve the constraint on $B_i$ without
+executing additional observations of line $i$.
 
 \Gus{Inverting}
 
