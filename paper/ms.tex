@@ -251,11 +251,83 @@ F = V_k
 \begin{pmatrix}
 \frac{B_2^2}{N_1N_2}+\frac{B_3^2}{N_1N_3} & \frac{B_1B_2}{N_1N_2} & \frac{B_1B_3}{N_1N_3} \\
 \frac{B_2B_1}{N_2N_1} & \frac{B_3^2}{N_2N_3}+\frac{B_1^2}{N_2N_1} & \frac{B_2B_3}{N_2N_3} \\
-\frac{B_3B_1}{N_3N_1} & \frac{B_3B_2}{N_3N_2} & \frac{B_1^2}{N_3N_1}+\frac{B_2^2}{N_3N_2}\text{.}
+\frac{B_3B_1}{N_3N_1} & \frac{B_3B_2}{N_3N_2} & \frac{B_1^2}{N_3N_1}+\frac{B_2^2}{N_3N_2}
 \end{pmatrix}
+\text{.}
 \eeq
+We can also write down the covariance matrix on the bias factors as
+\beq
+C = F^{-1} = \frac{1}{4V_k}
+\begin{pmatrix}
+\frac{B_1^2N_2N_3 + B_2^2N_3N_1 + B_3^2N_1N_2}{B_2^2B_3^2} & \frac{-B_1^2N_2N_3 - B_2^2N_3N_1 + B_3^2N_1N_2}{B_1B_2B_3^2} & \frac{-B_1^2N_2N_3 + B_2^2N_3N_1 - B_3^2N_1N_2}{B_1B_2^2B_3} \\
+\frac{-B_1^2N_2N_3 - B_2^2N_3N_1 + B_3^2N_1N_2}{B_1B_2B_3^2} & \frac{B_1^2N_2N_3 + B_2^2N_3N_1 + B_3^2N_1N_2}{B_3^2B_1^2} & \frac{B_1^2N_2N_3 - B_2^2N_3N_1 - B_3^2N_1N_2}{B_1^2B_2B_3} \\
+\frac{B_1^2N_2N_3 - B_2^2N_3N_1 - B_3^2N_1N_2}{B_1^2B_2B_3} & \frac{B_1^2N_2N_3 - B_2^2N_3N_1 - B_3^2N_1N_2}{B_1^2B_2B_3} & \frac{B_1^2N_2N_3 + B_2^2N_3N_1 + B_3^2N_1N_2}{B_1^2B_2^2}
+\end{pmatrix}
+\text{.}
+\eeq
+The diagonal elements show that
+\beq
+\begin{split}
+C_{1,1} = \sigma_{B_1}^2 &= \frac{1}{4V_k} \left( B_1^2 \frac{N_2N_3}{B_2^2B_3^2} + N_1(\frac{N_2}{B_2^2} + \frac{N_3}{B_3^2}) \right) \\
+\implies \frac{\sigma_{B_1}^2}{B_1^2} &= \frac{1}{4V_k} \left( \frac{N_1N_2}{B_1^2B_2^2} + \frac{N_2N_3}{B_2^2B_3^2} + \frac{N_3N_1}{B_3^2B_1^2} \right)
+\end{split}
+\eeq
+Note that this equation disagrees with Equation~\ref{eq:snr_nlgg1} because in
+that case we assumed $n_l \gg 1$ and therefore ignored the off-diagonal
+elements of the Fisher matrix, whereas here $n_l=3$. The symmetry of this
+equation also leads us to the conclusion that
+\beq
+\frac{\sigma_{B_1}^2}{B_1^2} = \frac{\sigma_{B_2}^2}{B_2^2} = 
+\frac{\sigma_{B_3}^2}{B_3^2}\text{.}
+\eeq
+Unfortunately this convenient result only holds in the case $n_l=3$.
 
-
+In the three-field case, let us also consider the \SN{} here compared to the
+auto-spectrum case. This will be simpler to write if we introduce $\tilde{B}_i
+\equiv B_i^2/N_i$. Then
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+\frac{2}{\tilde{B}_1}
+\sqrt{\frac{\tilde{B}_1\tilde{B}_2\tilde{B}_3}{\tilde{B}_1 + \tilde{B}_2 + \tilde{B}_3}}
+\text{.}
+\eeq
+There are several interesting cases to consider with this formula. For starters, let us assume that each field is measured to the same precision, i.e. $\tilde{B}_1 = \tilde{B}_2 = \tilde{B}_3 = \tilde{B}$. In this case, we have that
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+\frac{2}{\sqrt{3}} \approx 1.15
+\text{.}
+\eeq
+So, the three-field approach gives a marginally better \SN{} than the
+auto-spectrum approach. Next, let us assume that the field $1$ has a much
+stronger signal strength than $2$ or $3$ --- i.e. $\tilde{B}_1 \gg
+\tilde{B}_2,\tilde{B}_3$. In this case we have that
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+2\frac{\sqrt{\tilde{B}_2\tilde{B}_3}}{\tilde{B}_1}\text{.}
+\eeq
+In this case we see that it is unlikely for the $\text{S}/\text{N}$ on $B_1$
+to be higher in the three-field case than in the auto-spectrum case. On the
+other hand, let us consider the case where one of the other lines is measured
+to much higher precision, e.g. $\tilde{B}_2 \gg \tilde{B}_1,\tilde{B}_3$. In
+this case, we have that
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+2\sqrt{\frac{\tilde{B}_3}{\tilde{B}_1}}\text{.}
+\eeq
+As long as field $1$ and $3$ are measured to comparable precision, a gain in
+the \SN{} of $\sim2$ is possible with the three-field approach. Finally, let
+us consider the most interesting case in which fields $2$ and $3$ are measured
+to much higher precision than field $1$ --- i.e. $\tilde{B}_2, \tilde{B}_3 \gg
+\tilde{B}_1$. For simplicity let us also assume that $\tilde{B}_2 \approx
+\tilde{B}_3 = \tilde{B}$. In this case, we have that
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+\sqrt{2}\sqrt{\frac{\tilde{B}}{\tilde{B}_1}}
+\text{.}
+\eeq
+As a result, we can see that if two lines are measured with strong precision,
+then we can strongly boost the \SN{} of a third, weakly measured line with the
+three-field approach.
 
 \section{CO Measurements} \label{sec:co_measurements}
 \subsection{CO Modelling} \label{ssec:co_modelling}
