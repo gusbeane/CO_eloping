@@ -1,6 +1,6 @@
 import numpy as np 
 
-from threefield import gen_fisher_matrix, gen_Vk
+from threefield import threefield
 import CO_data
 from colossus.cosmology import cosmology
 
@@ -40,5 +40,4 @@ Nlist = np.array(Nlist)
 
 Vsurv = CO_data.calc_Vsurv(nuobs[0], nuemit[0], bandwidth, CO_data.survey_area[survey], cosmo)
 
-fish = gen_fisher_matrix(Blist[0], Blist[1], Blist[2],
-                         Nlist[0], Nlist[1], Nlist[2], kmax, Vsurv)
+tf = threefield(zobs, Blist, Nlist, kmax, Vsurv, cosmo)
