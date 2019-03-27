@@ -15,7 +15,7 @@ class threefield(object):
         self.noisedominated, self.whitenoise = noisedominated, whitenoise
 
         # construct linear matter power spectrum
-        self.klist, self.Pklist = self._gen_lin_ps_(self.kmin, self.kmax, 
+        self.klist, self.Pklist = self._gen_lin_ps_(self.z, self.kmin, self.kmax, 
                                                     self.nint, self.cosmo)
 
         # check Blist, Nlist, make sure lengths match
@@ -25,9 +25,9 @@ class threefield(object):
                                     self.Vsurv, self.nparam, self.nint,
                                     self.noisedominated, self.whitenoise)
 
-    def _gen_lin_ps_(self, kmin, kmax, nint, cosmo):
+    def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo):
         klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
-        Pklist = cosmo.matterPowerSpectrum(klist*cosmo.h, z)
+        Pklist = cosmo.matterPowerSpectrum(klist/cosmo.h, z)
         Pklist /= cosmo.h**3
 
         return klist, Pklist
