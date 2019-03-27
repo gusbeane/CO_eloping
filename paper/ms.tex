@@ -157,7 +157,8 @@ F_{i,j} =
 \frac{1}{\Var{\hat{P}_{l,l'}(k)}}
 \frac{\partial \hat{P}_{l,l'}(k)}{\partial B_j}\text{.}
 \eeq
-For a diagonal element, we can see that we will only get terms when $l=i$ or $l'=i$. Therefore
+For a diagonal element, we can see that we will only get terms when $l=i$ or
+$l'=i$. Therefore
 \beq\label{eq:fisher_noisedom2}
 F_{i,i} = 
 \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
@@ -205,9 +206,41 @@ C_{i,j} = \frac{N^2}{V_k B^2} \frac{1}{n_l-1} \delta_{ij}\text{,}
 \eeq
 where $\delta_{ij}$ is the Kronecker delta. This leads us to the conclusion
 that in the noise-dominated regime where each line has comparable
-$\text{S}/\text{N}$, the constraining power on each line $i$ scales as
-$1/n_l$. In other words, one can improve the constraint on $B_i$ without
-executing additional observations of line $i$.
+\SN{}, then the \SN{} on the bias factor of each
+line can be written as
+\beq
+\SN(B) =
+\frac{B^2}{N} \sqrt{V_k(n_l-1)}
+\eeq
+
+Now let us consider a slightly more general case where $n_l \gg 1$ but we
+allow each $B_i$ and $N_i$ to be any value, each of which has $B_i^2/N_i$ to
+be of comparable value. In this case, we can approximate the Fisher matrix as
+diagonal and write
+\beq\label{eq:fisher_BiNi_samemag}
+F_{i,j} = \frac{V_k}{N_i}\delta_{ij}
+\sum_{\substack{l\neq i}}
+\frac{B_l^2}{N_l}\text{.}
+\eeq
+Inversion of this matrix is trivial, and we can therefore write down the
+$\text{S}/\text{N}$ on each bias factor as
+\beq\label{eq:snr_nlgg1}
+\text{S}/\text{N}(B_i) = \frac{B_i}{\sqrt{N_i}}
+\sqrt{V_k} \left( \sum_{l\neq i} \frac{B_l^2}{N_l}\right)^{1/2}
+\text{.}
+\eeq
+Now, suppose that of the lines $l\neq i$ one of them --- say, line $j$ --- is
+measured to much higher precision than the other lines. Then the sum is
+approximated by just the term with $l=j$, and we can approximate the \SN{}
+{$\text{S}/\text{N}$} on $B_i$ as
+\beq
+\SN(B_i) \approx \frac{B_iB_j}{\sqrt{N_iN_j}}\sqrt{V_k}\text{.}
+\eeq
+Now, compare this to the \SN{} one would expect from the auto-spectrum:
+\beq
+\frac{\SN(B_i,\text{multi-field})}{\SN(B_i,\text{auto-spectrum})} =
+\frac{B_j/\sqrt{N_j}}{B_i/\sqrt{N_i}}
+\eeq
 
 \Gus{Inverting}
 
