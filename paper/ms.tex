@@ -127,8 +127,15 @@ F_{i,j} =
 \sum_{\substack{l,l'\\l \neq l'}} \sum_{\substack{m,m'\\m \neq m'}}
 \frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
 \frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} 
-\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{,}
+\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{.}
 \eeq
+We also note that a perfect auto-spectrum measurement will have a limit to the
+precision of a $B_i$ as
+\beq\label{eq:Bi_auto_snr}
+\text{S}/\text{N}(B_i) = \frac{B_i^2}{\sqrt{N_i}}\sqrt{V_k}\text{.}
+\eeq
+This will be useful to compare to the $\text{S}/\text{N}$ we will compute for
+the multi-field approach.
 
 \subsection{Noise-limited Regime} \label{ssec:noise_limited}
 We consider the noise-limited regime. In this case, we assume that $N_i \gg
