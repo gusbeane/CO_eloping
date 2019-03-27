@@ -67,6 +67,9 @@ class threefield(object):
                         fisher[i][j] = self._fmat_offdiag_noisedom_whitenoise_(i, j, Blist, Nlist)
             return Vk*fisher
 
+# class naive_snr(object):
+#     def __init__(self, z, B, N, kmax, )
+
 class chisq(object):
     def __init__(self, B1, B2, B3, cov_mat):
         self.B1 = B1
