@@ -5,6 +5,9 @@ from scipy.special import gamma
 
 # basic info about the lines
 
+CO_lines_names = ['1-0', '2-1', '3-2', '4-3', '5-4', '6-5', '7-6', '8-7', '9-8',
+                  '10-9', '11-10', '12-11', '13-12', 'CII']
+
 # CO line wavelengths in microns
 CO_lines_wave = {'1-0': 2610, '2-1': 1300, '3-2': 866, '4-3': 651,
                  '5-4': 521, '6-5': 434, '7-6': 372, '8-7': 325,
