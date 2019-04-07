@@ -9,7 +9,7 @@ from labellines import labelLine, labelLines
 
 import matplotlib as mpl
 from matplotlib import rc
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('font', **{'family': 'serif', 'serif': [r'\ttdefault']})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
@@ -52,8 +52,10 @@ for s,st,c in zip(surveys, surveys_tex, tb_c):
 ax.set_xlim(xrnge)
 ax.set_ylim(yrnge)
 
-ax.set_xlabel(r'$\text{\texttt{observed frequency [GHz]}}$')
-ax.set_ylabel(r'$\text{\texttt{emitted redshift}}$')
+# ax.set_xlabel(r'$\text{\texttt{observed frequency [GHz]}}$')
+# ax.set_ylabel(r'$\text{\texttt{emitted redshift}}$')
+ax.set_xlabel(r'$\text{observed frequency}\,[\,\text{GHz}\,]$')
+ax.set_ylabel(r'$\text{emitted redshift}$')
 
 fig.tight_layout()
 fig.savefig('freq_redshift_coverage.pdf')
