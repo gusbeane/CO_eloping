@@ -1,6 +1,6 @@
 import numpy as np 
 
-from threefield import threefield
+from threefield import threefield, corner_plot
 import CO_data
 from colossus.cosmology import cosmology
 
@@ -11,7 +11,7 @@ survey = 'CCAT-p'
 lines = ['6-5', '5-4', '4-3']
 
 b = 3
-bandwidth = 28
+bandwidth = 40
 kmax = 1
 
 zobs = 0.88
@@ -41,3 +41,11 @@ Nlist = np.array(Nlist)
 Vsurv = CO_data.calc_Vsurv(nuobs[0], nuemit[0], bandwidth, CO_data.survey_area[survey], cosmo)
 
 tf = threefield(zobs, Blist, Nlist, kmax, Vsurv, cosmo)
+
+fig, ax, tf = corner_plot(1, 1, 2, 3, 1, 1, 1, 1, 20, cosmo)
+fig.tight_layout()
+fig.savefig('corner_Nconstant.pdf')
+
+fig, ax, tf = corner_plot(1, 2, 2, 2, 1, 2, 3, 1, 20, cosmo)
+fig.tight_layout()
+fig.savefig('corner_Bconstant.pdf')
