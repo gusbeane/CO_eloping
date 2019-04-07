@@ -14,14 +14,14 @@ tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
 
 class threefield(object):
     def __init__(self, z, Blist, Nlist, kmax, Vsurv, cosmo, kmin=1E-3, nint=1000,
-                 noisedominated=True, whitenoise=True):
+                 noisedominated=True, whitenoise=True, Vk=None):
         
         if not noisedominated or not whitenoise:
             raise NotImplementedError()
 
         # store some parameters
         self.kmin, self.kmax = kmin, kmax
-        self.z, self.nint = z, nint
+        self.z, self.nint, self.Vk = z, nint, Vk
         self.Vsurv, self.cosmo = Vsurv, cosmo
         self.noisedominated, self.whitenoise = noisedominated, whitenoise
 
@@ -34,7 +34,7 @@ class threefield(object):
 
         self.fmat = self._gen_fmat_(self.Blist, self.Nlist, self.klist, self.Pklist, 
                                     self.Vsurv, self.nparam, self.nint,
-                                    self.noisedominated, self.whitenoise)
+                                    self.noisedominated, self.whitenoise, self.Vk)
 
     def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo):
         klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
@@ -66,10 +66,11 @@ class threefield(object):
         return np.sum(tosum)
 
     def _gen_fmat_(self, Blist, Nlist, klist, Pklist, Vsurv, nparam, nint,
-                   noisedominated, whitenoise):
+                   noisedominated, whitenoise, Vk=None):
         if noisedominated and whitenoise:
             fisher = np.zeros((nparam, nparam))
-            Vk = self._compute_Vk_noisedom_whitenoise_(klist, Pklist, Vsurv)
+            if Vk is None:
+                Vk = self._compute_Vk_noisedom_whitenoise_(klist, Pklist, Vsurv)
             for i in range(nparam):
                 for j in range(nparam):
                     if i==j:
