@@ -127,6 +127,117 @@ interloping/extraloping lines. While computing the Fisher matrix numerically
 is trivial, we will first work out the noise-dominated case which has a
 somewhat tractable analytic solution.
 
+\subsection{White Noise-dominated Regime} \label{ssec:tf_noisedom}
+In the white noise-dominated regime, we have that each $N_i \gg \ps{i}$ and
+$N_i(k) = N_i$. The relevant variance and covariance formulae then reduce to,
+\beq\label{eq:var_cov}
+\begin{split}
+\Var{\xps{i}{j}} &= N_iN_j \\
+\Cov{\xps{i}{j}}{\xps{i}{k}} &= N_i\xps{j}{k}\text{.}
+\end{split}
+\eeq
+Since the covariance formula is only first order in $N_i$, we will ignore
+contributions from terms like it and only consider terms involving
+$\Var{\xps{i}{j}}$. In such a case, the formula for the Fisher matrix
+simplifies greatly and we can write it down as:
+\beq \label{eq:fmat_tf_exp}
+F = V_k^2
+\begin{pmatrix}
+\frac{B_2^2}{N_1N_2}+\frac{B_3^2}{N_1N_3} & \frac{B_1B_2}{N_1N_2} & \frac{B_1B_3}{N_1N_3} \\
+\frac{B_2B_1}{N_2N_1} & \frac{B_3^2}{N_2N_3}+\frac{B_1^2}{N_2N_1} & \frac{B_2B_3}{N_2N_3} \\
+\frac{B_3B_1}{N_3N_1} & \frac{B_3B_2}{N_3N_2} & \frac{B_1^2}{N_3N_1}+\frac{B_2^2}{N_3N_2}
+\end{pmatrix}
+\text{,}
+\eeq
+where,
+\beq \label{eq:Vk}
+V_k^2 \equiv V_{\text{surv}} \int \frac{\text{d}k\,k^2}{2\pi^2} \denps(k)^2\text{.}
+\eeq
+
+Inverting this matrix we find that the covariance matrix of the bias factors is,
+\beq \label{eq:covmat_tf_wn}
+C = F^{-1} = \frac{1}{4V_k^2}
+\begin{pmatrix}
+\frac{B_1^2N_2N_3 + B_2^2N_3N_1 + B_3^2N_1N_2}{B_2^2B_3^2} & \frac{-B_1^2N_2N_3 - B_2^2N_3N_1 + B_3^2N_1N_2}{B_1B_2B_3^2} & \frac{-B_1^2N_2N_3 + B_2^2N_3N_1 - B_3^2N_1N_2}{B_1B_2^2B_3} \\
+\frac{-B_1^2N_2N_3 - B_2^2N_3N_1 + B_3^2N_1N_2}{B_1B_2B_3^2} & \frac{B_1^2N_2N_3 + B_2^2N_3N_1 + B_3^2N_1N_2}{B_3^2B_1^2} & \frac{B_1^2N_2N_3 - B_2^2N_3N_1 - B_3^2N_1N_2}{B_1^2B_2B_3} \\
+\frac{B_1^2N_2N_3 - B_2^2N_3N_1 - B_3^2N_1N_2}{B_1^2B_2B_3} & \frac{B_1^2N_2N_3 - B_2^2N_3N_1 - B_3^2N_1N_2}{B_1^2B_2B_3} & \frac{B_1^2N_2N_3 + B_2^2N_3N_1 + B_3^2N_1N_2}{B_1^2B_2^2}
+\end{pmatrix}
+\text{.}
+\eeq
+Examining the diagonal components we have that:
+\beq \label{eq:var_bias_tf_wn}
+\begin{split}
+C_{1,1} = \sigma_{B_1}^2 &= \frac{1}{4V_k^2} \left( B_1^2 \frac{N_2N_3}{B_2^2B_3^2} + N_1(\frac{N_2}{B_2^2} + \frac{N_3}{B_3^2}) \right) \\
+\implies \frac{\sigma_{B_1}^2}{B_1^2} &= \frac{1}{4V_k^2} \left( \frac{N_1N_2}{B_1^2B_2^2} + \frac{N_2N_3}{B_2^2B_3^2} + \frac{N_3N_1}{B_3^2B_1^2} \right)\text{.}
+\end{split}
+\eeq
+The symmetry of this result implies that,
+\beq \label{eq:frac_error_same}
+\frac{\sigma_{B_1}^2}{B_1^2} = \frac{\sigma_{B_2}^2}{B_2^2} = 
+\frac{\sigma_{B_3}^2}{B_3^2}\text{.}
+\eeq
+Unfortunately the surprising result that the fractional error on each line is
+the same only holds in the three field case.
+
+Now we wish to consider how the \SN{} on each $B_i$ from the various
+cross-spectra is related to the \SN{} in the auto-spectrum case. We first
+write down the \SN{} from the auto-spectrum in the white-noise dominated
+regime:
+\beq \label{eq:autops_sn_wn}
+\SN(B_1, \text{auto-spectrum}) = \frac{B_1^2}{N_1} V_k
+\eeq
+
+Now, let us compare the \SN{} of the two approaches in various cases. This
+will be simpler to write if we introduce $\tilde{B}_i \equiv B_i^2/N_i$. Then,
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+\frac{2}{\tilde{B}_1}
+\sqrt{\frac{\tilde{B}_1\tilde{B}_2\tilde{B}_3}{\tilde{B}_1 + \tilde{B}_2 + \tilde{B}_3}}
+\text{.}
+\eeq
+There are several interesting cases to consider with this formula. For
+starters, let us assume that each field is measured to the same precision,
+i.e. $\tilde{B}_1 = \tilde{B}_2 = \tilde{B}_3 = \tilde{B}$. In this case, we
+have that
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+\frac{2}{\sqrt{3}} \approx 1.15
+\text{.}
+\eeq
+So, the three-field approach gives a marginally better \SN{} than the
+auto-spectrum approach. This is encouraging, because it means that a tentative
+auto-spectrum measurement could be checked against the value derived from the
+three-field approach. Next, let us assume that the field $1$ has a much
+stronger signal strength than $2$ or $3$ --- i.e. $\tilde{B}_1 \gg
+\tilde{B}_2,\tilde{B}_3$. In this case we have that
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+2\frac{\sqrt{\tilde{B}_2\tilde{B}_3}}{\tilde{B}_1}\text{.}
+\eeq
+In this case we see that it is unlikely for the $\text{S}/\text{N}$ on $B_1$
+to be higher in the three-field case than in the auto-spectrum case. On the
+other hand, let us consider the case where one of the other lines is measured
+to much higher precision, e.g. $\tilde{B}_2 \gg \tilde{B}_1,\tilde{B}_3$. In
+this case, we have that
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+2\sqrt{\frac{\tilde{B}_3}{\tilde{B}_1}}\text{.}
+\eeq
+As long as field $1$ and $3$ are measured to comparable precision, a gain in
+the \SN{} of $\sim2$ is possible with the three-field approach. Finally, let
+us consider the most interesting case in which fields $2$ and $3$ are measured
+to much higher precision than field $1$ --- i.e. $\tilde{B}_2, \tilde{B}_3 \gg
+\tilde{B}_1$. For simplicity let us also assume that $\tilde{B}_2 \approx
+\tilde{B}_3 = \tilde{B}$. In this case, we have that
+\beq
+\frac{\SN(B_1, \text{three-field})}{\SN(B_1, \text{auto-spectrum})} =
+\sqrt{2}\sqrt{\frac{\tilde{B}}{\tilde{B}_1}}
+\text{.}
+\eeq
+As a result, if two lines are measured with strong precision, then we can
+strongly boost the \SN{} of a third, weakly measured line with the three-field
+approach.
+
 
 \bibliography{references}
 
