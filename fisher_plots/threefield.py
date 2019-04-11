@@ -79,39 +79,6 @@ class threefield(object):
                         fisher[i][j] = self._fmat_offdiag_noisedom_whitenoise_(i, j, Blist, Nlist)
             return Vk*fisher
 
-# class naive_snr(object):
-#     def __init__(self, z, B, N, kmax, )
-
-class chisq(object):
-    def __init__(self, B1, B2, B3, cov_mat):
-        self.B1 = B1
-        self.B2 = B2
-        self.B3 = B3
-
-        self.cov_mat = cov_mat
-
-        # self.sigma1 = np.sqrt(cov_mat[0][0])
-        # self.sigma2 = np.sqrt(cov_mat[1][1])
-        # self.sigma3 = np.sqrt(cov_mat[2][2])
-
-        # self.sigma12 = cov_mat[0][1]
-        # self.sigma23 = cov_mat[1][2]
-        # self.sigma31 = cov_mat[2][0]
-
-        # self.rho12 = self.sigma12/(self.sigma1*self.sigma2)
-        # self.rho23 = self.sigma23/(self.sigma2*self.sigma3)
-        # self.rho31 = self.sigma31/(self.sigma3*self.sigma1)
-
-    def __call__(self, b1, b2, b3, chisq):
-        d1 = b1 - self.B1
-        d2 = b2 - self.B2
-        d3 = b3 - self.B3
-        d = np.array([d1, d2, d3])
-
-        chisq = np.matmul(np.matmul(np.transpose(d), np.linalg.inv(self.cov_mat)), d)
-        
-        return chisq
-
 def _gaussian_(x, mu, sig):
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))/(np.sqrt(2.*np.pi*np.square(sig)))
 
