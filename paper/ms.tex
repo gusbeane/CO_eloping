@@ -238,6 +238,43 @@ As a result, if two lines are measured with strong precision, then we can
 strongly boost the \SN{} of a third, weakly measured line with the three-field
 approach.
 
+\subsection{\CO{} Forecasts for CCAT-p and CONCERTO} \label{ssec:forecasts_tf}
+Armed with some intuition from the simple white noise-dominated case, we now
+turn to forecasting constraints that can be placed on the CO bias factors. Our
+modelling of the \CO{} intensity as a function of redshift follows
+\citet{2016ApJ...825..143L} and is outlined in Appendix~\ref{app:co_int}. We
+assume that $b_i=3$ for each CO line.
+
+\appendix
+\section{CO Intensity Modelling} \label{app:co_int}
+To model the statistical fluctuation and amplitude of the \CO{} intensity maps
+we follow \citet{2016ApJ...825..143L}, and briefly summarize the procedure
+here. We begin by assuming a Schechter form for the star formation rate
+function,
+\beq\label{eq:schechter}
+\phi(\SFR)\,\text{d}\SFR = \phi_*
+\left(\frac{\SFR}{\SFR_*}\right)^{\alpha}\exp{\left[-\frac{\SFR}{\SFR_*}\right]}
+\frac{\text{d}\SFR}{\SFR_*}
+\eeq
+where $\alpha$ is the faint-end slope, $\SFR_*$ is the characteristic
+star-formation rate, and $\phi_*$ is the characteristic number density. The
+average specific intensity in a line $l$ can be related to the comoving
+emissivity by \citep{2011ApJ...741...70L, 2013ApJ...768...15P},
+\beq\label{eq:emiss_to_int}
+\avg{I_l} = \frac{\epsilon_l}{4\pi \nu_{\text{rest},l}}\frac{c}{H(z)}\text{,}
+\eeq
+where $\nu_{\text{rest},l}$ is the rest-frame emission frequency and
+$\epsilon_l$ is the comoving emissivity, each of line $l$. Assuming a linear
+luminosity-SFR relation with a constant of proportionality of $L_0^l$, along
+with the Schechter form for the SFR function (Equation~\ref{eq:schechter}), it
+follows that \citep{2013ApJ...768...15P},
+\beq\label{eq:com_emiss}
+\epsilon_l = \phi_* L_0^{l}
+\frac{\SFR_*}{1\,\Msun\text{yr}^{-1}}\Gamma{(2+\alpha)}\text{.}
+\eeq
+We adopt the value of $L_0^{\CO}$ for each line transition from
+\citet{2010JCAP...11..016V}.
+
 
 \bibliography{references}
 
