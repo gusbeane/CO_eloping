@@ -71,6 +71,62 @@ Abstract.
 
 \section{Introduction}\label{sec:intro}
 
+\section{Three Field Approach}\label{sec:tf}
+We begin by considering the three field approach. We first start with this
+relatively simple case to gain some intuition for the \SN{} behavior when the
+cross-spectra of multiple lines are combined.
+
+We are concerned with the problem of estimating the power spectrum of each
+line only from the three cross-spectra. To be more concrete, we model each
+auto-spectrum and cross-spectrum as,
+\beq\label{eq:auto_xps}
+\begin{split}
+\ps{i}(k,z) &= B_i(z)^2 \denps(k,z) \\
+\xps{i}{j}(k,z) &= B_i(z) B_j(z) \denps(k,z)\text{,}
+\end{split}
+\eeq
+where $B_i(z) \equiv b_i(z) \avg{I_i}(z)$. We will generally suppress the
+redshift and $k$ arguments for brevity. We can model the auto-spectra and
+cross-spectra in this way only on sufficiently large scales, i.e. only when
+$k<\kmax$ for some value of $k_{\text{max}}$. The value of \kmax{} is set by
+two conditions. First, we must have that linear biasing is a good description
+for each field $i$. This way $B_i$ for each line will be independent of $k$.
+Second, for each pair of lines $(i,j)$ we must have that $\abs{r_{i,j}(k)} =
+1$ when $k<\kmax$.
+
+Eventually it will be desirable to place constraints on $\denps(k)$. For now,
+however, we simply wish to understand how well future experiments will be able
+to determine each of $B_i$ as a function of $z$. We can proceed simply by
+computing the relevant Fisher matrix:
+\beq\label{eq:fisher_tf}
+F_{i,j} = 
+\int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{\substack{l,l'\\l > l'}} \sum_{\substack{m,m'\\m > m'}}
+\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
+\frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} 
+\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{,}
+\eeq
+where the sum of $l$, $l'$, $m$, and $m'$ is over each of the three lines.
+Equation~\ref{eq:fisher_tf} can be readily modified to accomodate the case of
+more than three lines (by extending the summations to include these lines) and
+to accomodate the auto-spectra (by allowing $l=l'$ and $m=m'$ in the relevant
+summations). We will consider these cases in Sections~\Gus{x}~and~\Gus{y},
+respectively.
+
+For the variance and covariance of the power spectra, it can be shown that,
+\beq\label{eq:var_cov}
+\begin{split}
+\Var{\xps{i}{j}} &= \xps{i}{j}^2 + \pstot{i}\pstot{j} \\
+\Cov{\xps{i}{j}}{\xps{i}{k}} &= \pstot{i}\xps{j}{k} +
+\xps{i}{j}\xps{i}{k}\text{,}
+\end{split}
+\eeq
+where $\pstot{i} \equiv \ps{i} + N_i$. Note that $N_i$ contains contributions
+from instrument noise, residual foreground contamination, and
+interloping/extraloping lines. While computing the Fisher matrix numerically
+is trivial, we will first work out the noise-dominated case which has a
+somewhat tractable analytic solution.
+
 
 \bibliography{references}
 
