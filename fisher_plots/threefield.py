@@ -82,7 +82,7 @@ class threefield(object):
 def _gaussian_(x, mu, sig):
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))/(np.sqrt(2.*np.pi*np.square(sig)))
 
-def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None):
+def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm=False, intstr=False):
     if tf is not None:
         pass
     elif kmax is not None and Vk is not None:
@@ -102,9 +102,9 @@ def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None):
     dB1 = B1*fac
     dB2 = B2*fac
     dB3 = B3*fac
-    b1list = np.linspace(B1-dB1, B1+dB1, 1000)
-    b2list = np.linspace(B2-dB2, B2+dB2, 1000)
-    b3list = np.linspace(B3-dB3, B3+dB3, 1000)
+    b1list = np.linspace(B1-dB1, B1+dB1, 5000)
+    b2list = np.linspace(B2-dB2, B2+dB2, 5000)
+    b3list = np.linspace(B3-dB3, B3+dB3, 5000)
 
     b12_1, b12_2 = np.meshgrid(b1list, b2list)
     b23_2, b23_3 = np.meshgrid(b2list, b3list)
@@ -132,57 +132,96 @@ def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None):
     contour_list_23 = [delta1chisq+np.min(chisq_23), delta2chisq+np.min(chisq_23)]
     contour_list_31 = [delta1chisq+np.min(chisq_31), delta2chisq+np.min(chisq_31)]
 
-    fig = plt.figure(figsize=(5,6))
+    fig = plt.figure(figsize=(5,5.2))
     ax1 = plt.subplot(3, 3, 1)
     ax2 = plt.subplot(3, 3, 5)
     ax3 = plt.subplot(3, 3, 9)
 
-    pb1list = _gaussian_(b1list, B1, np.sqrt(cov_mat[0][0]))
-    pb2list = _gaussian_(b2list, B2, np.sqrt(cov_mat[1][1]))
-    pb3list = _gaussian_(b3list, B3, np.sqrt(cov_mat[2][2]))
+    sig1 = np.sqrt(cov_mat[0][0])
+    sig2 = np.sqrt(cov_mat[1][1])
+    sig3 = np.sqrt(cov_mat[2][2])
 
-    ax1.plot(b1list, pb1list, c=tb_c[0])
-    ax2.plot(b2list, pb2list, c=tb_c[0])
-    ax3.plot(b3list, pb3list, c=tb_c[0])
+    pb1list = _gaussian_(b1list, B1, sig1)
+    pb2list = _gaussian_(b2list, B2, sig2)
+    pb3list = _gaussian_(b3list, B3, sig3)
+
+    if norm:
+        fac1, fac2, fac3 = B1, B2, B3
+    else:
+        fac1, fac2, fac3 = 1, 1, 1
+
+    ax1.plot(b1list/fac1, pb1list, c=tb_c[0])
+    ax2.plot(b2list/fac2, pb2list, c=tb_c[0])
+    ax3.plot(b3list/fac3, pb3list, c=tb_c[0])
+
+    ax1.axvline(B1/fac1, c=tb_c[0])
+    ax2.axvline(B2/fac2, c=tb_c[0])
+    ax3.axvline(B3/fac3, c=tb_c[0])
+    ax1.axvline((B1+sig1)/fac1, c=tb_c[0], ls='dashed', alpha=0.5)
+    ax2.axvline((B2+sig2)/fac2, c=tb_c[0], ls='dashed', alpha=0.5)
+    ax3.axvline((B3+sig3)/fac3, c=tb_c[0], ls='dashed', alpha=0.5)
+    ax1.axvline((B1-sig1)/fac1, c=tb_c[0], ls='dashed', alpha=0.5)
+    ax2.axvline((B2-sig2)/fac2, c=tb_c[0], ls='dashed', alpha=0.5)
+    ax3.axvline((B3-sig3)/fac3, c=tb_c[0], ls='dashed', alpha=0.5)
 
     ax12 = plt.subplot(3, 3, 4, sharex=ax1)
     ax23 = plt.subplot(3, 3, 8, sharex=ax2)
     ax31 = plt.subplot(3, 3, 7, sharex=ax1, sharey=ax23)
 
-    for bl,x in zip([b1list, b2list, b3list], [ax1, ax2, ax3]):
-        x.set_xlim([np.min(bl), np.max(bl)])
+    for bl,f,x in zip([b1list, b2list, b3list], [fac1,fac2,fac3],[ax1, ax2, ax3]):
+        x.set_xlim([np.min(bl)/f, np.max(bl)/f])
         x.set_yticklabels([])
+        x.set_ylim(bottom=0)
 
-    B1str = "{:.2E}".format(Blist[0])
-    B2str = "{:.2E}".format(Blist[1])
-    B3str = "{:.2E}".format(Blist[2])
-    N1str = "{:.2E}".format(N1)
-    N2str = "{:.2E}".format(N2)
-    N3str = "{:.2E}".format(N3)
+    if intstr:
+        B1str = str(round(Blist[0]))
+        B2str = str(round(Blist[1]))
+        B3str = str(round(Blist[2]))
+        N1str = str(round(Nlist[0]))
+        N2str = str(round(Nlist[1]))
+        N3str = str(round(Nlist[2]))
+    else:
+        B1str = "{:.2E}".format(Blist[0])
+        B2str = "{:.2E}".format(Blist[1])
+        B3str = "{:.2E}".format(Blist[2])
+        N1str = "{:.2E}".format(N1)
+        N2str = "{:.2E}".format(N2)
+        N3str = "{:.2E}".format(N3)
 
-    ax1.text(0.1, 1.4, r'$B_1^2='+B1str+r'$' , transform=ax1.transAxes)
-    ax1.text(0.1, 1.2, r'$N_1='+N1str+r'$' , transform=ax1.transAxes)
-    ax2.text(0.1, 1.4, r'$B_2^2='+B2str+r'$' , transform=ax2.transAxes)
-    ax2.text(0.1, 1.2, r'$N_2='+N2str+r'$' , transform=ax2.transAxes)
-    ax3.text(0.1, 1.4, r'$B_3^2='+B3str+r'$' , transform=ax3.transAxes)
-    ax3.text(0.1, 1.2, r'$N_3='+N3str+r'$' , transform=ax3.transAxes)
+    ax1.text(0.05, 1.2, r'$B_1^2='+B1str+r'$' , transform=ax1.transAxes, in_layout=True)
+    ax1.text(0.05, 1.05, r'$N_1='+N1str+r'$' , transform=ax1.transAxes, in_layout=True)
+    ax2.text(0.05, 1.2, r'$B_2^2='+B2str+r'$' , transform=ax2.transAxes, in_layout=False)
+    ax2.text(0.05, 1.05, r'$N_2='+N2str+r'$' , transform=ax2.transAxes, in_layout=False)
+    ax3.text(0.05, 1.2, r'$B_3^2='+B3str+r'$' , transform=ax3.transAxes, in_layout=False)
+    ax3.text(0.05, 1.05, r'$N_3='+N3str+r'$' , transform=ax3.transAxes, in_layout=False)
 
-    ax31.set_xlim([np.min(b1list), np.max(b1list)])
-    ax31.set_ylim([np.min(b3list), np.max(b3list)])
-    ax12.set_xlim([np.min(b1list), np.max(b1list)])
-    ax12.set_ylim([np.min(b2list), np.max(b2list)])
-    ax23.set_xlim([np.min(b2list), np.max(b2list)])
-    ax23.set_ylim([np.min(b3list), np.max(b3list)])
+    ax31.set_xlim([np.min(b1list)/fac1, np.max(b1list)/fac1])
+    ax31.set_ylim([np.min(b3list)/fac3, np.max(b3list)/fac3])
+    ax12.set_xlim([np.min(b1list)/fac1, np.max(b1list)/fac1])
+    ax12.set_ylim([np.min(b2list)/fac2, np.max(b2list)/fac2])
+    ax23.set_xlim([np.min(b2list)/fac2, np.max(b2list)/fac2])
+    ax23.set_ylim([np.min(b3list)/fac3, np.max(b3list)/fac3])
 
-    ax12.contour(b12_1, b12_2, chisq_12, levels=contour_list_12, colors=tb_c[0], linestyles=('solid', 'dashed'))
-    ax23.contour(b23_2, b23_3, chisq_23, levels=contour_list_23, colors=tb_c[0], linestyles=('solid', 'dashed'))
-    ax31.contour(b31_1, b31_3, chisq_31, levels=contour_list_31, colors=tb_c[0], linestyles=('solid', 'dashed'))
+    ax12.contour(b12_1/fac1, b12_2/fac2, chisq_12, levels=(contour_list_12[0],), colors=tb_c[0], linestyles=('solid',))
+    ax23.contour(b23_2/fac2, b23_3/fac3, chisq_23, levels=(contour_list_23[0],), colors=tb_c[0], linestyles=('solid',))
+    ax31.contour(b31_1/fac1, b31_3/fac3, chisq_31, levels=(contour_list_31[0],), colors=tb_c[0], linestyles=('solid',))
 
-    ax3.set_xlabel(r'$B_3$')
-    ax12.set_ylabel(r'$B_2$')
-    ax31.set_xlabel(r'$B_1$')
-    ax31.set_ylabel(r'$B_3$')
-    ax23.set_xlabel(r'$B_2$')
+    ax12.contour(b12_1/fac1, b12_2/fac2, chisq_12, levels=(contour_list_12[1],), colors=tb_c[0], alpha=0.5, linestyles=('solid',))
+    ax23.contour(b23_2/fac2, b23_3/fac3, chisq_23, levels=(contour_list_23[1],), colors=tb_c[0], alpha=0.5, linestyles=('solid',))
+    ax31.contour(b31_1/fac1, b31_3/fac3, chisq_31, levels=(contour_list_31[1],), colors=tb_c[0], alpha=0.5, linestyles=('solid',))
+    
+    if norm:
+        ax3.set_xlabel(r'$B_3/B_{3,\text{true}}$')
+        ax12.set_ylabel(r'$B_2/B_{2,\text{true}}$')
+        ax31.set_xlabel(r'$B_1/B_{1,\text{true}}$')
+        ax31.set_ylabel(r'$B_3/B_{3,\text{true}}$')
+        ax23.set_xlabel(r'$B_2/B_{2,\text{true}}$')
+    else:
+        ax3.set_xlabel(r'$B_3$')
+        ax12.set_ylabel(r'$B_2$')
+        ax31.set_xlabel(r'$B_1$')
+        ax31.set_ylabel(r'$B_3$')
+        ax23.set_xlabel(r'$B_2$')
 
     return fig, (ax12, ax23, ax31), chisq_12
 
