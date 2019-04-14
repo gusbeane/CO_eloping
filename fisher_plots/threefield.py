@@ -82,20 +82,29 @@ class threefield(object):
 def _gaussian_(x, mu, sig):
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))/(np.sqrt(2.*np.pi*np.square(sig)))
 
-def corner_plot(z, B1sq, B2sq, B3sq, N1, N2, N3, kmax, Vk, cosmo):
-    B1 = np.sqrt(B1sq)
-    B2 = np.sqrt(B2sq)
-    B3 = np.sqrt(B3sq)
-
-    Blist = np.array([B1, B2, B3])
-    Nlist = np.array([N1, N2, N3])
-    tf = threefield(z, Blist, Nlist, kmax, 1, cosmo, Vk=Vk)
+def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None):
+    if tf is not None:
+        pass
+    elif kmax is not None and Vk is not None:
+        tf = threefield(z, Blist, Nlist, kmax, 1, cosmo, Vk=Vk)
+    else:
+        raise Exception('tf is required or kmax and Vk are required')
 
     cov_mat = np.linalg.inv(tf.fmat)
 
-    b1list = np.linspace(B1-0.7, B1+0.7, 1000)
-    b2list = np.linspace(B2-0.7, B2+0.7, 1000)
-    b3list = np.linspace(B3-0.7, B3+0.7, 1000)
+    B1 = Blist[0]
+    B2 = Blist[1]
+    B3 = Blist[2]
+    N1 = Nlist[0]
+    N2 = Nlist[1]
+    N3 = Nlist[2]
+
+    dB1 = B1*fac
+    dB2 = B2*fac
+    dB3 = B3*fac
+    b1list = np.linspace(B1-dB1, B1+dB1, 1000)
+    b2list = np.linspace(B2-dB2, B2+dB2, 1000)
+    b3list = np.linspace(B3-dB3, B3+dB3, 1000)
 
     b12_1, b12_2 = np.meshgrid(b1list, b2list)
     b23_2, b23_3 = np.meshgrid(b2list, b3list)
@@ -123,7 +132,7 @@ def corner_plot(z, B1sq, B2sq, B3sq, N1, N2, N3, kmax, Vk, cosmo):
     contour_list_23 = [delta1chisq+np.min(chisq_23), delta2chisq+np.min(chisq_23)]
     contour_list_31 = [delta1chisq+np.min(chisq_31), delta2chisq+np.min(chisq_31)]
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(5,6))
     ax1 = plt.subplot(3, 3, 1)
     ax2 = plt.subplot(3, 3, 5)
     ax3 = plt.subplot(3, 3, 9)
@@ -142,15 +151,21 @@ def corner_plot(z, B1sq, B2sq, B3sq, N1, N2, N3, kmax, Vk, cosmo):
 
     for bl,x in zip([b1list, b2list, b3list], [ax1, ax2, ax3]):
         x.set_xlim([np.min(bl), np.max(bl)])
-        x.set_ylim([0, 5])
         x.set_yticklabels([])
 
-    ax1.text(0.68, 0.8, r'$B_1^2='+str(B1sq)+r'$' , transform=ax1.transAxes)
-    ax1.text(0.68, 0.6, r'$N_1='+str(N1)+r'$' , transform=ax1.transAxes)
-    ax2.text(0.68, 0.8, r'$B_2^2='+str(B2sq)+r'$' , transform=ax2.transAxes)
-    ax2.text(0.68, 0.6, r'$N_2='+str(N2)+r'$' , transform=ax2.transAxes)
-    ax3.text(0.68, 0.8, r'$B_3^2='+str(B3sq)+r'$' , transform=ax3.transAxes)
-    ax3.text(0.68, 0.6, r'$N_3='+str(N3)+r'$' , transform=ax3.transAxes)
+    B1str = "{:.2E}".format(Blist[0])
+    B2str = "{:.2E}".format(Blist[1])
+    B3str = "{:.2E}".format(Blist[2])
+    N1str = "{:.2E}".format(N1)
+    N2str = "{:.2E}".format(N2)
+    N3str = "{:.2E}".format(N3)
+
+    ax1.text(0.1, 1.4, r'$B_1^2='+B1str+r'$' , transform=ax1.transAxes)
+    ax1.text(0.1, 1.2, r'$N_1='+N1str+r'$' , transform=ax1.transAxes)
+    ax2.text(0.1, 1.4, r'$B_2^2='+B2str+r'$' , transform=ax2.transAxes)
+    ax2.text(0.1, 1.2, r'$N_2='+N2str+r'$' , transform=ax2.transAxes)
+    ax3.text(0.1, 1.4, r'$B_3^2='+B3str+r'$' , transform=ax3.transAxes)
+    ax3.text(0.1, 1.2, r'$N_3='+N3str+r'$' , transform=ax3.transAxes)
 
     ax31.set_xlim([np.min(b1list), np.max(b1list)])
     ax31.set_ylim([np.min(b3list), np.max(b3list)])
