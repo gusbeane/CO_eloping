@@ -11,7 +11,7 @@ survey = 'CCAT-p'
 lines = ['6-5', '5-4', '4-3']
 
 b = 3
-bandwidth = 40
+bandwidth = 60
 kmax = 1
 
 zobs = 0.88
@@ -40,12 +40,15 @@ Nlist = np.array(Nlist)
 
 Vsurv = CO_data.calc_Vsurv(nuobs[0], nuemit[0], bandwidth, CO_data.survey_area[survey], cosmo)
 
-tf = threefield(zobs, Blist, Nlist, kmax, Vsurv, cosmo)
-
-fig, ax, tf = corner_plot(1, 1, 2, 3, 1, 1, 1, 1, 20, cosmo)
+fig, ax, _ = corner_plot(1, np.array([1, 2, 3]), np.array([1, 1, 1]), cosmo, 0.5, kmax=1, Vk=20)
 fig.tight_layout()
 fig.savefig('corner_Nconstant.pdf')
 
-fig, ax, tf = corner_plot(1, 2, 2, 2, 1, 2, 3, 1, 20, cosmo)
+fig, ax, _ = corner_plot(1, np.array([2, 2, 2]), np.array([1, 2, 3]), cosmo, 0.5, kmax=1, Vk=20)
 fig.tight_layout()
 fig.savefig('corner_Bconstant.pdf')
+
+tf = threefield(zobs, Blist, Nlist, kmax, Vsurv, cosmo)
+fig, ax, _ = corner_plot(zobs, Blist, Nlist, cosmo, 1.75, tf=tf)
+fig.tight_layout()
+fig.savefig('CO.pdf')
