@@ -40,11 +40,11 @@ Nlist = np.array(Nlist)
 
 Vsurv = CO_data.calc_Vsurv(nuobs[0], nuemit[0], bandwidth, CO_data.survey_area[survey], cosmo)
 
-fig, ax, _ = corner_plot(1, np.array([1, 2, 3]), np.array([1, 1, 1]), cosmo, 0.5, kmax=1, Vk=20)
+fig, ax, _ = corner_plot(1, np.array([1, 2, 3]), np.array([1, 1, 1]), cosmo, 0.4, kmax=1, Vk=20)
 fig.tight_layout()
 fig.savefig('corner_Nconstant.pdf')
 
-fig, ax, _ = corner_plot(1, np.array([2, 2, 2]), np.array([1, 2, 3]), cosmo, 0.5, kmax=1, Vk=20)
+fig, ax, _ = corner_plot(1, np.array([2, 2, 2]), np.array([1, 2, 3]), cosmo, 0.4, kmax=1, Vk=20)
 fig.tight_layout()
 fig.savefig('corner_Bconstant.pdf')
 
