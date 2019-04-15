@@ -82,7 +82,8 @@ class threefield(object):
 def _gaussian_(x, mu, sig):
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))/(np.sqrt(2.*np.pi*np.square(sig)))
 
-def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm=False, intstr=False):
+def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm=False, labels=None, intstr=False, 
+                printtext=True):
     if tf is not None:
         pass
     elif kmax is not None and Vk is not None:
@@ -168,8 +169,12 @@ def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm
     ax23 = plt.subplot(3, 3, 8, sharex=ax2)
     ax31 = plt.subplot(3, 3, 7, sharex=ax1, sharey=ax23)
 
+    for x in [ax12, ax23, ax31]:
+        x.locator_params('x', nbins=5)
+
     for bl,f,x in zip([b1list, b2list, b3list], [fac1,fac2,fac3],[ax1, ax2, ax3]):
         x.set_xlim([np.min(bl)/f, np.max(bl)/f])
+        x.locator_params('x', nbins=5)
         x.set_yticklabels([])
         x.set_yticks([])
         x.set_ylim(bottom=0)
@@ -189,12 +194,13 @@ def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm
         N2str = "{:.2E}".format(N2)
         N3str = "{:.2E}".format(N3)
 
-    ax1.text(0.05, 1.2, r'$B_1^2='+B1str+r'$' , transform=ax1.transAxes, in_layout=True)
-    ax1.text(0.05, 1.05, r'$N_1='+N1str+r'$' , transform=ax1.transAxes, in_layout=True)
-    ax2.text(0.05, 1.2, r'$B_2^2='+B2str+r'$' , transform=ax2.transAxes, in_layout=False)
-    ax2.text(0.05, 1.05, r'$N_2='+N2str+r'$' , transform=ax2.transAxes, in_layout=False)
-    ax3.text(0.05, 1.2, r'$B_3^2='+B3str+r'$' , transform=ax3.transAxes, in_layout=False)
-    ax3.text(0.05, 1.05, r'$N_3='+N3str+r'$' , transform=ax3.transAxes, in_layout=False)
+    if printtext:
+        ax1.text(0.05, 1.2, r'$B_1^2='+B1str+r'$' , transform=ax1.transAxes, in_layout=True)
+        ax1.text(0.05, 1.05, r'$N_1='+N1str+r'$' ,  transform=ax1.transAxes, in_layout=True)
+        ax2.text(0.05, 1.2, r'$B_2^2='+B2str+r'$' , transform=ax2.transAxes, in_layout=False)
+        ax2.text(0.05, 1.05, r'$N_2='+N2str+r'$' ,  transform=ax2.transAxes, in_layout=False)
+        ax3.text(0.05, 1.2, r'$B_3^2='+B3str+r'$' , transform=ax3.transAxes, in_layout=False)
+        ax3.text(0.05, 1.05, r'$N_3='+N3str+r'$' ,  transform=ax3.transAxes, in_layout=False)
 
     ax31.set_xlim([np.min(b1list)/fac1, np.max(b1list)/fac1])
     ax31.set_ylim([np.min(b3list)/fac3, np.max(b3list)/fac3])
@@ -217,6 +223,12 @@ def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm
         ax31.set_xlabel(r'$B_1/B_{1,\text{true}}$')
         ax31.set_ylabel(r'$B_3/B_{3,\text{true}}$')
         ax23.set_xlabel(r'$B_2/B_{2,\text{true}}$')
+    elif labels is not None:
+        ax3.set_xlabel(labels[2])
+        ax12.set_ylabel(labels[1])
+        ax31.set_xlabel(labels[0])
+        ax31.set_ylabel(labels[2])
+        ax23.set_xlabel(labels[1])
     else:
         ax3.set_xlabel(r'$B_3$')
         ax12.set_ylabel(r'$B_2$')

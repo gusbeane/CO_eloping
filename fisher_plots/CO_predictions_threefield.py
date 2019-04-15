@@ -53,6 +53,13 @@ fig.tight_layout()
 fig.savefig('corner_Bconstant.pdf')
 
 tf = threefield(zobs, Blist, Nlist, kmax, Vsurv, cosmo)
-fig, ax, _ = corner_plot(zobs, Blist, Nlist, cosmo, 1.75, tf=tf)
+labels = [r'$B_{6-5}\,[\,\text{Jy}/\text{str}\,]$', r'$B_{5-4}\,[\,\text{Jy}/\text{str}\,]$', 
+          r'$B_{4-3}\,[\,\text{Jy}/\text{str}\,]$']
+fig, ax, _ = corner_plot(zobs, Blist, Nlist, cosmo, 1.75, tf=tf, labels=labels, printtext=False)
 fig.tight_layout()
 fig.savefig('CO.pdf')
+
+print('for CCAT-p, lines:', lines)
+print('Blist:', Blist)
+print('Nlist:', Nlist)
+
