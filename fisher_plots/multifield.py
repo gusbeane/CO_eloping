@@ -77,6 +77,9 @@ class threefield(object):
 
         return varij, covijk, np.square(Pij), PitotPjtot, PitotPjk, PijPik
 
+
+    def _gen_fmat_(self, Blist, Nlist, klist, Pklist, Vsurv)
+
 if __name__ == '__main__':
     from colossus.cosmology import cosmology
 
