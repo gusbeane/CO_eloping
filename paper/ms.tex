@@ -180,6 +180,41 @@ The symmetry of this result implies that,
 Unfortunately the surprising result that the fractional error on each line is
 the same only holds in the three field case.
 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics{fig/corner_Nconstant.pdf}
+\end{center}
+\caption{A toy corner plot showing the degeneracies between different lines
+with different intrinsic \SN{} ratios under the white-noise dominated
+assumption. We set $B_1^2 = 1$, $B_2^2 = 2$, and $B_3^2 = 3$ along with $N_1,
+N_2, N_3 = 100$ and $V_k^2 = 2\times10^6$. Since each line has the same value
+of $N$, the \SN{} of each line is driven by the value of $B_i$, with $B_3$
+having the highest intrinsic \SN{} and $B_1$ the lowest. We plot each axis as
+a fraction of the true value for each of $B_1$, $B_2$, and $B_3$, and see that
+the marginalized posterior on each bias factor is the same (\textit{diagonal
+panels}) as we expect from Equation~\ref{eq:frac_error_same}. There is a
+strong negative covariance between $B_2$ and $B_3$, a mildly negative
+covariance between $B_3$ and $B_1$, and a mildly positive covariance between
+$B_1$ and $B_2$. An explanation for this behavior is given in the text.}
+\label{fig:tf_Nconst}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics{fig/corner_Nconstant_Bhigher.pdf}
+\end{center}
+\caption{We perform the same procedure as in Figure~\ref{fig:tf_Nconst}, except
+now we slightly increase the intrinsic \SN{} of $B_2$ and $B_3$ by setting
+$B_2^2 = 4$ and $B_3^2 = 9$. The values for each $N_i$ and $V_k$ are the same
+as in Figure~\ref{fig:tf_Nconst}. We see that even though nothing about line
+$1$ has changed (i.e. no additional measurements of line $1$ have been made),
+the \SN{} on $B_1$ has improved because the fractional error on each line must
+be the same (Equation~\ref{eq:frac_error_same}). The degeneracies between the
+different lines discussed in Figure~\ref{fig:tf_Nconst} become stronger in
+this case.}
+\label{fig:tf_Nconst_Bhigher}
+\end{figure}
+
 Now we wish to consider how the \SN{} on each $B_i$ from the various
 cross-spectra is related to the \SN{} in the auto-spectrum case. We first
 write down the \SN{} from the auto-spectrum in the white-noise dominated
@@ -238,41 +273,6 @@ to much higher precision than field $1$ --- i.e. $\tilde{B}_2, \tilde{B}_3 \gg
 As a result, if two lines are measured with strong precision, then we can
 strongly boost the \SN{} of a third, weakly measured line with the three-field
 approach.
-
-\begin{figure}[h!]
-\begin{center}
-\includegraphics{fig/corner_Nconstant.pdf}
-\end{center}
-\caption{A toy corner plot showing the degeneracies between different lines
-with different intrinsic \SN{} ratios under the white-noise dominated
-assumption. We set $B_1^2 = 1$, $B_2^2 = 2$, and $B_3^2 = 3$ along with $N_1,
-N_2, N_3 = 100$ and $V_k^2 = 2\times10^6$. Since each line has the same value
-of $N$, the \SN{} of each line is driven by the value of $B_i$, with $B_3$
-having the highest intrinsic \SN{} and $B_1$ the lowest. We plot each axis as
-a fraction of the true value for each of $B_1$, $B_2$, and $B_3$, and see that
-the marginalized posterior on each bias factor is the same (\textit{diagonal
-panels}) as we expect from Equation~\ref{eq:frac_error_same}. There is a
-strong negative covariance between $B_2$ and $B_3$, a mildly negative
-covariance between $B_3$ and $B_1$, and a mildly positive covariance between
-$B_1$ and $B_2$. An explanation for this behavior is given in the text.}
-\label{fig:tf_Nconst}
-\end{figure}
-
-\begin{figure}[h!]
-\begin{center}
-\includegraphics{fig/corner_Nconstant_Bhigher.pdf}
-\end{center}
-\caption{We perform the same procedure as in Figure~\ref{fig:tf_Nconst}, except
-now we slightly increase the intrinsic \SN{} of $B_2$ and $B_3$ by setting
-$B_2^2 = 4$ and $B_3^2 = 9$. The values for each $N_i$ and $V_k$ are the same
-as in Figure~\ref{fig:tf_Nconst}. We see that even though nothing about line
-$1$ has changed (i.e. no additional measurements of line $1$ have been made),
-the \SN{} on $B_1$ has improved because the fractional error on each line must
-be the same (Equation~\ref{eq:frac_error_same}). The degeneracies between the
-different lines discussed in Figure~\ref{fig:tf_Nconst} become stronger in
-this case.}
-\label{fig:tf_Nconst_Bhigher}
-\end{figure}
 
 As an illustration, we construct a corner plot in Figure~\ref{fig:tf_Nconst}
 for the inferred bias values using toy values of $B_1^2 = 1$, $B_2^2 = 2$, and
