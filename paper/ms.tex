@@ -246,6 +246,14 @@ approach.
 \label{fig:tf_Nconst}
 \end{figure}
 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics{fig/corner_Nconstant_Bhigher.pdf}
+\end{center}
+\caption{Caption.}
+\label{fig:tf_Nconst_Bhigher}
+\end{figure}
+
 As an illustration, we construct a corner plot in Figure~\ref{fig:tf_Nconst}
 for the inferred bias values using toy values of $B_1^2 = 1$, $B_2^2 = 2$, and
 $B_3^2 = 3$ along with $N_1, N_2, N_3 = 100$ and $V_k^2 = 2\times10^6$. The
@@ -287,6 +295,19 @@ increase $B_2$ to keep $B_2B_3$ constant. Since the priors on $B_2B_3$ and
 $B_3B_1$ are tighter than on $B_1B_2$, these constraints dominate, and as a
 result increasing $B_1$ means that we must increase $B_2$. Therefore, $B_1$
 and $B_2$ are positively correlated.
+
+In Figure~\ref{fig:tf_Nconst_Bhigher} we perform the same procedure, except
+now we slightly increase the intrinsic \SN{} of $B_2$ and $B_3$ by setting
+$B_2^2 = 4$ and $B_3^2 = 9$. Notice that we have not changed the intrinsic
+\SN{} of field $1$. Two things are apparent. First, the strength of the
+correlations that we discussed for Figure~\ref{fig:tf_Nconst} are stronger,
+since the different priors have become more disparate in their relative
+tightness. Second, as a consequence of the fractional \SN{} being the same for
+each line, we see that the error on $B_1$ has become much smaller (and
+similarly for $B_2$ and $B_3$). However, this is particularly interesting in
+the case of $B_1$. No modification has been made to it's intrinsic \SN{} (or,
+in other words, no additional measurements have been made of line $1$).
+Nonetheless, the \SN{} on the inferred $B_1$ has become higher.
 
 \subsection{\CO{} Forecasts for CCAT-p and CONCERTO} \label{ssec:forecasts_tf}
 Armed with some intuition from the simple white noise-dominated case, we now
