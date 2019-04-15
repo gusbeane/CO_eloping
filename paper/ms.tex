@@ -238,6 +238,56 @@ As a result, if two lines are measured with strong precision, then we can
 strongly boost the \SN{} of a third, weakly measured line with the three-field
 approach.
 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics{fig/corner_Nconstant.pdf}
+\end{center}
+\caption{Caption.}
+\label{fig:tf_Nconst}
+\end{figure}
+
+As an illustration, we construct a corner plot in Figure~\ref{fig:tf_Nconst}
+for the inferred bias values using toy values of $B_1^2 = 1$, $B_2^2 = 2$, and
+$B_3^2 = 3$ along with $N_1, N_2, N_3 = 100$ and $V_k^2 = 2\times10^6$. The
+units here are arbitrary. Since each line has the same value of $N$, the \SN{}
+of each line is driven by the value of $B_i$, with $B_3$ having the highest
+intrinsic \SN{} and $B_1$ the lowest. We make the same assumptions that go
+into Equation~\ref{eq:fmat_tf_exp}, i.e. that we are white-noise dominated in
+each line.B y plotting each axis as a fraction of the true value for each of
+$B_1$, $B_2$, and $B_3$, we see that the marginalized posterior on each bias
+factor is the same (\textit{diagonal panels}). This is equivalent to saying
+that the fractional error on each bias factor is the same for each line.
+
+Moving on to the joint panels in Figure~\ref{fig:tf_Nconst}, we see that there
+is a strong negative covariance between $B_2$ and $B_3$, a mildly negative
+covariance between $B_3$ and $B_1$, and a mildly positive covariance between
+$B_1$ and $B_2$. We can intuitively understand this behavior by considering
+that each cross-spectrum places a prior on the product $B_1B_2$, $B_2B_3$, and
+$B_3B_1$, with the width of that prior given by the \SN{} of that
+cross-spectrum.
+
+In this toy scenario, the product $B_2B_3$ will have the highest \SN{} and
+therefore the tightest prior, and therefore to account for a larger $B_3$ one
+must have a smaller $B_2$ (and vice-versa), hence the strong negative
+correlation. We can make this argument for the relationship between $B_2$ and
+$B_3$ since $B_2B_3$ has the tightest prior, and therefore the products
+$B_1B_2$ and $B_3B_1$ are not relevant, since they have wider priors. The next
+tighest prior is on the product $B_3B_1$. Increasing the value of $B_1$ means
+that we must decrease the value of $B_3$ to keep $B_3B_1$ constant. Since
+$B_2B_3$ has a tighter prior, this means that we must also decrease the value
+of $B_2$. The prior on $B_1B_2$ is irrelevant, since it is wider than the
+other two.\footnote{Although in this case, to keep $B_1B_2$ constant while
+increasing $B_1$ we would need to decrease $B_2$ anyways.}
+
+Finally, we turn to the product $B_1B_2$, which has the widest prior of the
+three products. If we increase $B_1$, then naively we would need to decrease
+$B_2$. However, increasing $B_1$ also means that we must decrease $B_3$ to
+keep $B_3B_1$ constant. Furthermore, decreasing $B_3$ means that we must
+increase $B_2$ to keep $B_2B_3$ constant. Since the priors on $B_2B_3$ and
+$B_3B_1$ are tighter than on $B_1B_2$, these constraints dominate, and as a
+result increasing $B_1$ means that we must increase $B_2$. Therefore, $B_1$
+and $B_2$ are positively correlated.
+
 \subsection{\CO{} Forecasts for CCAT-p and CONCERTO} \label{ssec:forecasts_tf}
 Armed with some intuition from the simple white noise-dominated case, we now
 turn to forecasting constraints that can be placed on the CO bias factors. Our
