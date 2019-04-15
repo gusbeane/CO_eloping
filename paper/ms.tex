@@ -329,14 +329,66 @@ the case of $B_1$. No modification has been made to it's intrinsic \SN{} (or,
 in other words, no additional measurements have been made of line $1$).
 Nonetheless, the \SN{} on the inferred $B_1$ has become higher.
 
-\subsection{\CO{} Forecasts for CCAT-p and CONCERTO} \label{ssec:forecasts_tf}
+\subsection{Three-field \CO{} Forecasts for CCAT-p} \label{ssec:forecasts_tf}
+\begin{figure}[h!]
+\begin{center}
+\includegraphics{fig/CO_tf.pdf}
+\end{center}
+\caption{Constraints that can be placed on the fluctuations of the \CO(6-5),
+\CO(5-4), and \CO(4-3) lines with CCAT-p at $z_{\text{obs}} = 0.88$. This
+Figure is purely illustrative, as we do not include noise contributions from
+residual foreground contamination or interloper/extraloper lines. According to
+our simple \CO{} model, we have that $B_{\text{6-5}}, B_{\text{5-4}},
+B_{\text{4-3}} = 151, 183, 232\,\text{Jy}/\text{str}$. Using the instrumental
+specifications in \citet{2018arXiv181208135C}, we find that $N_{\text{6-5}},
+N_{\text{5-4}}, N_{\text{4-3}} = 5.1\times10^9, 1.4\times10^9,
+5.4\times10^8\,\left(\text{Jy}/\text{str}\right)^2\,\Mpc^3$. We find the same
+behavior as in Figure~\ref{fig:tf_Nconst}, where the best-measured line is
+strongly negatively degenerate with the second-best measured line, the
+best-measured and worst-measured are slightly negatively degenerate, and the
+second-best measured line and the worst-measured are slightly positively
+degenerate. }
+\label{fig:CO_tf}
+\end{figure}
+
 Armed with some intuition from the simple white noise-dominated case, we now
-turn to forecasting constraints that can be placed on the CO bias factors. Our
-modelling of the \CO{} intensity as a function of redshift follows
+turn to forecasting constraints that can be placed on the \CO{} bias factors.
+Our modelling of the \CO{} intensity as a function of redshift follows
 \citet{2016ApJ...825..143L} and is outlined in Appendix~\ref{app:co_int}. We
 assume that $b_i=3$ for each \CO{} line.
 
+At $z=0.88$, the lines \CO(6-5) ($\nu_{\text{obs}} = 367\,\MHz$), \CO(5-4)
+($\nu_{\text{obs}} = 306\,\MHz$), and \CO(4-3) ($\nu_{\text{obs}} =
+245\,\MHz$) are all in the observing band of CCAT-p. We only include
+instrumental noise for this Subsection, neglecting foreground and
+interloper/extraloper contamination. We simply want to place the result of
+Section~\ref{ssec:tf_noisedom} in the context of an actual experiment.
 
+Using our \CO{} modelling, we find that $B_{\text{6-5}}, B_{\text{5-4}},
+B_{\text{4-3}} = 151, 183, 232\,\text{Jy}/\text{str}$ at $z=0.88$. Using the
+instrumental specifications in \citet{2018arXiv181208135C}, we find that
+$N_{\text{6-5}}, N_{\text{5-4}}, N_{\text{4-3}} = 5.1\times10^9,
+1.4\times10^9, 5.4\times10^8\,\left(\text{Jy}/\text{str}\right)^2\,\Mpc^3$. We
+assume the instrumental noise is white, but note that in this case the
+noise-dominated assumption is mildly broken. The worst case is that of the
+\CO(4-3) line, where on a scale of $k\sim0.01\,\Mpc^{-1}$ we have that
+$P_{\text{4-3}} \sim 3N_{\text{4-3}}$. Again, this Subsection is purely
+illustrative, and we will rectify these assumptions in the next Section.
+
+We assume a bandwidth of $60\,\MHz$ for the line \CO(6-5). This corresponds to
+a redshift band of width $\Delta z = 0.16$. We resize the \CO(5-4) and
+\CO(4-3) bands to have the same extent in redshift space, which means slightly
+scaling the frequency bandwidth --- in this case, the bandwidths are $50$ and
+$40\,\MHz$, respectively. In Figure~\ref{fig:CO_tf} we show the constraints
+that can be placed on each of $B_{\text{6-5}}$, $B_{\text{5-4}}$, and
+$B_{\text{4-3}}$. The line \CO(4-3) is measured to the best intrinsic \SN{},
+followed by \CO(5-4) and then \CO(6-5). We find the same behavior as in
+Section~\ref{ssec:tf_noisedom}, where the best-measured line is strongly
+negatively degenerate with the second-best measured line, the best-measured
+and worst-measured are slightly negatively degenerate, and the second-best
+measured line and the worst-measured are slightly positively degenerate.
+However, we find that CCAT-p should be able to make a measurement of each bias
+factor using the three-field approach.
 
 \section{Random Thoughts}
 Like doing a matched filter??? Trying to understand intuitively why this
