@@ -242,7 +242,18 @@ approach.
 \begin{center}
 \includegraphics{fig/corner_Nconstant.pdf}
 \end{center}
-\caption{Caption.}
+\caption{A toy corner plot showing the degeneracies between different lines
+with different intrinsic \SN{} ratios under the white-noise dominated
+assumption. We set $B_1^2 = 1$, $B_2^2 = 2$, and $B_3^2 = 3$ along with $N_1,
+N_2, N_3 = 100$ and $V_k^2 = 2\times10^6$. Since each line has the same value
+of $N$, the \SN{} of each line is driven by the value of $B_i$, with $B_3$
+having the highest intrinsic \SN{} and $B_1$ the lowest. We plot each axis as
+a fraction of the true value for each of $B_1$, $B_2$, and $B_3$, and see that
+the marginalized posterior on each bias factor is the same (\textit{diagonal
+panels}) as we expect from Equation~\ref{eq:frac_error_same}. There is a
+strong negative covariance between $B_2$ and $B_3$, a mildly negative
+covariance between $B_3$ and $B_1$, and a mildly positive covariance between
+$B_1$ and $B_2$. An explanation for this behavior is given in the text.}
 \label{fig:tf_Nconst}
 \end{figure}
 
@@ -250,7 +261,15 @@ approach.
 \begin{center}
 \includegraphics{fig/corner_Nconstant_Bhigher.pdf}
 \end{center}
-\caption{Caption.}
+\caption{We perform the same procedure as in Figure~\ref{fig:tf_Nconst}, except
+now we slightly increase the intrinsic \SN{} of $B_2$ and $B_3$ by setting
+$B_2^2 = 4$ and $B_3^2 = 9$. The values for each $N_i$ and $V_k$ are the same
+as in Figure~\ref{fig:tf_Nconst}. We see that even though nothing about line
+$1$ has changed (i.e. no additional measurements of line $1$ have been made),
+the \SN{} on $B_1$ has improved because the fractional error on each line must
+be the same (Equation~\ref{eq:frac_error_same}). The degeneracies between the
+different lines discussed in Figure~\ref{fig:tf_Nconst} become stronger in
+this case.}
 \label{fig:tf_Nconst_Bhigher}
 \end{figure}
 
@@ -261,7 +280,7 @@ units here are arbitrary. Since each line has the same value of $N$, the \SN{}
 of each line is driven by the value of $B_i$, with $B_3$ having the highest
 intrinsic \SN{} and $B_1$ the lowest. We make the same assumptions that go
 into Equation~\ref{eq:fmat_tf_exp}, i.e. that we are white-noise dominated in
-each line.B y plotting each axis as a fraction of the true value for each of
+each line. By plotting each axis as a fraction of the true value for each of
 $B_1$, $B_2$, and $B_3$, we see that the marginalized posterior on each bias
 factor is the same (\textit{diagonal panels}). This is equivalent to saying
 that the fractional error on each bias factor is the same for each line.
@@ -315,6 +334,8 @@ turn to forecasting constraints that can be placed on the CO bias factors. Our
 modelling of the \CO{} intensity as a function of redshift follows
 \citet{2016ApJ...825..143L} and is outlined in Appendix~\ref{app:co_int}. We
 assume that $b_i=3$ for each \CO{} line.
+
+
 
 \section{Random Thoughts}
 Like doing a matched filter??? Trying to understand intuitively why this
