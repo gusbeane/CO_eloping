@@ -171,6 +171,7 @@ def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm
     for bl,f,x in zip([b1list, b2list, b3list], [fac1,fac2,fac3],[ax1, ax2, ax3]):
         x.set_xlim([np.min(bl)/f, np.max(bl)/f])
         x.set_yticklabels([])
+        x.set_yticks([])
         x.set_ylim(bottom=0)
 
     if intstr:
