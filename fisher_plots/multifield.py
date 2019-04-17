@@ -28,6 +28,7 @@ class threefield(object):
                                     self.noisedominated, self.whitenoise, self.Vk)
 
     def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo):
+        # generate linear power spectrum from colossus
         klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
         Pklist = cosmo.matterPowerSpectrum(klist/cosmo.h, z)
         Pklist /= cosmo.h**3
@@ -43,17 +44,21 @@ class threefield(object):
         nparam = len(Blist)
         return Blist, Nlist, nparam
 
-    def _gen_varij_covijk_(Blist, Nlist, Pklist, nparam, nint):
-        BPi = np.reshape(Blist, (nparam, 1))
-        PkPi = np.reshape(Pklist, (1, nint))
-        PkPi = np.repeat(PkPi, nparam, axis=0)
-        Pi = np.multiply(np.square(BPi), PkPi)
-
+    def _gen_Pij_(self, Blist, Pklist, nparam, nint):
         Bouter = np.reshape(np.outer(Blist, Blist), (nparam, nparam, 1))
         Pkrepeat = np.reshape(Pklist, (1, 1, nint))
         Pkrepeat = np.repeat(Pkrepeat, nparam, axis=0)
         Pkrepeat = np.repeat(Pkrepeat, nparam, axis=1)
         Pij = np.multiply(Bouter, Pkrepeat)
+        return Pij
+
+    def _gen_varij_covijk_(self, Blist, Nlist, Pklist, nparam, nint):
+        BPi = np.reshape(Blist, (nparam, 1))
+        PkPi = np.reshape(Pklist, (1, nint))
+        PkPi = np.repeat(PkPi, nparam, axis=0)
+        Pi = np.multiply(np.square(BPi), PkPi)
+
+        Pij = self._gen_Pij_(Blist, Pklist, nparam, nint)
 
         NPitot = np.reshape(Nlist, (nparam, 1))
         NPitot = np.repeat(NPitot, nint, axis=1)
