@@ -1,7 +1,7 @@
 import numpy as np
 import itertools
 
-class threefield(object):
+class multifield(object):
     def __init__(self, z, Blist, Nlist, kmax, Vsurv, cosmo, kmin=1E-3, nint=1000,
                  whitenoise=True, Vk=None):
         
