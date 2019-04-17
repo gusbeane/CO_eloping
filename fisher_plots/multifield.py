@@ -70,26 +70,36 @@ class multifield(object):
         return PijoverBk
 
     def _gen_varij_covijk_(self, Blist, Nlist, Pklist, nparam, nint):
+        # generate Pi
         BPi = np.reshape(Blist, (nparam, 1))
         PkPi = np.reshape(Pklist, (1, nint))
         PkPi = np.repeat(PkPi, nparam, axis=0)
         Pi = np.multiply(np.square(BPi), PkPi)
 
+        # generate Pij, gets its own function because its fancy
         Pij = self._gen_Pij_(Blist, Pklist, nparam, nint)
 
+        # generate Pitot - still only white noise
         NPitot = np.reshape(Nlist, (nparam, 1))
         NPitot = np.repeat(NPitot, nint, axis=1)
         Pitot = np.add(Pi, NPitot)
 
+        # multiply the tots together
         t = np.multiply.outer(Pitot, Pitot)
         PitotPjtot = np.diagonal(t, axis1=1, axis2=3)
 
+        # compute varij
         varij = np.add(np.square(Pij), PitotPjtot)
 
+        # # # # # # # # # # # # # # # # # # # 
+        # on to cov
+        # # # # # # # # # # # # # # # # # # #
 
+        #generate Pitot*Pjk
         t = np.multiply.outer(Pitot, Pij)
         PitotPjk = np.diagonal(t, axis1=1, axis2=4)
 
+        # generate PijPik
         t = np.multiply.outer(Pij, Pij)
         t2 = np.diagonal(t, axis1=0, axis2=3)
         t3 = np.diagonal(t2, axis1=1, axis2=3)
@@ -97,7 +107,7 @@ class multifield(object):
 
         covijk = np.add(PitotPjk, PijPik)
 
-        return varij, covijk, np.square(Pij), PitotPjtot, PitotPjk, PijPik
+        return varij, covijk
 
 
     def _gen_fmat_(self, Blist, Nlist, klist, Pklist, Vsurv)
