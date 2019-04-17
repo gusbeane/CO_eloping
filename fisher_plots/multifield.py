@@ -20,6 +20,8 @@ class threefield(object):
         # check Blist, Nlist, make sure lengths match
         self.Blist, self.Nlist, self.nparam = self._check_BN_param_(Blist, Nlist)
 
+        self.dPijdBk = self._gen_dPdB_(self.Blist, self.Pklist, self.nparam, self.nint)
+
         self.varij, self.covijk = self._gen_var_cov_(self.Blist, self.Nlist, self.Pklist,
                                                      self.nparam, self.nint)
 
@@ -51,6 +53,21 @@ class threefield(object):
         Pkrepeat = np.repeat(Pkrepeat, nparam, axis=1)
         Pij = np.multiply(Bouter, Pkrepeat)
         return Pij
+
+    def _gen_dPdB_(self, Blist, Pklist, nparam, nint):
+        Pij = self._gen_Pij_(Blist, Pklist, nparam, nint)
+
+        PijoverBk = np.divide.outer(Pij, Blist)
+        PijoverBk = np.swapaxes(PijoverBk, axis1=2, axis2=3)
+
+        # will fix this ugly for loop later
+        for i in range(nparam):
+            for j in range(nparam):
+                for k in range(nparam):
+                    if i != k and j != k:
+                        PijoverBk[i][j][k] = 0.0
+
+        return PijoverBk
 
     def _gen_varij_covijk_(self, Blist, Nlist, Pklist, nparam, nint):
         BPi = np.reshape(Blist, (nparam, 1))
