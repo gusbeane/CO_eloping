@@ -3,9 +3,9 @@ import itertools
 
 class threefield(object):
     def __init__(self, z, Blist, Nlist, kmax, Vsurv, cosmo, kmin=1E-3, nint=1000,
-                 noisedominated=True, whitenoise=True, Vk=None):
+                 whitenoise=True, Vk=None):
         
-        if not noisedominated or not whitenoise:
+        if not whitenoise:
             raise NotImplementedError()
 
         # store some parameters
