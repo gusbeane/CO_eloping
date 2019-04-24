@@ -20,6 +20,8 @@ class multifield(object):
         # check Blist, Nlist, make sure lengths match
         self.Blist, self.Nlist, self.nparam = self._check_BN_param_(Blist, Nlist)
 
+        self.pairlist, self.npair = self._gen_pairlist_(self.nparam)
+
         self.dPijdBk = self._gen_dPdB_(self.Blist, self.Pklist, self.nparam, self.nint)
 
         self.varij, self.covijk = self._gen_var_cov_(self.Blist, self.Nlist, self.Pklist,
@@ -44,6 +46,11 @@ class multifield(object):
                                                     
         nparam = len(Blist)
         return Blist, Nlist, nparam
+
+    def _gen_pairlist_(self, nparam):
+        l = list(range(nparam))
+        c = itertools.combinations(l, 2)
+        return list(c), len(list(c))
 
     def _gen_Pij_(self, Blist, Pklist, nparam, nint):
         Bouter = np.reshape(np.outer(Blist, Blist), (nparam, nparam, 1))
