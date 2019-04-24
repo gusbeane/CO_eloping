@@ -25,9 +25,8 @@ class multifield(object):
         self.varij, self.covijk = self._gen_var_cov_(self.Blist, self.Nlist, self.Pklist,
                                                      self.nparam, self.nint)
 
-        self.fmat = self._gen_fmat_(self.Blist, self.Nlist, self.klist, self.Pklist, 
-                                    self.Vsurv, self.nparam, self.nint,
-                                    self.noisedominated, self.whitenoise, self.Vk)
+        self.fmat = self._gen_fmat_(self.dPijdBk, self.varij, self.covijk, self.klist,
+                                    self.Vsurv, self.nparam, self.nint)
 
     def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo):
         # generate linear power spectrum from colossus
@@ -69,7 +68,7 @@ class multifield(object):
 
         return PijoverBk
 
-    def _gen_varij_covijk_(self, Blist, Nlist, Pklist, nparam, nint):
+    def _gen_var_cov_(self, Blist, Nlist, Pklist, nparam, nint):
         # generate Pi
         BPi = np.reshape(Blist, (nparam, 1))
         PkPi = np.reshape(Pklist, (1, nint))
@@ -109,8 +108,79 @@ class multifield(object):
 
         return varij, covijk
 
+    def _check_fmat_indices_(self, i, j, l, lp, m, mp):
+        if l != i and lp != i:
+            return False
+        
+        if m != j and mp != j:
+            return False
 
-    def _gen_fmat_(self, Blist, Nlist, klist, Pklist, Vsurv)
+        if l == m or l == mp:
+            return True
+        elif lp == m or lp == mp:
+            return True
+        else:
+            return False
+
+    def _fmat_term_(self, dPijdBk, varij, covijk, i, j, l, lp, m, mp):
+        if l != i and lp != i:
+            return 0.0
+        
+        if m != j and mp != j:
+            return 0.0
+
+        if l != m and l != mp:
+            return 0.0
+        elif lp != mp and l != m:
+            return 0.0
+
+        t1 = dPijdBk[l][lp][i]
+        t3 = dPijdBk[m][mp][j]
+
+        if l == m and lp == mp:
+            t2 = varij[l][lp]
+        elif l == mp and lp == m:
+            t2 = varij[l][lp]
+        else:
+            return 0.0
+        # if l == m and lp != mp:
+        #     t2 = covijk[l][lp][mp]
+        # elif l == mp and lp != m:
+        #     t2 = covijk[l][lp][m]
+        # elif lp == m and l != mp:
+        #     t2 = covijk[lp][l][mp]
+        # elif lp == mp and l != m:
+        #     t2 = covijk[lp][l][m]
+        # else:
+        #     raise Exception("Something went wrong with the index gymnastics in _fmat_term_")
+
+        return t1*t3/t2
+
+    def _integrate_fmat_(self, klist, Vsurv, fmat, nparam, nint):
+        k = np.reshape(klist, (1, 1, nint))
+        k = np.repeat(k, nparam, axis=0)
+        k = np.repeat(k, nparam, axis=1)
+
+        factor = np.square(k) * Vsurv / (2. * np.pi**2)
+
+        return np.trapz(np.multiply(factor, fmat), klist, axis=2)
+
+    def _gen_fmat_(self, dPijdBk, varij, covijk, klist, Vsurv, nparam, nint):
+        fmat = np.zeros((nparam, nparam, nint))
+
+        for i in range(nparam):
+            for j in range(nparam):
+                for l in range(nparam):
+                    for lp in range(nparam):
+                        for m in range(nparam):
+                            for mp in range(nparam):
+                                fmat[i][j] += self._fmat_term_(dPijdBk, varij, covijk, 
+                                                               i, j, l, lp, m, mp)
+
+        fmat = self._integrate_fmat_(klist, Vsurv, fmat, nparam, nint)
+
+        return fmat
+
 
 if __name__ == '__main__':
     from colossus.cosmology import cosmology
