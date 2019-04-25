@@ -66,6 +66,14 @@ class multifield(object):
                     dPldBi[j][i] = 0
         return dPldBi
 
+    def _gen_Pij_(self, Blist, Pklist, nparam, nint):
+        Bouter = np.reshape(np.outer(Blist, Blist), (nparam, nparam, 1))
+        Pkrepeat = np.reshape(Pklist, (1, 1, nint))
+        Pkrepeat = np.repeat(Pkrepeat, nparam, axis=0)
+        Pkrepeat = np.repeat(Pkrepeat, nparam, axis=1)
+        Pij = np.multiply(Bouter, Pkrepeat)
+        return Pij
+
     def _gen_cov_(self, Blist, Nlist, Pklist, pairlist, nparam, npair, nint):
         # generate Pi
         BPi = np.reshape(Blist, (nparam, 1))
