@@ -54,28 +54,17 @@ class multifield(object):
         npair = len(pairlist)
         return pairlist, npair
 
-    def _gen_Pij_(self, Blist, Pklist, nparam, nint):
-        Bouter = np.reshape(np.outer(Blist, Blist), (nparam, nparam, 1))
-        Pkrepeat = np.reshape(Pklist, (1, 1, nint))
-        Pkrepeat = np.repeat(Pkrepeat, nparam, axis=0)
-        Pkrepeat = np.repeat(Pkrepeat, nparam, axis=1)
-        Pij = np.multiply(Bouter, Pkrepeat)
-        return Pij
-
-    def _gen_dPdB_(self, Blist, Pklist, nparam, nint):
-        Pij = self._gen_Pij_(Blist, Pklist, nparam, nint)
-
-        PijoverBk = np.divide.outer(Pij, Blist)
-        PijoverBk = np.swapaxes(PijoverBk, axis1=2, axis2=3)
-
-        # will fix this ugly for loop later
-        for i in range(nparam):
+    def _gen_dPdB_(self, Blist, Pklist, pairlist, npair, nparam, nint):
+        dPldBi = np.zeros((nparam, npair, nint))
+        for i, (p1, p2) in enumerate(pairlist):
             for j in range(nparam):
-                for k in range(nparam):
-                    if i != k and j != k:
-                        PijoverBk[i][j][k] = 0.0
-
-        return PijoverBk
+                if j == p1:
+                    dPldBi[j][i] = Blist[p2] * Pklist
+                elif j == p2:
+                    dPldBi[j][i] = Blist[p1] * Pklist
+                else:
+                    dPldBi[j][i] = 0
+        return dPldBi
 
     def _gen_cov_(self, Blist, Nlist, Pklist, pairlist, nparam, npair, nint):
         # generate Pi
