@@ -50,7 +50,9 @@ class multifield(object):
     def _gen_pairlist_(self, nparam):
         l = list(range(nparam))
         c = itertools.combinations(l, 2)
-        return list(c), len(list(c))
+        pairlist = list(c)
+        npair = len(pairlist)
+        return pairlist, npair
 
     def _gen_Pij_(self, Blist, Pklist, nparam, nint):
         Bouter = np.reshape(np.outer(Blist, Blist), (nparam, nparam, 1))
