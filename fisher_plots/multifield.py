@@ -24,8 +24,8 @@ class multifield(object):
 
         self.dPijdBk = self._gen_dPdB_(self.Blist, self.Pklist, self.nparam, self.nint)
 
-        self.varij, self.covijk = self._gen_var_cov_(self.Blist, self.Nlist, self.Pklist,
-                                                     self.nparam, self.nint)
+        self.cov, self.invcov = self._gen_cov_(self.Blist, self.Nlist, self.Pklist,
+                                               self.pairlist, self.nparam, self.npair, self.nint)
 
         self.fmat = self._gen_fmat_(self.dPijdBk, self.varij, self.covijk, self.klist,
                                     self.Vsurv, self.nparam, self.nint)
@@ -77,7 +77,7 @@ class multifield(object):
 
         return PijoverBk
 
-    def _gen_var_cov_(self, Blist, Nlist, Pklist, nparam, nint):
+    def _gen_cov_(self, Blist, Nlist, Pklist, pairlist, nparam, npair, nint):
         # generate Pi
         BPi = np.reshape(Blist, (nparam, 1))
         PkPi = np.reshape(Pklist, (1, nint))
@@ -115,7 +115,32 @@ class multifield(object):
 
         covijk = np.add(PitotPjk, PijPik)
 
-        return varij, covijk
+        cov = np.zeros((npair, npair, nint))
+
+        print(np.shape(cov))
+
+        for i,l in enumerate(pairlist):
+            for j,m in enumerate(pairlist):
+                # check for diagonal term
+                t = np.append(l, m)
+                t2, counts = np.unique(t, return_counts=True)
+                k = np.flip( np.argsort(counts) )
+
+                if len(k)==4:
+                    cov[i][j] = 0
+                elif len(k)==3:
+                    cov[i][j] = covijk[t2[k][0], t2[k][1], t2[k][2]]
+                elif len(k)==2:
+                    cov[i][j] = varij[t2[k][0], t2[k][1]]
+                else:
+                    raise Exception("Same pair in the list, or auto-spectrum in list")
+
+        # also invert
+        invcov = np.zeros(np.shape(cov))
+        for i in range(np.shape(cov)[2]):
+            invcov[:,:,i] = np.linalg.inv(cov[:,:,i])
+
+        return cov, invcov
 
     def _check_fmat_indices_(self, i, j, l, lp, m, mp):
         if l != i and lp != i:
