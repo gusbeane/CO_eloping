@@ -1,6 +1,6 @@
 import numpy as np 
 
-from threefield import threefield, corner_plot
+from multifield import threefield, corner_plot
 import CO_data
 from colossus.cosmology import cosmology
 
