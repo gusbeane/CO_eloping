@@ -373,9 +373,16 @@ if __name__ == '__main__':
     z = 0.88
     kmax = 1
 
+    nint = 100
+    klist = np.logspace(-3, 0, nint)
+
     Blist = [1, 2, 3]
-    Nlist = [1E8, 2E8, 3E8]
     Vsurv = 1E8
 
-    mf = multifield(z, Blist, Nlist, kmax, Vsurv, cosmo)
+    # do tf with constant N
+    Nlist = [1E8, 2E8, 3E8]
     tf = threefield(z, Blist, Nlist, kmax, Vsurv, cosmo)
+
+    # do mf with full N
+    Nlist = np.array([np.full(nint, 1E8), np.full(nint, 2E8), np.full(nint, 3E8)])
+    mf = multifield(z, Blist, Nlist, kmax, Vsurv, cosmo, klist=klist)
