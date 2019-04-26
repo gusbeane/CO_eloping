@@ -22,7 +22,7 @@ class multifield(object):
 
         self.pairlist, self.npair = self._gen_pairlist_(self.nparam)
 
-        self.dPijdBk = self._gen_dPdB_(self.Blist, self.Pklist, self.nparam, self.nint)
+        self.dPldBi = self._gen_dPdB_(self.Blist, self.Pklist, self.pairlist, self.npair, self.nparam, self.nint)
 
         self.cov, self.invcov = self._gen_cov_(self.Blist, self.Nlist, self.Pklist,
                                                self.pairlist, self.nparam, self.npair, self.nint)
