@@ -1,5 +1,8 @@
 import numpy as np 
 
+import sys
+sys.path.append('../')
+
 from multifield import threefield, corner_plot
 import CO_data
 from colossus.cosmology import cosmology
@@ -15,6 +18,8 @@ bandwidth = 60
 kmax = 1
 
 zobs = 0.88
+nuemit = np.array([CO_data.CO_lines[l] for l in lines])
+nuobs = nuemit / (1.+zobs)
 
 Blist, Nlist = CO_data.gen_Blist_Nlist(3, bandwidth, kmax, zobs, lines, survey, cosmo)
 
