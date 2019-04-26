@@ -16,7 +16,7 @@ tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
 
 class multifield(object):
     def __init__(self, z, Blist, Nlist, kmax, Vsurv, cosmo, kmin=1E-3, nint=1000,
-                 whitenoise=True, Vk=None):
+                 whitenoise=True, Vk=None, klist=None):
         
         if not whitenoise:
             raise NotImplementedError()
@@ -26,9 +26,13 @@ class multifield(object):
         self.z, self.nint, self.Vk = z, nint, Vk
         self.Vsurv, self.cosmo = Vsurv, cosmo
 
+        # ignore nint if a klist is provided
+        if klist is not None:
+            self.nint = len(klist)
+
         # construct linear matter power spectrum
         self.klist, self.Pklist = self._gen_lin_ps_(self.z, self.kmin, self.kmax, 
-                                                    self.nint, self.cosmo)
+                                                    self.nint, self.cosmo, klist)
 
         # check Blist, Nlist, make sure lengths match
         self.Blist, self.Nlist, self.nparam = self._check_BN_param_(Blist, Nlist)
@@ -47,9 +51,11 @@ class multifield(object):
         self.fmat = self._gen_fmat_(self.dPldBi, self.invcov, self.klist,
                                     self.Vsurv, self.npair, self.nparam, self.nint)
 
-    def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo):
+    def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo, klist=None):
         # generate linear power spectrum from colossus
-        klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
+        if klist is None:
+            klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
+
         Pklist = cosmo.matterPowerSpectrum(klist/cosmo.h, z)
         Pklist /= cosmo.h**3
 
