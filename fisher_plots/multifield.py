@@ -20,13 +20,17 @@ class multifield(object):
         # check Blist, Nlist, make sure lengths match
         self.Blist, self.Nlist, self.nparam = self._check_BN_param_(Blist, Nlist)
 
+        # generate pairs of indices
         self.pairlist, self.npair = self._gen_pairlist_(self.nparam)
 
+        # construct derivative vector
         self.dPldBi = self._gen_dPdB_(self.Blist, self.Pklist, self.pairlist, self.npair, self.nparam, self.nint)
 
+        # construct cov, invcov matrices
         self.cov, self.invcov = self._gen_cov_(self.Blist, self.Nlist, self.Pklist,
                                                self.pairlist, self.nparam, self.npair, self.nint)
 
+        # construct fisher matrix
         self.fmat = self._gen_fmat_(self.dPldBi, self.invcov, self.klist,
                                     self.Vsurv, self.npair, self.nparam, self.nint)
 
