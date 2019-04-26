@@ -27,8 +27,8 @@ class multifield(object):
         self.cov, self.invcov = self._gen_cov_(self.Blist, self.Nlist, self.Pklist,
                                                self.pairlist, self.nparam, self.npair, self.nint)
 
-        self.fmat = self._gen_fmat_(self.dPijdBk, self.varij, self.covijk, self.klist,
-                                    self.Vsurv, self.nparam, self.nint)
+        self.fmat = self._gen_fmat_(self.dPldBi, self.invcov, self.klist,
+                                    self.Vsurv, self.npair, self.nparam, self.nint)
 
     def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo):
         # generate linear power spectrum from colossus
@@ -95,6 +95,16 @@ class multifield(object):
 
         return cov, invcov
 
+    def _gen_fmat_(self, dPldBi, invcov, klist, Vsurv, npair, nparam, nint):
+        t1 = np.transpose(np.swapaxes(dPldBi, 0, 1))
+        t2 = np.transpose(invcov)
+        t3 = np.transpose(dPldBi)
+
+        fmat = np.matmul(np.matmul(t1, t2), t3)
+        fmat = np.transpose(fmat)
+        fmat = self._integrate_fmat_(klist, Vsurv, fmat, nparam, nint)
+
+        return fmat
 
     def _integrate_fmat_(self, klist, Vsurv, fmat, nparam, nint):
         k = np.reshape(klist, (1, 1, nint))
