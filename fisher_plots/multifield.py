@@ -66,75 +66,31 @@ class multifield(object):
                     dPldBi[j][i] = 0
         return dPldBi
 
-    def _gen_Pij_(self, Blist, Pklist, nparam, nint):
-        Bouter = np.reshape(np.outer(Blist, Blist), (nparam, nparam, 1))
-        Pkrepeat = np.reshape(Pklist, (1, 1, nint))
-        Pkrepeat = np.repeat(Pkrepeat, nparam, axis=0)
-        Pkrepeat = np.repeat(Pkrepeat, nparam, axis=1)
-        Pij = np.multiply(Bouter, Pkrepeat)
-        return Pij
-
     def _gen_cov_(self, Blist, Nlist, Pklist, pairlist, nparam, npair, nint):
-        # generate Pi
-        BPi = np.reshape(Blist, (nparam, 1))
-        PkPi = np.reshape(Pklist, (1, nint))
-        PkPi = np.repeat(PkPi, nparam, axis=0)
-        Pi = np.multiply(np.square(BPi), PkPi)
-
-        # generate Pij, gets its own function because its fancy
-        Pij = self._gen_Pij_(Blist, Pklist, nparam, nint)
-
-        # generate Pitot - still only white noise
-        NPitot = np.reshape(Nlist, (nparam, 1))
-        NPitot = np.repeat(NPitot, nint, axis=1)
-        Pitot = np.add(Pi, NPitot)
-
-        # multiply the tots together
-        t = np.multiply.outer(Pitot, Pitot)
-        PitotPjtot = np.diagonal(t, axis1=1, axis2=3)
-
-        # compute varij
-        varij = np.add(np.square(Pij), PitotPjtot)
-
-        # # # # # # # # # # # # # # # # # # # 
-        # on to cov
-        # # # # # # # # # # # # # # # # # # #
-
-        #generate Pitot*Pjk
-        t = np.multiply.outer(Pitot, Pij)
-        PitotPjk = np.diagonal(t, axis1=1, axis2=4)
-
-        # generate PijPik
-        t = np.multiply.outer(Pij, Pij)
-        t2 = np.diagonal(t, axis1=0, axis2=3)
-        t3 = np.diagonal(t2, axis1=1, axis2=3)
-        PijPik = np.swapaxes(t3, 0, 2)
-
-        covijk = np.add(PitotPjk, PijPik)
-
         cov = np.zeros((npair, npair, nint))
 
-        print(np.shape(cov))
-
-        for i,l in enumerate(pairlist):
-            for j,m in enumerate(pairlist):
-                # check for diagonal term
-                t = np.append(l, m)
-                t2, counts = np.unique(t, return_counts=True)
-                k = np.flip( np.argsort(counts) )
-
-                if len(k)==4:
-                    cov[i][j] = 0
-                elif len(k)==3:
-                    cov[i][j] = covijk[t2[k][0], t2[k][1], t2[k][2]]
-                elif len(k)==2:
-                    cov[i][j] = varij[t2[k][0], t2[k][1]]
+        for i, (l1, l2) in enumerate(pairlist):
+            for j, (m1, m2) in enumerate(pairlist):
+                if (l1 == m1 and l2 == m2) or (l1 == m2 and l2 == m1):
+                    cov[i][j] = (Blist[l1]*Blist[l2]*Pklist)**2
+                    cov[i][j] += (Blist[l1]**2*Pklist + Nlist[l1]) * (Blist[l2]**2*Pklist + Nlist[l2])
+                elif l1 == m1 and l2 != m2:
+                    cov[i][j] = (Blist[l1]**2*Pklist + Nlist[l1])*Blist[l2]*Blist[m2]*Pklist
+                    cov[i][j] += Blist[l1]**2 * Blist[l2]*Blist[m2] * Pklist**2
+                elif l1 == m2 and l2 != m1:
+                    cov[i][j] = (Blist[l1]**2*Pklist + Nlist[l1])*Blist[l2]*Blist[m1]*Pklist
+                    cov[i][j] += Blist[l1]**2 * Blist[l2]*Blist[m1] * Pklist**2
+                elif l2 == m1 and l1 != m2:
+                    cov[i][j] = (Blist[l2]**2*Pklist + Nlist[l2])*Blist[l1]*Blist[m2]*Pklist
+                    cov[i][j] += Blist[l2]**2 * Blist[l1]*Blist[m2] * Pklist**2
+                elif l2 == m2 and l1 != m1:
+                    cov[i][j] = (Blist[l2]**2*Pklist + Nlist[l2])*Blist[l1]*Blist[m1]*Pklist
+                    cov[i][j] += Blist[l2]**2 * Blist[l1]*Blist[m1] * Pklist**2
                 else:
-                    raise Exception("Same pair in the list, or auto-spectrum in list")
+                    cov[i][j] = 0.0
 
-        # also invert
-        invcov = np.zeros(np.shape(cov))
-        for i in range(np.shape(cov)[2]):
+        invcov = np.copy(cov)
+        for i in range(nint):
             invcov[:,:,i] = np.linalg.inv(cov[:,:,i])
 
         return cov, invcov
