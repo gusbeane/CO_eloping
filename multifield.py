@@ -377,6 +377,14 @@ def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm
 
     return fig, (ax12, ax23, ax31), chisq_12
 
+def alpha_factors(zi, zj, cosmo):
+    alphapar = cosmo.Hz(zi)/cosmo.Hz(zj)
+    alphapar *= (1. + zj)/(1. + zi)
+
+    alphaperp = cosmo.angularDiameterDistance(zj)/cosmo.angularDiameterDistance(zi)
+
+    return alphapar, alphaperp
+
 if __name__ == '__main__':
     from colossus.cosmology import cosmology
 
