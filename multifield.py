@@ -405,7 +405,7 @@ def fomega(z, cosmo):
     return np.negative(fomega)
 
 def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
-                             distort=False, ztarget=None, returnk=False):
+                             distort=False, ztarget=None, returnk=False, angle_averaged=False):
     klist = np.logspace(np.log10(kmin), np.log10(kmax), nk)
     mulist = np.linspace(-1, 1, nmu)
 
@@ -439,10 +439,25 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     if distort:
         Pintensity = np.divide(Pintensity, apar * aperp**2)
 
+    if angle_averaged:
+        k, Pintensity = _angle_average_ps_(k, mu, Pintensity)
+
     if returnk:
-        return k, mu, Pintensity
+        if angle_averaged:
+            return k, Pintensity
+        else:
+            return k, mu, Pintensity
     else:
         return Pintensity
+
+def _angle_average_ps_(k, mu, Pkmu):
+    klist = k[:,0]
+
+    Pi = np.trapz(mu, Pkmu, axis=1)
+    Pi = np.divide(Pi, 2.)
+
+    return klist, Pi
+
 
 if __name__ == '__main__':
     from colossus.cosmology import cosmology
