@@ -372,9 +372,17 @@ def alpha_factors(zi, zj, cosmo):
 
     return alphapar, alphaperp
 
-def gen_k_meshgrid(klist, kparkperp=False):
+def gen_k_meshgrid(klist, kparkperp=False, distort=False, apar=None, aperp=None):
 
     kx, ky, kz = np.meshgrid(klist, klist, klist, indexing='ij')
+
+    if distort:
+        assert apar is not None and aperp is not None, "Must specify apar, aperp to distort!"
+        
+        kx = np.divide(kx, apar)
+        ky = np.divide(ky, aperp)
+        kz = np.divide(kz, aperp)
+    
     kx2 = np.square(kx)
     ky2 = np.square(ky)
     kz2 = np.square(kz)
