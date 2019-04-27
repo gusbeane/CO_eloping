@@ -51,7 +51,14 @@ def epsilon_l(L0, z, smit_table, log=False):
     eps = phi * L0 * SFR * gamma(2.+alpha)
     return eps # Lsolar / Mpc^3
 
-def avg_int(L0, z, smit_table, nurest_l, cosmo, log=False):
+def _smooth_(x, y, x_eval, sigma):
+    delta_x = x_eval[:, None] - x 
+    weights = np.exp(-delta_x*delta_x / (2*sigma*sigma)) / (np.sqrt(2*np.pi) * sigma) 
+    weights /= np.sum(weights, axis=1, keepdims=True) 
+    y_eval = np.dot(weights, y) 
+    return y_eval 
+
+def _avg_int_lookup_(L0, z, smit_table, nurest_l, cosmo, log=False):
     eps = epsilon_l(L0, z, smit_table, log=log)
 
     avg = (eps/(4.*np.pi*nurest_l))
@@ -62,6 +69,22 @@ def avg_int(L0, z, smit_table, nurest_l, cosmo, log=False):
     avg *= r
     
     return avg
+
+def avg_int(L0, z, smit_table, nurest_l, cosmo, smooth=False, sigma=None, log=False):
+    if smooth:
+        assert sigma is not None, "Must specify sigma and zlist to smooth!"
+
+        zsmit_list = smit_table[:,0]
+
+        int_list = np.array([ _avg_int_lookup_(L0, zsmit, smit_table, nurest_l, cosmo, log=log) 
+                                                   for zsmit in zsmit_list ])
+        
+        int_smooth = _smooth_(zsmit_list, int_list, z, sigma)
+
+        return int_smooth
+
+    else:
+        return _avg_int_lookup_(L0, z, smit_table, nurest_l, cosmo)
 
 smit_table = np.array( [[0.0, 0.91, -3.80, -1.51], 
                         [0.2, 0.88, -3.01, -1.45], 
