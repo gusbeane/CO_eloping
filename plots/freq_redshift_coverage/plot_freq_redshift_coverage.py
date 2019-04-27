@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../../fisher_plots')
+sys.path.append('../../')
 
 import CO_data
 import numpy as np 
