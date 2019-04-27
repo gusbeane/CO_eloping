@@ -40,6 +40,11 @@
 \newcommand{\pstot}[1]{\ensuremath{P_{#1,\text{tot}}}}
 \newcommand{\Bsum}{\ensuremath{\tilde{B}}}
 
+\newcommand{\kpar}{k_{\parallel}}
+\newcommand{\kperp}{\bm{k}_{\perp}}
+\newcommand{\apar}{\alpha_{\parallel}}
+\newcommand{\aperp}{\alpha_{\perp}}
+
 \newcommand{\E}[1]{\mathrm{E}[#1]}
 \newcommand{\Var}[1]{\mathrm{Var}[#1]}
 \newcommand{\Cov}[2]{\mathrm{Cov}[#1,#2]}
@@ -123,7 +128,7 @@ For the variance and covariance of the power spectra, it can be shown that,
 \xps{i}{j}\xps{i}{k}\text{,}
 \end{split}
 \eeq
-where $\pstot{i} \equiv \ps{i} + N_i$. Note that $N_i$ contains contributions
+where $\pstot{i} = \ps{i} + N_i$. Note that $N_i$ contains contributions
 from instrument noise, residual foreground contamination, and
 interloping/extraloping lines. While computing the Fisher matrix numerically
 is trivial, we will first work out the noise-dominated case which has a
@@ -330,7 +335,40 @@ the case of $B_1$. No modification has been made to it's intrinsic \SN{} (or,
 in other words, no additional measurements have been made of line $1$).
 Nonetheless, the \SN{} on the inferred $B_1$ has become higher.
 
-\subsection{Three-field \CO{} Forecasts for CCAT-p} \label{ssec:forecasts_tf}
+\subsection{Interloping Lines} \label{ssec:interlopers}
+The multi-field method relies only on the measurements of cross-spectra beween
+various lines. Interloping lines do not contribute to the average
+cross-spectra signal, but does contribute to the noise of the measurement. We
+can account for this by modifying the equation for $N_i$ to be
+\citep{2016ApJ...825..143L, 2016ApJ...832..165C},
+\beq\label{eq:ptot_intlpr}
+N_i = N_{i,\text{instrumental}} + \sum_{j} \frac{1}{\apar(z_j) \aperp(z_j)^2} 
+            P_j\left(\frac{\kpar}{\apar(z_j)}, 
+                     \frac{\kperp}{\aperp(z_j)}\right)\text{,}
+\eeq
+where $N_{i,\text{instrumental}}$ is the instrumental noise of line $i$ at the
+observed frequency, the sum on $j$ is over all interloping lines, $z_j$ is the
+emitted redshift of line $j$, and where,
+\begin{alignat}{2}
+\apar = \frac{H(z_i)}{H(z_j)} \frac{1+z_j}{1+z_i} \quad \quad &&
+\aperp = \frac{D_{A}(z_j)}{D_A(z_i)}\text{,}
+\end{alignat}
+where $z_i$ is the emitted redshift of line $i$ and $D_A(z)$ is the comoving
+angular diameter distance to redshift $z$.
+
+For simplicity, we assume the instrumental noise is white (i.e.
+$N_{i,\text{instrumental}}$ is constant). 
+
+
+% \begin{multicols}{2}
+%   \beq
+%     \apar = \frac{H(z_i)}{H(z_j)} \frac{1+z_j}{1+z_i}
+%   \eeq\break
+%   \beq
+%     \aperp = \frac{D_{A}(z_j)}{D_A(z_i)}
+%   \eeq
+% \end{multicols}
+
 % \begin{figure}[h!]
 % \begin{center}
 % \includegraphics{fig/CO_tf.pdf}
