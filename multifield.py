@@ -404,6 +404,46 @@ def fomega(z, cosmo):
 
     return np.negative(fomega)
 
+def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
+                             distort=False, ztarget=None, returnk=False):
+    klist = np.logspace(np.log10(kmin), np.log10(kmax), nk)
+    mulist = np.linspace(-1, 1, nmu)
+
+    if distort:
+        assert ztarget is not None, "Must specify ztarget to distort!"
+        apar, aperp = alpha_factors(ztarget, z, cosmo)
+    else:
+        apar, aperp = None, None
+
+    k, mu = gen_k_meshgrid(klist, mulist, distort=distort, apar=apar, aperp=aperp)
+
+    Pden = cosmo.matterPowerSpectrum(np.divide(k, cosmo.h), z)
+    Pden = np.divide(Pden, cosmo.h**3)
+
+    B = b * I
+
+    beta_z = fomega(z, cosmo)/b
+    kaiser = np.add(1., np.multiply(beta_z, np.square(mu)))
+    kaiser = np.square(kaiser)
+
+    fingerofgod = 1 # TODO: implement
+
+    shot = 0 # TODO: implement
+
+    prefactor = np.multiply(B**2, kaiser)
+    prefactor = np.multiply(prefactor, fingerofgod)
+
+    Pintensity = np.multiply(prefactor, Pden)
+    Pintensity = np.add(Pintensity, shot)
+
+    if distort:
+        Pintensity = np.divide(Pintensity, apar * aperp**2)
+
+    if returnk:
+        return k, mu, Pintensity
+    else:
+        return Pintensity
+
 if __name__ == '__main__':
     from colossus.cosmology import cosmology
 
