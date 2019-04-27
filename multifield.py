@@ -51,6 +51,19 @@ class multifield(object):
         self.fmat = self._gen_fmat_(self.dPldBi, self.invcov, self.klist,
                                     self.Vsurv, self.npair, self.nparam, self.nint)
 
+    def _gen_meshgrid_(self, klist):
+
+        kx, ky, kz = np.meshgrid(klist, klist, klist, indexing='ij')
+
+        kx2 = np.square(kx)
+        ky2 = np.square(ky)
+        kz2 = np.square(kz)
+        
+        k = np.sqrt( np.add(np.add(kx2, ky2), kz2) )
+        mu = np.divide(kx, k)
+        
+        return kx, ky, kz, k, mu
+
     def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo, klist=None):
         # generate linear power spectrum from colossus
         if klist is None:
