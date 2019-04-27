@@ -382,7 +382,7 @@ def gen_k_meshgrid(klist, kparkperp=False, distort=False, apar=None, aperp=None)
         kx = np.divide(kx, apar)
         ky = np.divide(ky, aperp)
         kz = np.divide(kz, aperp)
-    
+
     kx2 = np.square(kx)
     ky2 = np.square(ky)
     kz2 = np.square(kz)
@@ -397,6 +397,15 @@ def gen_k_meshgrid(klist, kparkperp=False, distort=False, apar=None, aperp=None)
         return kpar, kperp, k, mu
     else:
         return kx, ky, kz, k, mu
+
+def fomega(z, cosmo):
+    D = cosmo.growthFactor(z)
+    dDdz = cosmo.growthFactor(z, derivative=1)
+
+    fomega = np.divide(np.add(1., z), D)
+    fomega = np.multiply(fomega, dDdz)
+
+    return np.negative(fomega)
 
 if __name__ == '__main__':
     from colossus.cosmology import cosmology
