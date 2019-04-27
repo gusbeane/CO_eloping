@@ -372,31 +372,28 @@ def alpha_factors(zi, zj, cosmo):
 
     return alphapar, alphaperp
 
-def gen_k_meshgrid(klist, kparkperp=False, distort=False, apar=None, aperp=None):
+def gen_k_meshgrid(klist, mulist, distort=False, apar=None, aperp=None):
 
-    kx, ky, kz = np.meshgrid(klist, klist, klist, indexing='ij')
+    k, mu = np.meshgrid(klist, mulist, indexing='ij')
 
     if distort:
         assert apar is not None and aperp is not None, "Must specify apar, aperp to distort!"
         
-        kx = np.divide(kx, apar)
-        ky = np.divide(ky, aperp)
-        kz = np.divide(kz, aperp)
+        kpar = np.multiply(k, mu)
+        kpar2 = np.square(kpar)
+        k2 = np.square(k)
+        kperp2 = np.subtract(k2, kpar2)
+        kperp = np.sqrt(kperp2)
 
-    kx2 = np.square(kx)
-    ky2 = np.square(ky)
-    kz2 = np.square(kz)
-    
-    k = np.sqrt( np.add(np.add(kx2, ky2), kz2) )
-    mu = np.divide(kx, k)
-    
-    if kparkperp:
-        kpar = kx
-        kperp = np.sqrt(np.add(ky2, kz2))
+        kpar = np.divide(kpar, apar)
+        kperp = np.divide(kperp, aperp)
 
-        return kpar, kperp, k, mu
-    else:
-        return kx, ky, kz, k, mu
+        k2 = np.add(np.square(kpar), np.square(kperp))
+        k = np.sqrt(k2)
+
+        mu = np.divide(kpar, k)
+    
+    return k, mu
 
 def fomega(z, cosmo):
     D = cosmo.growthFactor(z)
