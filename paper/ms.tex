@@ -101,17 +101,18 @@ to determine each of $B_i$ as a function of $z$. We can proceed simply by
 computing the relevant Fisher matrix:
 \beq\label{eq:fisher_tf}
 F_{i,j} = 
-\int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
-\sum_{\substack{l,l'\\l > l'}} \sum_{\substack{m,m'\\m > m'}}
-\frac{\partial \hat{P}_{l,l'}(k)}{\partial B_i}
-\frac{1}{\Cov{\hat{P}_{l,l'}(k)}{\hat{P}_{m,m'}(k)}} 
-\frac{\partial \hat{P}_{m,m'}(k)}{\partial B_j}\text{,}
+\int \frac{\text{d}^3k}{(2\pi)^3} V_{\text{surv}}
+% \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{l} \sum_{m}
+\frac{\partial \hat{P}_{l}(\bm{k})}{\partial B_i}
+\left(\Cov{\hat{P}_{l}(\bm{k})}{\hat{P}_{m}(\bm{k})}\right)^{-1}
+\frac{\partial \hat{P}_{m}(\bm{k})}{\partial B_j}\text{,}
 \eeq
-where the sum of $l$, $l'$, $m$, and $m'$ is over each of the three lines.
+where the sum over $l$ and $m$ each is over every \emph{pair} of lines.
 Equation~\ref{eq:fisher_tf} can be readily modified to accomodate the case of
 more than three lines (by extending the summations to include these lines) and
-to accomodate the auto-spectra (by allowing $l=l'$ and $m=m'$ in the relevant
-summations). We will consider these cases in Sections~\Gus{x}~and~\Gus{y},
+to accomodate the auto-spectra (by extending the sum over $l$ and $m$ to
+include them). We will consider these cases in Sections~\Gus{x}~and~\Gus{y},
 respectively.
 
 For the variance and covariance of the power spectra, it can be shown that,
