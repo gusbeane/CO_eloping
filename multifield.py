@@ -56,8 +56,7 @@ class multifield(object):
         if klist is None:
             klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
 
-        Pklist = cosmo.matterPowerSpectrum(klist/cosmo.h, z)
-        Pklist /= cosmo.h**3
+        Pklist = cosmo.matterPowerSpectrum(klist, z)
 
         return klist, Pklist
 
@@ -164,8 +163,7 @@ class threefield(object):
 
     def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo):
         klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
-        Pklist = cosmo.matterPowerSpectrum(klist/cosmo.h, z)
-        Pklist /= cosmo.h**3
+        Pklist = cosmo.matterPowerSpectrum(klist, z)
 
         return klist, Pklist
 
@@ -417,8 +415,7 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
 
     k, mu = gen_k_meshgrid(klist, mulist, distort=distort, apar=apar, aperp=aperp)
 
-    Pden = cosmo.matterPowerSpectrum(np.divide(k, cosmo.h), z)
-    Pden = np.divide(Pden, cosmo.h**3)
+    Pden = cosmo.matterPowerSpectrum(k, z)
 
     B = b * I
 

@@ -176,7 +176,7 @@ survey_z_spixtpix = { 'TIME': np.array([[6.0, 1.6E4], [7.4, 5.7E3]]),
 
 def comoving_distance_at_freq(freq_obs, freq_emit, cosmo):
     z = (freq_emit - freq_obs) / freq_obs
-    return cosmo.comovingDistance(0, z) / cosmo.h
+    return cosmo.comovingDistance(0, z)
 
 def calc_Vpix(nu_obs, nu_emit, pixel_nu, survey, cosmo):
     assert survey in ['TIME', 'CONCERTO', 'CCAT-p'], "Survey not recognized!"
