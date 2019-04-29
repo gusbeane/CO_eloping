@@ -36,6 +36,18 @@ def _find_nearest_(array, value):
     idx = (np.abs(array - value)).argmin()
     return idx
 
+def _find_nearest_smit_(z, smit_table, log=False):
+    key = _find_nearest_(smit_table[:,0], z)
+    SFR = smit[1]
+    phi = smit[2]
+    alpha = smit[3]
+
+    if log:
+        SFR = 10.**SFR
+        phi = 10.**phi
+
+    return SFR, phi, alpha
+
 def epsilon_l(L0, z, smit_table, log=False):
     key = _find_nearest_(smit_table[:,0], z)
     smit = smit_table[key]
