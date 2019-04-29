@@ -6,9 +6,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from colossus.cosmology import cosmology
+import multifield as mf
 
 from labellines import labelLine, labelLines
 from colour import Color
+
+from tqdm import tqdm
 
 import matplotlib as mpl
 from matplotlib import rc
@@ -71,6 +74,70 @@ def plot_intensity_vs_z():
     fig.savefig('intensity_vs_z.pdf')
 
 
+def plot_intensity_vs_nu(kplot=0.7, sigma=1):
+
+    nulist = np.linspace(170, 270, 100)
+
+    ltarget = 'CII'
+    linterlopers = ['13-12', '12-11', '11-10', '10-9', '9-8', '8-7', 
+                    '7-6', '6-5', '5-4', '4-3', '3-2', '2-1', '1-0']
+
+    nuemit_int = [CO_data.CO_lines[l] for l in linterlopers]
+    L0l_list = [CO_data.CO_L0[l] for l in linterlopers]
+
+    nuemit_target = CO_data.CO_lines[ltarget]
+    zlist = (nuemit_target - nulist)/nulist
+
+    L0target = CO_data.CO_L0[ltarget]
+    Itarget = np.array([CO_data.avg_int(L0target, z, CO_data.smit_unlog_table, nuemit_target, cosmo, smooth=False, sigma=sigma) for z in zlist])
+
+    Patk_target = []
+    Patk_int = {l: [] for l in linterlopers}
+
+    for z,nu,It in zip(tqdm(zlist), nulist, Itarget):
+        k, Ptarget = mf.intensity_power_spectrum(z, 3, It, cosmo, returnk=True, angle_averaged=True)
+
+        Pk = np.interp(kplot, k, Ptarget)
+        Patk_target.append(Pk)
+
+        for l, nue, L0l in zip(linterlopers, nuemit_int, L0l_list):
+            zl = (nue/nuemit_target)*(1+z) - 1
+            if zl >= 0.0:
+                Itarget = CO_data.avg_int(L0l, np.array([zl]), CO_data.smit_unlog_table, nue, cosmo, smooth=True, sigma=sigma)[0]
+                Pl = mf.intensity_power_spectrum(zl, 2, It, cosmo, angle_averaged=True)
+
+                Pk = np.interp(kplot, k, Pl)
+                Patk_int[l].append(Pk)
+
+            else:
+                Patk_int[l].append(0)
+
+    Patk_target = np.array(Patk_target)
+    for l in linterlopers:
+        Patk_int[l] = np.array(Patk_int[l])
+
+    fig, ax = plt.subplots(1, 1)
+
+    ax.plot(zlist, kplot**3 * Patk_target/(2.*np.pi**2), c=tb_c[0], label=ltarget)
+    
+    Ptot = np.zeros(np.shape(Patk_target))
+    # for l in linterlopers:
+    for l in ['2-1', '3-2', '4-3', '5-4', '6-5', '7-6']:
+        ax.plot(zlist, kplot**3 * Patk_int[l]/(2.*np.pi**2), label=l)
+        Ptot += Patk_int[l]
+
+    print(Ptot)
+    ax.plot(zlist, kplot**3 * Ptot/(2.*np.pi**2), c='k', label='int tot')
+    ax.legend()
+
+    ax.set_yscale('log')
+
+    ax.set_xlabel(r'$z_{\text{C~\textsc{ii}}}$')
+    ax.set_ylabel(r'$\Delta^2 (k)$')
+
+    plt.show()
 
 if __name__ == '__main__':
-    plot_intensity_vs_z()
+    # plot_intensity_vs_z()
+    P = plot_intensity_vs_nu()
+
