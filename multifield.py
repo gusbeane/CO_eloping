@@ -376,19 +376,21 @@ def gen_k_meshgrid(klist, mulist, distort=False, apar=None, aperp=None):
 
     if distort:
         assert apar is not None and aperp is not None, "Must specify apar, aperp to distort!"
-        
+
+        # convert from (k, mu) to (kpar, kperp)        
         kpar = np.multiply(k, mu)
         kpar2 = np.square(kpar)
         k2 = np.square(k)
         kperp2 = np.subtract(k2, kpar2)
         kperp = np.sqrt(kperp2)
 
+        # distort in (kpar, kperp) space
         kpar = np.divide(kpar, apar)
         kperp = np.divide(kperp, aperp)
 
+        # convert back to (k, mu) space
         k2 = np.add(np.square(kpar), np.square(kperp))
         k = np.sqrt(k2)
-
         mu = np.divide(kpar, k)
     
     return k, mu
