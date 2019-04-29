@@ -69,7 +69,7 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
     ax.set_yscale('log')
 
     ax.set_xlabel(r'$k\,[\,h/\text{Mpc}\,]$')
-    ax.set_ylabel(r'$\Delta^2 (k)$')
+    ax.set_ylabel(r'$\Delta^2 (k)\,[\,\text{Jy}^2/\text{str}^2\,]$')
 
     ax.set_xlim([0.01, 10])
     ax.set_ylim([10, 1E8])
