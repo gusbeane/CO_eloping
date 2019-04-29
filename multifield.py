@@ -438,7 +438,9 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     kaiser = np.add(1., np.multiply(beta_z, np.square(mudist)))
     kaiser = np.square(kaiser)
 
-    fingerofgod = 1 # TODO: implement
+    sp2 = sigmap2(z, b, cosmo)
+    x2 = sp2 * k**2 * mu**2
+    fingerofgod = 1./(1. + x2)
 
     shot = 0 # TODO: implement
 
