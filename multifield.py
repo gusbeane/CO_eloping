@@ -415,14 +415,15 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     else:
         apar, aperp = None, None
 
-    k, mu = gen_k_meshgrid(klist, mulist, distort=distort, apar=apar, aperp=aperp)
+    k, mu = gen_k_meshgrid(klist, mulist)
+    kdist, mudist = gen_k_meshgrid(klist, mulist, distort=distort, apar=apar, aperp=aperp)
 
-    Pden = cosmo.matterPowerSpectrum(k, z)
+    Pden = cosmo.matterPowerSpectrum(kdist, z)
 
     B = b * I
 
     beta_z = fomega(z, cosmo)/b
-    kaiser = np.add(1., np.multiply(beta_z, np.square(mu)))
+    kaiser = np.add(1., np.multiply(beta_z, np.square(mudist)))
     kaiser = np.square(kaiser)
 
     fingerofgod = 1 # TODO: implement
