@@ -19,6 +19,12 @@ speed_of_light = c.to_value(u.micron*u.GHz)
 
 CO_lines = { key: speed_of_light/wave for key, wave in CO_lines_wave.items() }
 
+n = 111.52
+CO_lines_LT16 = {'1-0': n, '2-1': 2*n, '3-2': 3*n, '4-3': 4*n,
+                 '5-4': 5*n, '6-5': 6*n, '7-6': 7*n, '8-7': 8*n,
+                 '9-8': 9*n, '10-9': 10*n, '11-10': 11*n,
+                 '12-11': 12*n, '13-12': 13*n, 'CII': speed_of_light/157.7}
+
 # ---------------------------------------------------------------- #
 #                                                                  #
 #                         line modelling                           #
