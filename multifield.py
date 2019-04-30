@@ -470,7 +470,7 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
 def _angle_average_ps_(k, mu, Pkmu):
     klist = k[:,0]
 
-    Pi = np.trapz(mu, Pkmu, axis=1)
+    Pi = np.trapz(Pkmu, mu, axis=1)
     Pi = np.divide(Pi, 2.)
 
     return klist, Pi
