@@ -48,9 +48,10 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
 
     del2int = np.zeros(np.shape(del2))
     for li in lint:
-        nue_i = CO_data.CO_lines[l]
-        L0 = CO_data.CO_L0[l]
-        zint = (nue_i/nue) * (1+z) - 1
+        nue_i = CO_data.CO_lines[li]
+        L0 = CO_data.CO_L0[li]
+        zint = (nue_i/nue) * (1+z)
+        zint -= 1
 
         if zint > 0:
 
