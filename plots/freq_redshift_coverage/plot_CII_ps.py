@@ -61,7 +61,7 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
             ICOtot += Ii
             bi = 2
             k, Pi = mf.intensity_power_spectrum(zint, bi, Ii, cosmo, kmin=kmin, kmax=kmax, returnk=True, angle_averaged=True,
-                                                                     distort=True, ztarget=z)
+                                                                     distort=False, ztarget=z)
 
             del2 = k**3 * Pi / (2.*np.pi**2)
 
