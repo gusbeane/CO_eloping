@@ -67,8 +67,18 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
 
             del2int += del2
 
-    ax.plot(k, del2int, c=tb_c[2], label='CO interlopers')
     print('ICO tot:', ICOtot)
+    ax.plot(k, del2int, c=tb_c[1], label='CO interlopers')
+
+    # now plot values from LT16
+    LT16_target = np.genfromtxt('LT16_fig3/delta_mon_quad_target_z7.dat')
+    LT16_COnodist = np.genfromtxt('LT16_fig3/delta_mon_quad_int_nodist_all.dat')
+    LT16_COdist = np.genfromtxt('LT16_fig3/delta_mon_quad_int_all.dat')
+
+    s=0.5
+    ax.scatter(LT16_target[:,0], LT16_target[:,1], c='k', s=s)
+    ax.scatter(LT16_COnodist[:,0], LT16_COnodist[:,1], c='r', s=s)
+    ax.scatter(LT16_COdist[:,0], LT16_COdist[:,1], c='b', s=s)
 
     ax.set_xscale('log')
     ax.set_yscale('log')
