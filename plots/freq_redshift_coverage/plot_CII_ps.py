@@ -47,6 +47,7 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
     ax.plot(k, del2, c=tb_c[0], label='CII')
 
     del2int = np.zeros(np.shape(del2))
+    ICOtot = 0
     for li in lint:
         nue_i = CO_data.CO_lines[li]
         L0 = CO_data.CO_L0[li]
@@ -56,6 +57,7 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
         if zint > 0:
 
             Ii = CO_data.avg_int(L0, zint, CO_data.smit_unlog_table, nue_i, cosmo, smooth=False)
+            ICOtot += Ii
             bi = 2
             k, Pi = mf.intensity_power_spectrum(zint, bi, Ii, cosmo, kmin=kmin, kmax=kmax, returnk=True, angle_averaged=True,
                                                                      distort=True, ztarget=z)
@@ -65,6 +67,7 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
             del2int += del2
 
     ax.plot(k, del2int, c=tb_c[2], label='CO interlopers')
+    print('ICO tot:', ICOtot)
 
     ax.set_xscale('log')
     ax.set_yscale('log')
