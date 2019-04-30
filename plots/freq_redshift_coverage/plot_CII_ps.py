@@ -57,6 +57,7 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
         if zint > 0:
 
             Ii = CO_data.avg_int(L0, zint, CO_data.smit_unlog_table, nue_i, cosmo, smooth=False)
+            print(li, zint, Ii, Ii/Il)
             ICOtot += Ii
             bi = 2
             k, Pi = mf.intensity_power_spectrum(zint, bi, Ii, cosmo, kmin=kmin, kmax=kmax, returnk=True, angle_averaged=True,
