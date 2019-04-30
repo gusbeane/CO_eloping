@@ -1,0 +1,7 @@
+delta_mon_quad_target_z7.dat - first column is k in units of h/Mpc, second column is Delta^2(k) = k^3 P(k)/2pi^2 in units of (Jy/str)^2...Ignore the other columns. This is for [CII] at z=7.
+
+delta_mon_quad_int_nodist_all.dat -- first column is k in units of h/Mpc, second column is non-distorted interloper power Delta^2(k) as in the red dotted line in Figure 3 of Lidz & Taylor 16.
+
+delta_mon_quad_int_all.dat - including interloper distortions, same columns as other two files. Should give blue dashed line in Figure 3.
+
+
