@@ -38,6 +38,8 @@ def _find_nearest_(array, value):
 
 def _find_nearest_smit_(z, smit_table, log=False):
     key = _find_nearest_(smit_table[:,0], z)
+    smit = smit_table[key]
+
     SFR = smit[1]
     phi = smit[2]
     alpha = smit[3]
