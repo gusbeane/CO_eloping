@@ -21,23 +21,26 @@ cosmo = cosmology.setCosmology('myCosmo', params)
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
 
-zjlist = np.linspace(0.00001, 1, 10000)
+zjlist = np.linspace(0, 8, 10000)
 
-ztarget = [7, 20]
+ztarget = [6, 7, 8]
 
 fig, ax = plt.subplots(1, 1)
-for zi in ztarget:
+for zi,c in zip(ztarget, tb_c):
     apar, aperp = alpha_factors(zi, zjlist, cosmo)
 
-    ax.plot(zjlist, 1/(apar * aperp**2), label=str(zi))
-    # ax.plot(zjlist, 1/aperp**2)
+    keys = np.where(zjlist < zi)[0]
 
-ax.set_yscale('log')
-ax.set_xscale('log')
+    ax.plot(zjlist[keys], apar[keys], label=str(zi), c=c)
+    ax.plot(zjlist[keys], aperp[keys], ls='dashed', c=c)
+    # ax.plot(zjlist, 1/aperp**2)
 
 ax.set_xlabel(r'$z$')
 ax.legend()
-# ax.set_ylabel(r'$\left< I \right> \,[\,\text{Jy}/\text{str}\,]$')
+ax.set_ylabel(r'$\alpha_{\parallel}(z)$, $\alpha_{\perp}(z)$')
 
-plt.show()
-# fig.savefig('intensity_vs_z.pdf')
+ax.set_xlim(0, 8)
+ax.set_ylim(0, 2)
+
+fig.tight_layout()
+fig.savefig('apar_aperp.pdf')
