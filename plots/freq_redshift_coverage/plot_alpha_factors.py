@@ -21,20 +21,22 @@ cosmo = cosmology.setCosmology('myCosmo', params)
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
 
-zjlist = np.linspace(1, 10, 100)
+zjlist = np.linspace(0.00001, 1, 10000)
 
-ztarget = [7]
+ztarget = [7, 20]
 
 fig, ax = plt.subplots(1, 1)
 for zi in ztarget:
     apar, aperp = alpha_factors(zi, zjlist, cosmo)
 
-    ax.plot(zjlist, 1/apar)
-    ax.plot(zjlist, 1/aperp**2)
+    ax.plot(zjlist, 1/(apar * aperp**2), label=str(zi))
+    # ax.plot(zjlist, 1/aperp**2)
 
-# ax.set_yscale('log')
+ax.set_yscale('log')
+ax.set_xscale('log')
 
 ax.set_xlabel(r'$z$')
+ax.legend()
 # ax.set_ylabel(r'$\left< I \right> \,[\,\text{Jy}/\text{str}\,]$')
 
 plt.show()
