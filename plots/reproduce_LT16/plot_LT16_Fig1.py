@@ -43,4 +43,4 @@ ax.set_xlim(0, 8)
 ax.set_ylim(0, 2)
 
 fig.tight_layout()
-fig.savefig('apar_aperp.pdf')
+fig.savefig('LT16_Fig1.pdf')
