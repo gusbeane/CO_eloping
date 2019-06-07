@@ -370,7 +370,9 @@ def alpha_factors(ztarget, ziloper, cosmo):
         alphapar = cosmo.Hz(ztarget)/cosmo.Hz(ziloper)
         alphapar *= (1. + ziloper)/(1. + ztarget)
 
+        # TODO: check that this is the right conversion in non-flat universes
         alphaperp = cosmo.angularDiameterDistance(ziloper)/cosmo.angularDiameterDistance(ztarget)
+        alphaperp *= (1. + ziloper)/(1. + ztarget)
     else:
         alphaperp, alphapar = np.nan, np.nan
 
