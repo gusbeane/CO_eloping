@@ -4,6 +4,8 @@ import itertools
 from scipy.stats import chi2
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
+from scipy.special import gamma
+import CO_data
 
 import matplotlib as mpl
 from matplotlib import rc
@@ -363,7 +365,8 @@ def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm
     return fig, (ax12, ax23, ax31), chisq_12
 
 def alpha_factors(zi, zj, cosmo):
-    if zj >=0 and zi >= 0:
+    # if zj >=0 and zi >= 0:
+    if True:
         alphapar = cosmo.Hz(zi)/cosmo.Hz(zj)
         alphapar *= (1. + zj)/(1. + zi)
 
@@ -440,24 +443,39 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     beta_z = fomega(z, cosmo)/b
     kaiser = np.add(1., np.multiply(beta_z, np.square(mudist)))
     kaiser = np.square(kaiser)
+    # print(np.average(kaiser))
+    # kaiser = 56/45
+    # print(kaiser)
 
-    sp2 = sigmap2(z, b, cosmo)
-    x2 = sp2 * k**2 * mu**2
-    fingerofgod = 1./(1. + x2)
 
-    shot = 0 # TODO: implement
+    # sp2 = sigmap2(z, b, cosmo)
+    # x2 = sp2 * k**2 * mu**2
+    # fingerofgod = 1./(1. + x2)
+    fingerofgod = 1
+
+    # SFR, phi, alpha = CO_data._find_nearest_smit_(z, CO_data.smit_unlog_table)
+    # shot = I**2 * (2. + alpha) / (phi * gamma(2.+alpha))
+    # print(I, shot)
+    shot = 0
 
     prefactor = np.multiply(B**2, kaiser)
+    # print(prefactor)
     prefactor = np.multiply(prefactor, fingerofgod)
+    # print(prefactor)
 
     Pintensity = np.multiply(prefactor, Pden)
+    # print(Pintensity[50])
     Pintensity = np.add(Pintensity, shot)
+    # print(Pintensity[50])
 
     if distort:
         Pintensity = np.divide(Pintensity, apar * aperp**2)
+    # print(Pintensity[50])
 
     if angle_averaged:
         k, Pintensity = _angle_average_ps_(k, mu, Pintensity)
+
+    # print(Pintensity[50])
 
     if returnk:
         if angle_averaged:
