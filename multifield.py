@@ -364,13 +364,13 @@ def corner_plot(z, Blist, Nlist, cosmo, fac=1, tf=None, kmax=None, Vk=None, norm
 
     return fig, (ax12, ax23, ax31), chisq_12
 
-def alpha_factors(zi, zj, cosmo):
+def alpha_factors(ztarget, ziloper, cosmo):
     # if zj >=0 and zi >= 0:
     if True:
-        alphapar = cosmo.Hz(zi)/cosmo.Hz(zj)
-        alphapar *= (1. + zj)/(1. + zi)
+        alphapar = cosmo.Hz(ztarget)/cosmo.Hz(ziloper)
+        alphapar *= (1. + ziloper)/(1. + ztarget)
 
-        alphaperp = cosmo.angularDiameterDistance(zj)/cosmo.angularDiameterDistance(zi)
+        alphaperp = cosmo.angularDiameterDistance(ziloper)/cosmo.angularDiameterDistance(ztarget)
     else:
         alphaperp, alphapar = np.nan, np.nan
 
