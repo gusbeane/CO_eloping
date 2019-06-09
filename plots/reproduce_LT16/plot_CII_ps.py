@@ -31,10 +31,10 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
     kmax = 10
 
     l = 'CII'
-    # lint = ['3-2', '4-3', '5-4', '6-5']
-    lint = ['2-1', '3-2', '4-3', '5-4', '6-5', '7-6', '8-7', '9-8', '10-9', '11-10', '12-11', '13-12']
+    lint = ['3-2', '4-3', '5-4', '6-5']
+    # lint = ['2-1', '3-2', '4-3', '5-4', '6-5', '7-6', '8-7', '9-8', '10-9', '11-10', '12-11', '13-12']
 
-    nue = CO_data.CO_lines[l]
+    nue = CO_data.CO_lines_LT16[l]
     L0 = CO_data.CO_L0[l]
     Il = CO_data.avg_int(L0, z, CO_data.smit_unlog_table, nue, cosmo, smooth=False)
     bl = 3
@@ -48,9 +48,10 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
     ax.plot(k, del2, c=tb_c[0], label='CII')
 
     del2int = np.zeros(np.shape(del2))
+    del2int_dist = np.zeros(np.shape(del2))
     ICOtot = 0
     for li in lint:
-        nue_i = CO_data.CO_lines[li]
+        nue_i = CO_data.CO_lines_LT16[li]
         L0 = CO_data.CO_L0[li]
         zint = (nue_i/nue) * (1+z)
         zint -= 1
@@ -64,12 +65,18 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
             k, Pi = mf.intensity_power_spectrum(zint, bi, Ii, cosmo, kmin=kmin, kmax=kmax, returnk=True, angle_averaged=True,
                                                                      distort=False, ztarget=z)
 
+            k, Pidist = mf.intensity_power_spectrum(zint, bi, Ii, cosmo, kmin=kmin, kmax=kmax, returnk=True, angle_averaged=True,
+                                                                     distort=True, ztarget=z)
+
             del2 = k**3 * Pi / (2.*np.pi**2)
+            del2_dist = k**3 * Pidist / (2.*np.pi**2)
 
             del2int += del2
+            del2int_dist += del2_dist
 
     print('ICO tot:', ICOtot)
     ax.plot(k, del2int, c=tb_c[1], label='CO interlopers')
+    ax.plot(k, del2int_dist, c=tb_c[2], label='CO interlopers, distorted')
 
     # now plot values from LT16
     LT16_target = np.genfromtxt('LT16_fig3/delta_mon_quad_target_z7.dat')
