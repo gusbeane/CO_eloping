@@ -54,7 +54,33 @@ class multifield(object):
                                     self.Vsurv, self.npair, self.nparam, self.nint)
 
     def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo, klist=None):
-        # generate linear power spectrum from colossus
+        """Generates a the linear power spectrum at redshift z.
+
+        Uses the input colossus cosmology to generate the linear matter
+        power spectrum at redshift z. Note that kmin and kmax are ignored if
+        klist is provided, but are still required arguments. If klist is not
+        given, then a klist will be generated with logarithmic spacing from kmin
+        to kmax, with a length of nint.
+    
+        Args:
+            z (float): The redshift at which to compute the power spectrum.
+            kmin (float): The minimum k at which to compute the power spectrum.
+                Ignored if klist is given.
+            kmax (float): The maximum k at which to compute the power spectrum.
+                Ignored if klist is given.
+            nint (int): The number of spacings for the klist. Ignored if klist is
+                given.
+            cosmo: A colossus cosmology object. Used to compute the matter power
+                spectrum.
+            klist (array, optional): A list of k values at which to compute the
+                matter power spectrum. Recommended to be in ascending order. Overrides
+                the kmin, kmax, and nint arguments.
+    
+        Returns:
+            klist (array): The k values [h/Mpc] at which the matter power spectrum is 
+                computed.
+            Pklist (array): The power spectrum values [(Mpc/h)^3].
+        """
         if klist is None:
             klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
 
