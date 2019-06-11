@@ -463,15 +463,8 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     shot *= CO_data.smit_h3
     print('shot:', z, I, shot)
 
-    prefactor = np.multiply(B**2, kaiser)
-    # print(prefactor)
-    prefactor = np.multiply(prefactor, fingerofgod)
-    # print(prefactor)
-
-    Pintensity = np.multiply(prefactor, Pden)
-    # print(Pintensity[50])
+    Pintensity = np.multiply(np.multiply(np.multiply(B**2, kaiser), fingerofgod), Pden)
     Pintensity = np.add(Pintensity, shot)
-    # print(Pintensity[50])
 
     if distort:
         Pintensity = np.divide(Pintensity, apar * aperp**2)
