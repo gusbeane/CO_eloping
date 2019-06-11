@@ -438,6 +438,8 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     else:
         apar, aperp = None, None
 
+    # generate distorted k, mu - if applicable
+    # otherwise kdist, mudist = k, mu
     k, mu = gen_k_meshgrid(klist, mulist)
     kdist, mudist = gen_k_meshgrid(klist, mulist, distort=distort, apar=apar, aperp=aperp)
 
@@ -445,27 +447,34 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
 
     B = b * I
 
+    # compute prefactor from kaiser effect
     beta_z = fomega(z, cosmo)/b
     kaiser = np.add(1., np.multiply(beta_z, np.square(mudist)))
     kaiser = np.square(kaiser)
 
+    # compute prefactor from fingerofgod effect
     sp2 = sigmap2(z, b, cosmo)
     x2 = sp2 * (kdist*cosmo.h)**2 * mu**2
     fingerofgod = 1./(1. + x2)
 
+    # compute shot noise
     SFR, phi, alpha = CO_data._find_nearest_smit_(z, CO_data.smit_unlog_table)
     shot = I**2 * (2. + alpha) / (phi * gamma(2.+alpha))
     shot *= CO_data.smit_h3
 
+    # put all the pieces together
     Pintensity = np.multiply(np.multiply(np.multiply(B**2, kaiser), fingerofgod), Pden)
     Pintensity = np.add(Pintensity, shot)
 
+    # add in prefactor if distorted
     if distort:
         Pintensity = np.divide(Pintensity, apar * aperp**2)
 
+    # angle average, if necessary
     if angle_averaged:
         k, Pintensity = _angle_average_ps_(k, mu, Pintensity)
 
+    # return
     if returnk:
         if angle_averaged:
             return k, Pintensity
