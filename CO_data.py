@@ -322,3 +322,18 @@ class line(object):
             return self.intensity * self.bias
         else:
             return self.intensity(z)*self.bias
+
+CO1_0 = line('1-0', LT16_cosmo)
+CO2_1 = line('2-1', LT16_cosmo)
+CO3_2 = line('3-2', LT16_cosmo)
+CO4_3 = line('4-3', LT16_cosmo)
+CO5_4 = line('5-4', LT16_cosmo)
+CO6_5 = line('6-5', LT16_cosmo)
+CO7_6 = line('7-6', LT16_cosmo)
+CO8_7 = line('8-7', LT16_cosmo)
+CO9_8 = line('9-8', LT16_cosmo)
+CO10_9 = line('10-9', LT16_cosmo)
+CO11_10 = line('11-10', LT16_cosmo)
+CO12_11 = line('12-11', LT16_cosmo)
+CO13_12 = line('13-12', LT16_cosmo)
+CII = line('CII', LT16_cosmo)
