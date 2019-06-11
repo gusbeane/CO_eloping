@@ -45,7 +45,7 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
 
     fig, ax = plt.subplots(1, 1)
 
-    ax.plot(k, del2, c=tb_c[0], label='CII')
+    ax.plot(k, del2, c=tb_c[-1], label=r'CII')
 
     del2int = np.zeros(np.shape(del2))
     del2int_dist = np.zeros(np.shape(del2))
@@ -75,8 +75,8 @@ def plot_CII_ps(z=7, name='CIIps_z7.pdf'):
             del2int_dist += del2_dist
 
     print('ICO tot:', ICOtot)
-    ax.plot(k, del2int, c=tb_c[1], label='CO interlopers')
-    ax.plot(k, del2int_dist, c=tb_c[2], label='CO interlopers, distorted')
+    ax.plot(k, del2int, c=tb_c[2], label='CO interlopers')
+    ax.plot(k, del2int_dist, c=tb_c[0], label='CO interlopers, distorted')
 
     # now plot values from LT16
     LT16_target = np.genfromtxt('LT16_fig3/delta_mon_quad_target_z7.dat')
