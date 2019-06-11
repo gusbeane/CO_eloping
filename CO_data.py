@@ -2,6 +2,10 @@ import numpy as np
 import astropy.units as u
 from astropy.constants import c
 from scipy.special import gamma
+from colossus.cosmology import cosmology
+
+LT16_params = {'flat': True, 'H0': 70, 'Om0': 0.27, 'Ob0': 0.046, 'sigma8': 0.8, 'ns': 1.0}
+LT16_cosmo = cosmology.setCosmology('myCosmo', LT16_params)
 
 # basic info about the lines
 
