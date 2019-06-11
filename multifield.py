@@ -453,10 +453,10 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     # print(kaiser)
 
 
-    # sp2 = sigmap2(z, b, cosmo)
-    # x2 = sp2 * k**2 * mu**2
-    # fingerofgod = 1./(1. + x2)
-    fingerofgod = 1
+    sp2 = sigmap2(z, b, cosmo)
+    x2 = sp2 * (kdist*cosmo.h)**2 * mu**2
+    fingerofgod = 1./(1. + x2)
+    # fingerofgod = 1
 
     # SFR, phi, alpha = CO_data._find_nearest_smit_(z, CO_data.smit_unlog_table)
     # shot = I**2 * (2. + alpha) / (phi * gamma(2.+alpha))
