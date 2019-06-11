@@ -260,3 +260,65 @@ def gen_Blist_Nlist(b, bandwidth, kmax, zobs, lines, survey, cosmo):
     Nlist = np.array(Nlist)
 
     return Blist, Nlist
+
+class line(object):
+    def __init__(self, key, cosmo, redshift=None, bias=None):
+        self.key = key
+        self.intensity_assigned = False
+
+        self.freq_emit = CO_lines[key]
+        self.wave_emit = CO_lines_wave[key]
+
+        self.cosmo = cosmo
+
+        if redshift is not None:
+            self.assign_redshift(redshift)
+            self.intensity(redshift, assign=True)
+        else:
+            self.assign_redshift(redshift)
+
+        if bias is not None:
+            self.assign_bias(bias)
+
+    def assign_redshift(self, z):
+        self.redshift = z
+
+    def assign_bias(self, b):
+        self.bias = b
+
+    def freq_obs(self, z):
+        return self.freq_emit / (1. + z)
+
+    def wave_obs(self, z):
+        return self.wave_emit * (1. + z)
+
+    def redshift_emit_interloping(self, ztarget, freq_target):
+        zinterlop = (1.+ztarget)*(self.freq_emit/freq_target) - 1
+        return zinterlop
+
+    def freq_obs_interloping(self, ztarget, freq_target):
+        zinterlop = self.redshift_interloping(ztarget, freq_target)
+        return self.freq_emit / (1. + zinterlop)
+
+    def wave_obs_interloping(self, ztarget, freq_target):
+        zinterlop = self.redshift_interloping(ztarget, freq_target)
+        return self.wave_emit * (1. + zinterlop)
+
+    def calc_intensity(self, z, assign=False):
+        L0 = CO_L0[self.key]
+        intensity = avg_int(L0, z, smit_unlog_table, 
+                            self.freq_emit, self.cosmo, smooth=False)
+
+        if assign:
+            self.intensity = intensity
+            self.intensity_assigned = True
+
+        return intensity
+
+    def B(self, z):
+        assert self.bias is not None, "You must assign the line bias first!"
+        
+        if self.intensity_assigned:
+            return self.intensity * self.bias
+        else:
+            return self.intensity(z)*self.bias
