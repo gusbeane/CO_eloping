@@ -106,6 +106,9 @@ def avg_int(L0, z, smit_table, nurest_l, cosmo, smooth=False, sigma=None, log=Fa
     else:
         return _avg_int_lookup_(L0, z, smit_table, nurest_l, cosmo)
 
+smit_h = 0.7
+smit_h3 = smit_h**3
+
 smit_table = np.array( [[0.0, 0.91, -3.80, -1.51], 
                         [0.2, 0.88, -3.01, -1.45], 
                         [0.4, 0.97, -2.97, -1.45], 
