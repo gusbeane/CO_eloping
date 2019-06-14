@@ -44,6 +44,8 @@ class line(object):
     
 class LT16_COmodel(object):
     def __init__(self):
+        self.available_keys = ['1-0', '2-1', '3-2', '4-3', '5-4', '6-5', '7-6', '8-7', '9-8',
+                               '10-9', '11-10', '12-11', '13-12', 'CII']
         self._assign_CO_L0_()        
         self._assign_smit_table_()
     def _assign_CO_L0_(self):
