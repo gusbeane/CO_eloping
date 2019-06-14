@@ -44,12 +44,13 @@ class line(object):
     
 class LT16_COmodel(object):
     def __init__(self):
+        self._assign_CO_L0_()        
+        self._assign_smit_table_()
+    def _assign_CO_L0_(self):
         self.CO_L0 = {'1-0': 3.7E3, '2-1': 2.8E4, '3-2': 7E4, '4-3': 9.7E4,
                       '5-4': 9.6E4, '6-5': 9.5E4, '7-6': 8.9E4, '8-7': 7.7E4,
                       '9-8': 6.9E4, '10-9': 5.3E4, '11-10': 3.8E4,
                       '12-11': 2.6E4, '13-12': 1.4E4, 'CII': 6E6}
-        
-        self._assign_smit_table_()
 
     def _assign_smit_table_(self):
         smit_h = 0.7
