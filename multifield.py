@@ -442,13 +442,10 @@ def sigmap2(z, b, cosmo, kmin=1E-4, kmax=1E4, nk=1000):
     klist = np.logspace(np.log10(kmin), np.log10(kmax), nk)
     Pklist = cosmo.matterPowerSpectrum(klist, z)
     
-    klist *= cosmo.h
-    Pklist /= cosmo.h**3
     Pint = np.trapz(Pklist, klist)
 
     f = fomega(z, cosmo)
-    beta = f/b
-    sigmav2 = beta**2 * Pint / (3. * 2. * np.pi**2)
+    sigmav2 = f**2 * Pint / (3. * 2. * np.pi**2)
     sigmap2 = sigmav2/2
 
     return sigmap2
