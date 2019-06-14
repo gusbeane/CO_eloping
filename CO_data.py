@@ -43,11 +43,16 @@ class line(object):
         return self.wave_obs(zinterlop)
     
 class LT16_COmodel(object):
-    def __init__(self):
+    def __init__(self, use_LT16_freq=False):
         self.available_keys = ['1-0', '2-1', '3-2', '4-3', '5-4', '6-5', '7-6', '8-7', '9-8',
                                '10-9', '11-10', '12-11', '13-12', 'CII']
+        self.use_LT16_freq = use_LT16_freq
+
+        self._assign_lines_()
         self._assign_CO_L0_()        
         self._assign_smit_table_()
+        
+
     def _assign_CO_L0_(self):
         self.CO_L0 = {'1-0': 3.7E3, '2-1': 2.8E4, '3-2': 7E4, '4-3': 9.7E4,
                       '5-4': 9.6E4, '6-5': 9.5E4, '7-6': 8.9E4, '8-7': 7.7E4,
@@ -77,6 +82,24 @@ class LT16_COmodel(object):
         smit_table[:,2] = 10.**smit_table[:,2]
 
         self.smit_table = smit_table
+
+    def _assign_lines_(self):
+        if self.use_LT16_freq:
+            n = 111.52
+            CO_lines_LT16 = {'1-0': n, '2-1': 2*n, '3-2': 3*n, '4-3': 4*n,
+                 '5-4': 5*n, '6-5': 6*n, '7-6': 7*n, '8-7': 8*n,
+                 '9-8': 9*n, '10-9': 10*n, '11-10': 11*n,
+                 '12-11': 12*n, '13-12': 13*n, 'CII': 1901.0}
+
+            self.lines = { key: line(key, freq_emit=f) for key, f in CO_lines_LT16.items() }
+        
+        else:
+            CO_lines_wave = {'1-0': 2610, '2-1': 1300, '3-2': 866, '4-3': 651,
+                             '5-4': 521, '6-5': 434, '7-6': 372, '8-7': 325,
+                             '9-8': 289, '10-9': 260, '11-10': 237,
+                             '12-11': 217, '13-12': 200, 'CII': 157.7}
+            
+            self.lines = { key: line(key, wave_emit=w) for key, w in CO_lines_wave.items() }
 
 if __name__ == '__main__':
     l_freq = line('CII', 1901.03)
