@@ -1,5 +1,9 @@
 import numpy as np
 import warnings
+from colossus.cosmology import cosmology
+
+LT16_params = {'flat': True, 'H0': 70, 'Om0': 0.27, 'Ob0': 0.046, 'sigma8': 0.8, 'ns': 1.0}
+LT16_cosmo = cosmology.setCosmology('myCosmo', LT16_params)
 
 class line(object):
     def __init__(self, key, freq_emit=None, wave_emit=None):
@@ -43,10 +47,11 @@ class line(object):
         return self.wave_obs(zinterlop)
     
 class LT16_COmodel(object):
-    def __init__(self, use_LT16_freq=False):
+    def __init__(self, use_LT16_freq=False, cosmo=LT16_cosmo):
         self.available_keys = ['1-0', '2-1', '3-2', '4-3', '5-4', '6-5', '7-6', '8-7', '9-8',
                                '10-9', '11-10', '12-11', '13-12', 'CII']
         self.use_LT16_freq = use_LT16_freq
+        self.cosmo = cosmo
 
         self._assign_lines_()
         self._assign_CO_L0_()        
