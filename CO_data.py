@@ -41,3 +41,42 @@ class line(object):
     def wave_obs_interloping(self, ztarget, freq_target):
         zinterlop = self.redshift_emit_interloping(ztarget, freq_target)
         return self.wave_obs(zinterlop)
+    
+class LT16_COmodel(object):
+    def __init__(self):
+        self.CO_L0 = {'1-0': 3.7E3, '2-1': 2.8E4, '3-2': 7E4, '4-3': 9.7E4,
+                      '5-4': 9.6E4, '6-5': 9.5E4, '7-6': 8.9E4, '8-7': 7.7E4,
+                      '9-8': 6.9E4, '10-9': 5.3E4, '11-10': 3.8E4,
+                      '12-11': 2.6E4, '13-12': 1.4E4, 'CII': 6E6}
+        
+        self._assign_smit_table_()
+
+    def _assign_smit_table_(self):
+        smit_h = 0.7
+
+        smit_table = np.array( [[0.0, 0.91, -3.80, -1.51], 
+                                [0.2, 0.88, -3.01, -1.45], 
+                                [0.4, 0.97, -2.97, -1.45], 
+                                [0.6, 1.06, -2.68, -1.45], 
+                                # [0.8, 1.19, -2.77, -1.45], 
+                                [0.8, 1.10, -2.47, -1.56], 
+                                [1.5, 1.41, -2.61, -1.62], 
+                                [2.2, 1.71, -2.73, -1.57], 
+                                [1.5, 2.28, -3.44, -1.60], 
+                                [2.0, 2.27, -3.41, -1.60], 
+                                [2.3, 2.35, -3.49, -1.71], 
+                                [3.8, 1.54, -2.97, -1.60], 
+                                [5.0, 1.36, -3.12, -1.50], 
+                                [5.9, 1.07, -2.97, -1.57], 
+                                [6.8, 1.00, -3.20, -1.96]] )
+        
+        smit_table[:,1] = 10.**smit_table[:,1]
+        smit_table[:,2] = 10.**smit_table[:,2]
+
+        self.smit_table = smit_table
+
+if __name__ == '__main__':
+    l_freq = line('CII', 1901.03)
+    l_wave = line('CII', wave_emit=157.7)
+
+    COmodel = LT16_COmodel()
