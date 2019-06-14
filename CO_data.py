@@ -1,5 +1,6 @@
 import numpy as np
 import warnings
+from scipy.special import gamma
 from colossus.cosmology import cosmology
 
 LT16_params = {'flat': True, 'H0': 70, 'Om0': 0.27, 'Ob0': 0.046, 'sigma8': 0.8, 'ns': 1.0}
@@ -48,6 +49,7 @@ class line(object):
     
 class LT16_COmodel(object):
     def __init__(self, use_LT16_freq=False, cosmo=LT16_cosmo):
+        self._speed_of_light_in_kms_ = 299792.458
         self.available_keys = ['1-0', '2-1', '3-2', '4-3', '5-4', '6-5', '7-6', '8-7', '9-8',
                                '10-9', '11-10', '12-11', '13-12', 'CII']
         self.use_LT16_freq = use_LT16_freq
@@ -56,7 +58,8 @@ class LT16_COmodel(object):
         self._assign_lines_()
         self._assign_CO_L0_()        
         self._assign_smit_table_()
-        
+
+        self._compute_intensity_grid_()
 
     def _assign_CO_L0_(self):
         self.CO_L0 = {'1-0': 3.7E3, '2-1': 2.8E4, '3-2': 7E4, '4-3': 9.7E4,
@@ -106,6 +109,24 @@ class LT16_COmodel(object):
             
             self.lines = { key: line(key, wave_emit=w) for key, w in CO_lines_wave.items() }
 
+    def _compute_intensity_grid_(self):
+        print('hi')
+        intensity_grid = {}
+
+        z = self.smit_table[:,0]
+        SFR = self.smit_table[:,1]
+        phi = self.smit_table[:,2]
+        alpha = self.smit_table[:,3]
+
+        for key in self.available_keys:
+            eps = phi * self.CO_L0[key] * SFR * gamma(2.+alpha)
+            avg = (eps/(4.*np.pi*self.lines[key].freq_emit))
+            avg = np.multiply(avg, self._speed_of_light_in_kms_/self.cosmo.Hz(z) )
+            avg *= 0.04020414574289873 # unit handling, will incorporate astropy units later
+            intensity_grid[key] = np.transpose([z, avg])
+        
+        self._intensity_grid_ = intensity_grid
+    
 if __name__ == '__main__':
     l_freq = line('CII', 1901.03)
     l_wave = line('CII', wave_emit=157.7)
