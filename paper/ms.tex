@@ -379,10 +379,25 @@ emitted redshift of line $j$, and where,
 \aperp = \frac{D_{A}(z_j)}{D_A(z_i)}\text{,}
 \end{alignat}
 where $z_i$ is the emitted redshift of line $i$ and $D_A(z)$ is the comoving
-angular diameter distance to redshift $z$.
+angular diameter distance to redshift $z$. For simplicity, we assume the
+instrumental noise is white (i.e. $N_{i,\text{instrumental}}$ is constant),
+though it is straightforward in this formalism to incorporate a $k$- or
+$\mu$-dependence in the instrumental noise.
 
-For simplicity, we assume the instrumental noise is white (i.e.
-$N_{i,\text{instrumental}}$ is constant). 
+Unlike in the three field case, where the integrand of the Fisher matrix was
+only dependent on $k$, the noise and therefore covariance matrix depends also
+on $\mu$. Galactic foregrounds can imprint an azimuthal dependence as well,
+which we do not consider in this work. Incorporating a polar dependence is straightforward, and we can write the Fisher matrix as:
+\beq\label{eq:fisher_mu}
+F_{i,j} = 
+\int \frac{\text{d}k\,\text{d}\mu}{(2\pi)^2} k^2 V_{\text{surv}}
+% \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{l} \sum_{m}
+\frac{\partial \hat{P}_{l}(k, \mu)}{\partial B_i}
+\left(\Cov{\hat{P}_{l}(k, \mu)}{\hat{P}_{m}(k, \mu)}\right)^{-1}
+\frac{\partial \hat{P}_{m}(k, \mu)}{\partial B_j}\text{,}
+\eeq
+
 
 
 % \begin{multicols}{2}
