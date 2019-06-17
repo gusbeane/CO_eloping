@@ -1,6 +1,7 @@
 import numpy as np
 import warnings
 from scipy.special import gamma
+from scipy.interpolate import interp1d
 from colossus.cosmology import cosmology
 
 LT16_params = {'flat': True, 'H0': 70, 'Om0': 0.27, 'Ob0': 0.046, 'sigma8': 0.8, 'ns': 1.0}
@@ -60,6 +61,7 @@ class LT16_COmodel(object):
         self._assign_smit_table_()
 
         self._compute_intensity_grid_()
+        self._compute_interpolating_functions_()
 
     def _assign_CO_L0_(self):
         self.CO_L0 = {'1-0': 3.7E3, '2-1': 2.8E4, '3-2': 7E4, '4-3': 9.7E4,
@@ -77,9 +79,9 @@ class LT16_COmodel(object):
                                 # [0.8, 1.19, -2.77, -1.45], 
                                 [0.8, 1.10, -2.47, -1.56], 
                                 [1.5, 1.41, -2.61, -1.62], 
-                                [2.2, 1.71, -2.73, -1.57], 
-                                [1.5, 2.28, -3.44, -1.60], 
+                                # [1.5, 2.28, -3.44, -1.60], 
                                 [2.0, 2.27, -3.41, -1.60], 
+                                [2.2, 1.71, -2.73, -1.57], 
                                 [2.3, 2.35, -3.49, -1.71], 
                                 [3.8, 1.54, -2.97, -1.60], 
                                 [5.0, 1.36, -3.12, -1.50], 
@@ -99,7 +101,8 @@ class LT16_COmodel(object):
                  '9-8': 9*n, '10-9': 10*n, '11-10': 11*n,
                  '12-11': 12*n, '13-12': 13*n, 'CII': 1901.0}
 
-            self.lines = { key: line(key, freq_emit=f) for key, f in CO_lines_LT16.items() }
+            self.lines = { key: line(key, freq_emit=f) 
+                           for key, f in CO_lines_LT16.items() }
         
         else:
             CO_lines_wave = {'1-0': 2610, '2-1': 1300, '3-2': 866, '4-3': 651,
@@ -107,10 +110,10 @@ class LT16_COmodel(object):
                              '9-8': 289, '10-9': 260, '11-10': 237,
                              '12-11': 217, '13-12': 200, 'CII': 157.7}
             
-            self.lines = { key: line(key, wave_emit=w) for key, w in CO_lines_wave.items() }
+            self.lines = { key: line(key, wave_emit=w) 
+                           for key, w in CO_lines_wave.items() }
 
     def _compute_intensity_grid_(self):
-        print('hi')
         intensity_grid = {}
 
         z = self.smit_table[:,0]
@@ -127,8 +130,21 @@ class LT16_COmodel(object):
         
         self._intensity_grid_ = intensity_grid
     
+    def _compute_interpolating_functions_(self):
+        interpolating_fns = {}
+
+        for key in self.available_keys:
+            grid = self._intensity_grid_[key]
+            fns = {}
+            for kind in ['linear', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic']:
+                fns[kind] = interp1d(np.array(grid[:,0]), np.array(grid[:,1]), kind=kind, 
+                                     bounds_error=False, fill_value="extrapolate")
+            interpolating_fns[key] = fns
+
+        self._interpolating_fns_ = interpolating_fns
+
 if __name__ == '__main__':
     l_freq = line('CII', 1901.03)
     l_wave = line('CII', wave_emit=157.7)
 
-    COmodel = LT16_COmodel()
+    COmodel = LT16_COmodel(use_LT16_freq=True)
