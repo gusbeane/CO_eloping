@@ -99,7 +99,7 @@ class LT16_COmodel(object):
             CO_lines_LT16 = {'1-0': n, '2-1': 2*n, '3-2': 3*n, '4-3': 4*n,
                  '5-4': 5*n, '6-5': 6*n, '7-6': 7*n, '8-7': 8*n,
                  '9-8': 9*n, '10-9': 10*n, '11-10': 11*n,
-                 '12-11': 12*n, '13-12': 13*n, 'CII': 1901.0}
+                 '12-11': 12*n, '13-12': 13*n, 'CII': 1901.0301712111605}
 
             self.lines = { key: line(key, freq_emit=f) 
                            for key, f in CO_lines_LT16.items() }
