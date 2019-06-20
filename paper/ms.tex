@@ -163,6 +163,12 @@ $P_{i,\text{shot}}$ is given in Appendix~\ref{app:co_int}. All basic
 cosmological calculations are performed using the code \texttt{colossus} {\bf
 Diemer 2018}.
 
+For the cross-spectrum between two lines $i$ and $j$, we assume that {\bf need
+to fix this with the shot noise component}
+\beq\label{eq:cross_spec}
+P_{i,j}(k, \mu, z) = r_{i,j}(k, z) \sqrt{P_{i,i}(k, \mu, z) P_{j,j}(k, \mu, z)}
+\eeq
+
 \section{Three Field Approach}\label{sec:tf}
 We begin by considering the three field approach. We first start with this
 relatively simple case to gain some intuition for the \SN{} behavior when the
