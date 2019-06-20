@@ -477,7 +477,7 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
 
     # compute prefactor from fingerofgod effect
     sp2 = sigmap2(z, b, cosmo)
-    x2 = sp2 * (kdist)**2 * mu**2
+    x2 = sp2 * (kdist)**2 * (mudist)**2
     fingerofgod = 1./(1. + x2)
 
     # compute shot noise
