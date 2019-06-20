@@ -8,12 +8,18 @@ LT16_params = {'flat': True, 'H0': 70, 'Om0': 0.27, 'Ob0': 0.046, 'sigma8': 0.8,
 LT16_cosmo = cosmology.setCosmology('myCosmo', LT16_params)
 
 class line(object):
-    def __init__(self, key, freq_emit=None, wave_emit=None):
+    def __init__(self, key, freq_emit=None, wave_emit=None, bias=None):
         
         self._speed_of_light_ = 299792.458 # micron * GHz
         self._assign_freq_and_wave_(freq_emit, wave_emit)
 
         self.key = key
+        
+        if bias is not None:
+            self.bias = bias
+            self.bias_assigned = True
+        else:
+            self.bias_assigned = False
 
     def _assign_freq_and_wave_(self, freq_emit, wave_emit):        
         assert freq_emit is not None or wave_emit is not None, "Must specify emitted frequency\
