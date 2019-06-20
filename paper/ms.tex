@@ -102,6 +102,31 @@ different surveys.
 
 \section{Introduction}\label{sec:intro}
 
+\section{Technical Background}\label{sec:tech_back}
+We first lay out the approach to modelling the average intensity of an
+arbitrary emission line, the spatial clustering of that signal, the
+cross-spectrum between two different lines, and the fisher matrix approach for
+estimating the bias factors from an arbitrary number of cross-spectra or
+cross-spectra and auto-spectra.
+
+\subsection{Intrinsic Line Emission}\label{ssec:line_emission}
+The average intensity of an arbitrary line is calculated according
+to the simple model of \citet{2016ApJ...825..143L}, which is based upon
+\citet{2011ApJ...741...70L} and {\bf Pullen 2013}. The details are laid out in
+Appendix~\ref{app:co_int}, but in brief the model assumes a {\bf Schechter
+1976} form for the star formation rate function and a linear relationship
+between a halo's luminosity and its star formation rate with constants of
+proportionality from \citet{2010JCAP...11..016V}.
+
+We note that in this model the redshift evolution of each line is identical up
+to the luminosity-SFR constant of proportionality. In reality, we do not
+expect this to be the case. For example, the different CO lines should have
+varying intrinsic strengths since the typical phase of the ISM in each
+emitting galaxies should change as a function of redshift. This highlights one
+of the limitations of the line intensity model adopted here. Fully
+understanding the underlying galactic population will require more nuanced
+models, though the best path forward is not clear.
+
 \section{Three Field Approach}\label{sec:tf}
 We begin by considering the three field approach. We first start with this
 relatively simple case to gain some intuition for the \SN{} behavior when the
