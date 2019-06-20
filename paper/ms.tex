@@ -127,6 +127,42 @@ of the limitations of the line intensity model adopted here. Fully
 understanding the underlying galactic population will require more nuanced
 models, though the best path forward is not clear.
 
+To model the intrinsic spatial fluctuations of each line, we follow
+\citet{2016ApJ...825..143L} and \citet{2016ApJ...832..165C}, though we adopt
+the notation of the former. We use the word ``intrinsic'' here not to mean the
+signal in the cosmological rest frame, but rather the observed signal assuming
+the observed coordinates have been transformed to comoving coordinates with
+the correct redshift. This is not the case for interloping lines, for which
+their contribution to the signal is distorted because the assumed redshift and
+the emitted redshift are not the same. 
+
+The intrinsic emission from a line $i$ is given by
+\beq\label{eq:int_ps}
+P_{i,i}(k, \mu, z) = \avg{I_i}^2 \avg{b_i}^2 (1 + \beta_i \mu^2)^2 
+              D\left[\mu k \sigma_p(z)\right] P_{\delta, \delta}(k, z)
+              + P_{i, \text{shot}}\text{,}
+\eeq
+where $\mu=k_{\parallel}/k$ is the cosine of the angle between the wavevector
+$\bm{k}$ and the line of sight direction, $\avg{I_i}$ is the average specific
+intensity of line $i$, and $\avg{b_i}$ is the average luminosity-weighted bias
+of the emitting galaxies. The Kaiser effect {\bf Kaiser 1987} is implemented
+through the $(1 + \beta_i \mu^2)^2$ factor, where $\beta_i =
+f_{\Omega}/\avg{b_i}$ with $f_{\Omega} = \text{d}\ln{D}/\text{d}\ln{a}$ is the
+logarithmic derivative of the growth factor, well approximated by $f_{\Omega}
+\approx \Omega^{0.55}$ {\bf Linder 2005}. We assume a Lorentzian form for the
+finger-of-god suppression:
+\beq\label{eq:fog}
+D(x) = \frac{1}{1+x^2}\text{.}
+\eeq
+We approximate the pairwise velocity dispersion by $\sigma_p(z) =
+\sigma_v(z)/\sqrt{2}$ with $\sigma_v^2(z)$ being the variance of the
+line-of-sight component of the velocity field according to linear theory. We
+use the {\bf Eisenstein and Hu 1998} model for the linear theory matter power
+spectrum, $P_{\delta,\delta}(k, z)$. The computation of the shot noise,
+$P_{i,\text{shot}}$ is given in Appendix~\ref{app:co_int}. All basic
+cosmological calculations are performed using the code \texttt{colossus} {\bf
+Diemer 2018}.
+
 \section{Three Field Approach}\label{sec:tf}
 We begin by considering the three field approach. We first start with this
 relatively simple case to gain some intuition for the \SN{} behavior when the
