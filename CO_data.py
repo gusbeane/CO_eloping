@@ -53,14 +53,29 @@ class line(object):
     def wave_obs_interloping(self, ztarget, freq_target):
         zinterlop = self.redshift_emit_interloping(ztarget, freq_target)
         return self.wave_obs(zinterlop)
+
+class gaussian_smooth(object):
+    def __init__(self, x, y, sigma):
+        self.x = x
+        self.y = y
+        self.sigma = sigma
     
+    def __call__(self, x_eval):
+        delta_x = x_eval[:, None] - self.x 
+        weights = np.exp(-delta_x*delta_x / (2*self.sigma*self.sigma)) / (np.sqrt(2*np.pi) * self.sigma) 
+        weights /= np.sum(weights, axis=1, keepdims=True) 
+        y_eval = np.dot(weights, self.y) 
+        return y_eval
+
 class LT16_COmodel(object):
-    def __init__(self, use_LT16_freq=False, cosmo=LT16_cosmo):
+    def __init__(self, use_LT16_freq=False, cosmo=LT16_cosmo, kind='smooth', smooth_sigma=1):
         self._speed_of_light_in_kms_ = 299792.458
         self.available_keys = ['1-0', '2-1', '3-2', '4-3', '5-4', '6-5', '7-6', '8-7', '9-8',
                                '10-9', '11-10', '12-11', '13-12', 'CII']
         self.use_LT16_freq = use_LT16_freq
         self.cosmo = cosmo
+        self.kind = kind
+        self.smooth_sigma = smooth_sigma
 
         self._assign_lines_()
         self._assign_CO_L0_()        
@@ -145,6 +160,7 @@ class LT16_COmodel(object):
             for kind in ['linear', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic']:
                 fns[kind] = interp1d(np.array(grid[:,0]), np.array(grid[:,1]), kind=kind, 
                                      bounds_error=False, fill_value="extrapolate")
+            fns['smooth'] = gaussian_smooth(np.array(grid[:,0]), np.array(grid[:,1]), self.smooth_sigma)
             interpolating_fns[key] = fns
 
         self._interpolating_fns_ = interpolating_fns
