@@ -164,6 +164,12 @@ class LT16_COmodel(object):
             interpolating_fns[key] = fns
 
         self._interpolating_fns_ = interpolating_fns
+    
+    def __call__(self, key, z, kind=None):
+        if kind is None:
+            return self._interpolating_fns_[key][self.kind](z)
+        else:
+            return self._interpolating_fns_[key][kind](z)
 
 if __name__ == '__main__':
     l_freq = line('CII', 1901.03)
