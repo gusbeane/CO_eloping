@@ -189,7 +189,19 @@ F_{i,j} =
 \left(\Cov{\hat{P}_{l}(\bm{k})}{\hat{P}_{m}(\bm{k})}\right)^{-1}
 \frac{\partial \hat{P}_{m}(\bm{k})}{\partial \theta_j}\text{,}
 \eeq
-where the sum over $l$ and $m$ each is over each \emph{pair} of lines.
+where the sum over $l$ and $m$ each is over each \emph{pair} of lines. In
+order to compute the covariance matrix, we use the result that (cite {\bf
+something? Visbal?})
+\beq\label{eq:var_cov}
+\begin{split}
+\Var{\xps{i}{j}} &= \xps{i}{j}^2 + \pstot{i}\pstot{j} \\
+\Cov{\xps{i}{j}}{\xps{i}{k}} &= \pstot{i}\xps{j}{k} +
+\xps{i}{j}\xps{i}{k}\text{,}
+\end{split}
+\eeq
+where $\pstot{i} = \ps{i} + N_i$. Note that $N_i$ contains contributions from
+instrument noise, residual foreground contamination, and
+interloping/extraloping lines.
 
 While in principle one can extract $\bi$ and $\Ii$ independently due to the
 $\mu$-dependence of the Kaiser effect, there are a number of observational
@@ -235,7 +247,6 @@ computing the relevant Fisher matrix:
 \beq\label{eq:fisher_tf}
 F_{i,j} = 
 \int \frac{\text{d}^3k}{(2\pi)^3} V_{\text{surv}}
-% \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
 \sum_{l} \sum_{m}
 \frac{\partial \hat{P}_{l}(\bm{k})}{\partial B_i}
 \left(\Cov{\hat{P}_{l}(\bm{k})}{\hat{P}_{m}(\bm{k})}\right)^{-1}
