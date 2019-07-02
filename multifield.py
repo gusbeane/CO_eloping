@@ -170,6 +170,11 @@ def covariance(z, blist, Ilist, keylist, cosmo, Nfunclist=None, kmin=1E-3, kmax=
     ipairs = np.array(list(c))
     keypairs = keylist[ipairs]
 
+    PSlist = np.array([intensity_power_spectrum(z, b, I, cosmo, kmin=kmin, kmax=kmax, 
+                                             nk=nk, nmu=nmu, returnk=False) for b,I in zip(blist, Ilist)])
+
+    xPSlist = np.array([ np.sqrt(PSlist[ipair[0]]*PSlist[ipair[1]]) for ipair in ipairs ])
+
 if __name__ == '__main__':
     cosmo = CO_data.LT16_cosmo
 
