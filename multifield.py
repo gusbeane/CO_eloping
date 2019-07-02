@@ -78,7 +78,7 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
                              distort=False, ztarget=None, returnk=False, angle_averaged=False,
                              Iderivative=False, bderivative=False):
     
-    assert not Iderivative and bderivative, "I and b second derivative not supported"
+    assert not (Iderivative and bderivative), "I and b second derivative not supported"
 
     def _angle_average_ps_(k, mu, Pkmu):
         klist = k[:,0]
