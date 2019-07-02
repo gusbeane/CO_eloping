@@ -75,8 +75,11 @@ def sigmap2(z, b, cosmo, kmin=1E-4, kmax=1E4, nk=1000):
     return sigmap2
 
 def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
-                             distort=False, ztarget=None, returnk=False, angle_averaged=False):
+                             distort=False, ztarget=None, returnk=False, angle_averaged=False,
+                             Iderivative=False, bderivative=False):
     
+    assert not Iderivative and bderivative, "I and b second derivative not supported"
+
     def _angle_average_ps_(k, mu, Pkmu):
         klist = k[:,0]
 
@@ -105,8 +108,12 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
 
     # compute prefactor from kaiser effect
     beta_z = fomega(z, cosmo)/b
-    kaiser = np.add(1., np.multiply(beta_z, np.square(mudist)))
-    kaiser = np.square(kaiser)
+    kaiser1 = np.add(1., np.multiply(beta_z, np.square(mudist)))
+    kaiser = np.square(kaiser1)
+
+    if bderivative:
+        kd = np.multiply(2., kaiser1)
+        kaiser_derivative = np.multiply(kd, np.multiply(-beta_z/b, np.square(mudist)))
 
     # compute prefactor from fingerofgod effect
     sp2 = sigmap2(z, b, cosmo)
@@ -118,9 +125,19 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     shot = I**2 * (2. + alpha) / (phi * gamma(2.+alpha))
     shot *= CO_data.smit_h3
 
-    # put all the pieces together
-    Pintensity = np.multiply(np.multiply(np.multiply(B**2, kaiser), fingerofgod), Pden)
-    Pintensity = np.add(Pintensity, shot)
+    if bderivative:
+        Pintensity1 = np.multiply(np.multiply(np.multiply(B**2, kaiser_derivative), fingerofgod), Pden)
+        Pintensity2 = np.multiply(np.multiply(np.multiply(2*B**2/b, kaiser), fingerofgod), Pden)
+        Pintensity = np.add(Pintensity1, Pintensity2)
+    else:
+        # put all the pieces together
+        Pintensity = np.multiply(np.multiply(np.multiply(B**2, kaiser), fingerofgod), Pden)    
+        Pintensity = np.add(Pintensity, shot)
+
+    if Iderivative:
+        # this assumes that shot propto I^2, which I think is true generally
+        Pintensity = np.divide(Pintensity, I)
+        Pintensity = np.multiply(Pintensity, 2)
 
     # add in prefactor if distorted
     if distort:
