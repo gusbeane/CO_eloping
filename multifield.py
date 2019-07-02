@@ -121,9 +121,11 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     fingerofgod = 1./(1. + x2)
 
     # compute shot noise
-    SFR, phi, alpha = CO_data._find_nearest_smit_(z, CO_data.smit_unlog_table)
-    shot = I**2 * (2. + alpha) / (phi * gamma(2.+alpha))
-    shot *= CO_data.smit_h3
+    # TODO: implement in some way, probably in CO_data
+    # SFR, phi, alpha = CO_data._find_nearest_smit_(z, CO_data.smit_unlog_table)
+    # shot = I**2 * (2. + alpha) / (phi * gamma(2.+alpha))
+    # shot *= CO_data.smit_h3
+    shot = 0
 
     if bderivative:
         Pintensity1 = np.multiply(np.multiply(np.multiply(B**2, kaiser_derivative), fingerofgod), Pden)
