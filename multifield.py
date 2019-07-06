@@ -7,6 +7,16 @@ import CO_data
 class multifield(object):
     def __init__(self, z, line_list):
 
+def list_of_b_I_ps_derivatives(z, blist, Ilist, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256):
+    # first get b and I derivatives
+    ps_b_derivative = np.array([intensity_power_spectrum(z, b, I, cosmo, kmin=kmin, kmax=kmax, nk=nk,
+                                                         nmu=nmu, bderivative=True) 
+                                                         for b,I in zip(blist, Ilist)])
+
+    ps_I_derivative = np.array([intensity_power_spectrum(z, b, I, cosmo, kmin=kmin, kmax=kmax, nk=nk,
+                                                         nmu=nmu, Iderivative=True) 
+                                                         for b,I in zip(blist, Ilist)])
+
         self._check_assigned_bias_(line_list)
     
     def _check_assigned_bias_(self, line_list):
