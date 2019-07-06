@@ -188,6 +188,32 @@ def covariance(z, blist, Ilist, keylist, cosmo, Nfunclist=None, kmin=1E-3, kmax=
 
     PStotlist = np.add(PSlist, Nlist)
 
+    cov = np.zeros((npairs, npairs, nk, nmu))
+    for l,lpair in enumerate(ipairs):
+        l1, l2 = lpair
+        for m,mpair in enumerate(ipairs):
+            m1, m2 = mpair
+            if l == m:
+                cov[l][m] = np.square(xPSlist[l1][l2])
+                cov[l][m] = np.add(cov[l][m], np.multiply(PStotlist[l1], PStotlist[l2]))
+            else:
+                if l1 == m1 and l2 != m2:
+                    cov[l][m] = np.multiply(PStotlist[l1], xPSlist[l2][m2])
+                    cov[l][m] = np.add(cov[l][m], np.multiply(xPSlist[l1][l2], xPSlist[l1][m2]))
+                elif l1 == m2 and l2 != m1:
+                    cov[l][m] = np.multiply(PStotlist[l1], xPSlist[l2][m1])
+                    cov[l][m] = np.add(cov[l][m], np.multiply(xPSlist[l1][l2], xPSlist[l1][m1]))
+                elif l2 == m1 and l1 != m2:
+                    cov[l][m] = np.multiply(PStotlist[l2], xPSlist[l1][m2])
+                    cov[l][m] = np.add(cov[l][m], np.multiply(xPSlist[l2][l1], xPSlist[l2][m2]))
+                elif l2 == m2 and l1 != m1:
+                    cov[l][m] = np.multiply(PStotlist[l2], xPSlist[l1][m1])
+                    cov[l][m] = np.add(cov[l][m], np.multiply(xPSlist[l2][l1], xPSlist[l2][m1]))
+                else:
+                    cov[l][m] = 0.0
+
+    return cov
+
 if __name__ == '__main__':
     cosmo = CO_data.LT16_cosmo
 
