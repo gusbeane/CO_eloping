@@ -210,7 +210,10 @@ def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256
                 else:
                     cov[l][m] = 0.0
 
-    return cov
+    if returnk:
+        return k, mu, cov
+    else:
+        return cov
 
 class constant_N(object):
     def __init__(self, N):
