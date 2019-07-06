@@ -158,18 +158,16 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
     else:
         return Pintensity
 
-def covariance(z, blist, Ilist, keylist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256, nmu=256,
+def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256, nmu=256,
                 returnk=False):
 
-    assert len(blist) == len(Ilist) and len(Ilist) == len(keylist), "blist, Ilist, and keylist must be\
-                                                                    the same length"
+    assert len(blist) == len(Ilist), "blist, and Ilist must be the same length"
     
     nparam = len(blist)
     ilist = np.array(list(range(nparam)))
     c = itertools.combinations(ilist, 2)
     ipairs = np.array(list(c))
-    keypairs = keylist[ipairs]
-    npairs = len(keypairs)
+    npairs = len(ipairs)
 
     # just to get k, mu... TODO: pull this out of PS func later
     k, mu, _ = intensity_power_spectrum(z, blist[0], Ilist[0], cosmo, kmin=kmin, kmax=kmax,
@@ -227,7 +225,6 @@ if __name__ == '__main__':
     N_const2 = constant_N(20)
     Nlist = [N_const1, N_const2]
 
-    cov = covariance(2, np.array([1, 2, 3, 4]), np.array([100, 100, 100, 100]), np.array(['2-1', '3-2', '4-3', '5-4']),
-                     cosmo, Nfunclist=Nlist)
+    cov = covariance(2, np.array([1, 2, 3, 4]), np.array([100, 100, 100, 100]), cosmo, Nfunclist=Nlist)
 
     
