@@ -180,6 +180,14 @@ def covariance(z, blist, Ilist, keylist, cosmo, Nfunclist=None, kmin=1E-3, kmax=
 
     xPSlist = np.array([ np.sqrt(PSlist[ipair[0]]*PSlist[ipair[1]]) for ipair in ipairs ])
 
+    if Nfunclist is not None:
+        Nlist = np.array([ Nfunc(k, mu) for Nfunc in Nfunclist ])
+        Nlist = np.sum(Nlist, axis=0)
+    else:
+        Nlist = np.zeros(np.shape(k))
+
+    PStotlist = np.add(PSlist, Nlist)
+
 if __name__ == '__main__':
     cosmo = CO_data.LT16_cosmo
 
