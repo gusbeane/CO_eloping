@@ -169,6 +169,11 @@ def covariance(z, blist, Ilist, keylist, cosmo, Nfunclist=None, kmin=1E-3, kmax=
     c = itertools.combinations(ilist, 2)
     ipairs = np.array(list(c))
     keypairs = keylist[ipairs]
+    npairs = len(keypairs)
+
+    # just to get k, mu... TODO: pull this out of PS func later
+    k, mu, _ = intensity_power_spectrum(z, blist[0], Ilist[0], cosmo, kmin=kmin, kmax=kmax,
+                                        nk=nk, nmu=nmu, returnk=True)
 
     PSlist = np.array([intensity_power_spectrum(z, b, I, cosmo, kmin=kmin, kmax=kmax, 
                                              nk=nk, nmu=nmu, returnk=False) for b,I in zip(blist, Ilist)])
