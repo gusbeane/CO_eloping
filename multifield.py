@@ -214,6 +214,12 @@ def covariance(z, blist, Ilist, keylist, cosmo, Nfunclist=None, kmin=1E-3, kmax=
 
     return cov
 
+class constant_N(object):
+    def __init__(self, N):
+        self.N = N
+    def __call__(self, k, mu):
+        return np.full(np.shape(k), self.N)
+
 if __name__ == '__main__':
     cosmo = CO_data.LT16_cosmo
 
