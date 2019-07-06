@@ -223,7 +223,11 @@ class constant_N(object):
 if __name__ == '__main__':
     cosmo = CO_data.LT16_cosmo
 
-    cov = covariance(2, np.array([1, 2, 3]), np.array([100, 100, 100]), np.array(['2-1', '3-2', '4-3']),
-                     cosmo)
+    N_const1 = constant_N(10)
+    N_const2 = constant_N(20)
+    Nlist = [N_const1, N_const2]
+
+    cov = covariance(2, np.array([1, 2, 3, 4]), np.array([100, 100, 100, 100]), np.array(['2-1', '3-2', '4-3', '5-4']),
+                     cosmo, Nfunclist=Nlist)
 
     
