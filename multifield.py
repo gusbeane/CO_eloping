@@ -169,7 +169,7 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
         return Pintensity
 
 def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256, nmu=256,
-                returnk=False):
+                returnk_and_pairs=False):
 
     assert len(blist) == len(Ilist), "blist, and Ilist must be the same length"
     
@@ -220,8 +220,8 @@ def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256
                 else:
                     cov[l][m] = 0.0
 
-    if returnk:
-        return k, mu, cov
+    if returnk_and_pairs:
+        return k, mu, ipairs, cov
     else:
         return cov
 
