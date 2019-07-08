@@ -72,7 +72,7 @@ def fomega(z, cosmo):
 
     return np.negative(fomega)
 
-def sigmap2(z, b, cosmo, kmin=1E-4, kmax=1E4, nk=1000):
+def sigmap2(z, cosmo, kmin=1E-4, kmax=1E4, nk=1000):
     klist = np.logspace(np.log10(kmin), np.log10(kmax), nk)
     Pklist = cosmo.matterPowerSpectrum(klist, z)
     
@@ -126,7 +126,7 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
         kaiser_derivative = np.multiply(kd, np.multiply(-beta_z/b, np.square(mudist)))
 
     # compute prefactor from fingerofgod effect
-    sp2 = sigmap2(z, b, cosmo)
+    sp2 = sigmap2(z, cosmo)
     x2 = sp2 * (kdist*cosmo.h)**2 * mu**2
     fingerofgod = 1./(1. + x2)
 
