@@ -363,8 +363,15 @@ if __name__ == '__main__':
 
     N_const1 = constant_N(10)
     N_const2 = constant_N(20)
-    Nlist = [N_const1, N_const2]
+    Nlist = [N_const1]
 
-    cov = covariance(2, np.array([1, 2, 3, 4]), np.array([100, 100, 100, 100]), cosmo, Nfunclist=Nlist)
+    k, mu, ipairs, cov = covariance(2, np.array([1, 2, 3, 4]), np.array([100, 100, 100, 100]), cosmo, 
+                     Nfunclist=Nlist, returnk_and_pairs=True)
 
-    
+    # reproduce the ellipses from the paper
+    Vsurv = 508
+    blist = 100*np.array([1, np.sqrt(2), np.sqrt(3)])
+    Ilist = np.array([1, 1, 1])/100
+    Nlist = [constant_N(2E5)]
+    fmat = fisher_multifield(0.88, blist, Ilist, Vsurv, cosmo, Nfunclist=Nlist)
+    fmatp = convert_fisher(fmat, blist, Ilist)
