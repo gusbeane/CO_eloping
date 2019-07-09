@@ -310,7 +310,12 @@ def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256
     PSlist = np.array([intensity_power_spectrum(z, b, I, cosmo, kmin=kmin, kmax=kmax, 
                                              nk=nk, nmu=nmu, returnk=False) for b,I in zip(blist, Ilist)])
 
-    xPSlist = np.array([ np.sqrt(PSlist[ipair[0]]*PSlist[ipair[1]]) for ipair in ipairs ])
+    xPSlist = np.zeros((nparam, nparam, nk, nmu))
+    for i in range(nparam):
+        for j in range(nparam):
+            xPSlist[i][j] = intensity_cross_power_spectrum(z, blist[i], blist[j], Ilist[i], Ilist[j], 
+                                                           cosmo, kmin=kmin, kmax=kmax, nk=nk, nmu=nmu,
+                                                           returnk=False)
 
     if Nfunclist is not None:
         Nlist = np.array([ Nfunc(k, mu) for Nfunc in Nfunclist ])
