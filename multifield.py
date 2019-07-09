@@ -84,6 +84,74 @@ def sigmap2(z, cosmo, kmin=1E-4, kmax=1E4, nk=1000):
 
     return sigmap2
 
+def kaiser(b, mu, z, cosmo):
+    beta_z = fomega(z, cosmo)/b
+    kai = np.add(1., np.multiply(beta_z, np.square(mu)))
+    return kai
+
+def intensity_cross_power_spectrum(z, b1, b2, I1, I2, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
+                             returnk=False, angle_averaged=False,
+                             Iderivative=False, bderivative=False):
+    # note that b derivative is always taken wrt b1, and same with I derivative
+
+    assert not (Iderivative and bderivative), "I and b second derivative not supported"
+
+    def _angle_average_ps_(k, mu, Pkmu):
+        klist = k[:,0]
+
+        Pi = np.trapz(Pkmu, mu, axis=1)
+        Pi = np.divide(Pi, 2.)
+
+        return klist, Pi
+    
+    klist = np.logspace(np.log10(kmin), np.log10(kmax), nk)
+    mulist = np.linspace(-1, 1, nmu)
+
+    # generate distorted k, mu - if applicable
+    # otherwise kdist, mudist = k, mu
+    k, mu = gen_k_meshgrid(klist, mulist)
+
+    Pden = cosmo.matterPowerSpectrum(k, z)
+
+    B1 = b1 * I1
+    B2 = b2 * I2
+
+    # compute prefactor from kaiser effect
+    kai1 = kaiser(b1, mu, z, cosmo)
+    kai2 = kaiser(b2, mu, z, cosmo)
+
+    # compute prefactor from fingerofgod effect
+    sp2 = sigmap2(z, cosmo)
+    x2 = sp2 * (k*cosmo.h)**2 * mu**2
+    fingerofgod = 1./(1. + x2)
+
+    prefactor = np.multiply(B1, B2)
+    prefactor = np.multiply(prefactor, np.multiply(kai1, kai2))
+    prefactor = np.multiply(prefactor, fingerofgod)
+    
+    if (not bderivative) and (not Iderivative):
+        Pintensity = np.multiply(prefactor, Pden)
+    elif bderivative:
+        prefactor1 = np.divide(prefactor, b1)
+        prefactor2 = np.divide(prefactor, kai1)
+        prefactor2 = np.multiply(prefactor, (1.-np.square(kai1))/b1)
+        Pintensity = np.multiply(prefactor1, den) + np.multiply(prefactor2, den)
+    elif Iderivative:
+        Pintensity = np.multiply(prefactor/I1, Pden)
+
+    # angle average, if necessary
+    if angle_averaged:
+        k, Pintensity = _angle_average_ps_(k, mu, Pintensity)
+
+    # return
+    if returnk:
+        if angle_averaged:
+            return k, Pintensity
+        else:
+            return k, mu, Pintensity
+    else:
+        return Pintensity
+
 def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
                              distort=False, ztarget=None, returnk=False, angle_averaged=False,
                              Iderivative=False, bderivative=False):
