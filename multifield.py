@@ -65,6 +65,20 @@ def fisher_multifield(z, blist, Ilist, Vsurv, cosmo, Nfunclist=None,
     fmat *= Vsurv/(2.*np.pi)**2
     return fmat
                     
+def convert_fisher(fmat, blist, Ilist):
+    nlines = len(blist)
+    nderiv = 2 * nlines
+    conv_mat = np.zeros((nderiv, nlines))
+    for i in range(nderiv):
+        for j in range(nlines):
+            if i==j:
+                conv_mat[i][j] = 1/Ilist[j]
+            elif i==j+nlines:
+                conv_mat[i][j] = 1/blist[j]
+            else:
+                conv_mat[i][j] = 0
+    fmatp = np.matmul(np.matmul(np.transpose(conv_mat), fmat), conv_mat)
+    return fmatp
 
 def alpha_factors(ztarget, ziloper, cosmo):
     # if zj >=0 and zi >= 0:
