@@ -177,7 +177,7 @@ def intensity_cross_power_spectrum(z, b1, b2, I1, I2, cosmo, kmin=1E-3, kmax=1, 
         prefactor1 = np.divide(prefactor, b1)
         prefactor2 = np.divide(prefactor, kai1)
         prefactor2 = np.multiply(prefactor, (1.-np.square(kai1))/b1)
-        Pintensity = np.multiply(prefactor1, den) + np.multiply(prefactor2, den)
+        Pintensity = np.multiply(prefactor1, Pden) + np.multiply(prefactor2, Pden)
     elif Iderivative:
         Pintensity = np.multiply(prefactor/I1, Pden)
 
