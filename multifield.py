@@ -4,25 +4,16 @@ import itertools
 from scipy.special import gamma
 import CO_data
 
-class multifield(object):
-    def __init__(self, z, line_list):
 
-def list_of_b_I_ps_derivatives(z, blist, Ilist, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256):
-    # first get b and I derivatives
-    ps_b_derivative = np.array([intensity_power_spectrum(z, b, I, cosmo, kmin=kmin, kmax=kmax, nk=nk,
-                                                         nmu=nmu, bderivative=True) 
-                                                         for b,I in zip(blist, Ilist)])
+def fisher_multifield(z, blist, Ilist, Vsurv, cosmo, Nfunclist=None, 
+                      kmin=1E-3, kmax=1, nk=256, nmu=256):
 
-    ps_I_derivative = np.array([intensity_power_spectrum(z, b, I, cosmo, kmin=kmin, kmax=kmax, nk=nk,
-                                                         nmu=nmu, Iderivative=True) 
-                                                         for b,I in zip(blist, Ilist)])
+    assert len(blist) == len(Ilist), "blist and Ilist must be same length"
+    nlines = len(blist)
 
-        self._check_assigned_bias_(line_list)
+    k, mu, ipairs, cov = covariance(z, blist, Ilist, cosmo, Nfunclist=Nfunclist, 
+                     kmin=kmin, kmax=kmax, nk=nk, nmu=nmu, returnk_and_pairs=True)
     
-    def _check_assigned_bias_(self, line_list):
-        for line in line_list:
-            assert line.bias_assigned, "Bias not assigned for line "+line.key
-
 
 def alpha_factors(ztarget, ziloper, cosmo):
     # if zj >=0 and zi >= 0:
