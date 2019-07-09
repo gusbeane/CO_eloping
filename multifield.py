@@ -326,10 +326,8 @@ def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256
     PStotlist = np.add(PSlist, Nlist)
 
     cov = np.zeros((npairs, npairs, nk, nmu))
-    for l,lpair in enumerate(ipairs):
-        l1, l2 = lpair
-        for m,mpair in enumerate(ipairs):
-            m1, m2 = mpair
+    for l, (l1, l2) in enumerate(ipairs):
+        for m, (m1, m2) in enumerate(ipairs):
             if l == m:
                 cov[l][m] = np.square(xPSlist[l1][l2])
                 cov[l][m] = np.add(cov[l][m], np.multiply(PStotlist[l1], PStotlist[l2]))
