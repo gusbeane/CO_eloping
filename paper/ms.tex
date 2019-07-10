@@ -144,8 +144,8 @@ the emitted redshift are not the same.
 The intrinsic emission from a line $i$ is given by
 \beq\label{eq:int_ps}
 P_{i,i}(k, \mu, z) = \avg{I_i}^2 \avg{b_i}^2 (1 + \beta_i \mu^2)^2 
-              D\left[\mu k \sigma_p(z)\right] P_{\delta, \delta}(k, z)
-              + P_{i, \text{shot}}\text{,}
+              D\left[\mu k \sigma_p(z)\right] P_{\delta, \delta}(k, z)\text{,}
+              % + P_{i, \text{shot}}\text{,}
 \eeq
 where $\mu=k_{\parallel}/k$ is the cosine of the angle between the wavevector
 $\bm{k}$ and the line of sight direction, $\avg{I_i}$ is the average specific
@@ -161,15 +161,14 @@ D(x) = \frac{1}{1+x^2}\text{.}
 \eeq
 We approximate the pairwise velocity dispersion by $\sigma_p(z) =
 \sigma_v(z)/\sqrt{2}$ with $\sigma_v^2(z)$ being the variance of the
-line-of-sight component of the velocity field according to linear theory. We
-use the {\bf Eisenstein and Hu 1998} model for the linear theory matter power
-spectrum, $P_{\delta,\delta}(k, z)$. The computation of the shot noise,
-$P_{i,\text{shot}}$ is given in Appendix~\ref{app:co_int}. All basic
-cosmological calculations are performed using the code \texttt{colossus} {\bf
-Diemer 2018}.
+line-of-sight component of the velocity field according to linear theory.
+Equation~\eqref{eq:int_ps} neglects the shot noise component of the power
+spectrum, which is an acceptable omission for the large scales considered in
+this work. We use the {\bf Eisenstein and Hu 1998} model for the linear theory
+matter power spectrum, $P_{\delta,\delta}(k, z)$. All basic cosmological
+calculations are performed using the code \texttt{colossus} {\bf Diemer 2018}.
 
-For the cross-spectrum between two lines $i$ and $j$, we assume that {\bf need
-to fix this with the shot noise component}
+For the cross-spectrum between two lines $i$ and $j$, we assume that
 \beq\label{eq:cross_spec}
 P_{i,j}(k, \mu, z) = r_{i,j}(k, z) \sqrt{P_{i,i}(k, \mu, z) P_{j,j}(k, \mu, z)}
 \eeq
