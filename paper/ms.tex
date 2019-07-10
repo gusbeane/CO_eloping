@@ -150,11 +150,11 @@ P_{i,i}(k, \mu, z) = \avg{I_i}^2 \avg{b_i}^2 (1 + \beta_i \mu^2)^2
 where $\mu=k_{\parallel}/k$ is the cosine of the angle between the wavevector
 $\bm{k}$ and the line of sight direction, $\avg{I_i}$ is the average specific
 intensity of line $i$, and $\avg{b_i}$ is the average luminosity-weighted bias
-of the emitting galaxies. The Kaiser effect {\bf Kaiser 1987} is implemented
+of the emitting galaxies. The Kaiser effect \citep{1987MNRAS.227....1K} is implemented
 through the $(1 + \beta_i \mu^2)^2$ factor, where $\beta_i =
 f_{\Omega}/\avg{b_i}$ with $f_{\Omega} = \text{d}\ln{D}/\text{d}\ln{a}$ is the
 logarithmic derivative of the growth factor, well approximated by $f_{\Omega}
-\approx \Omega^{0.55}$ {\bf Linder 2005}. We assume a Lorentzian form for the
+\approx \Omega^{0.55}$ \citep{2005PhRvD..72d3529L}. We assume a Lorentzian form for the
 finger-of-god suppression:
 \beq\label{eq:fog}
 D(x) = \frac{1}{1+x^2}\text{.}
@@ -164,9 +164,9 @@ We approximate the pairwise velocity dispersion by $\sigma_p(z) =
 line-of-sight component of the velocity field according to linear theory.
 Equation~\eqref{eq:int_ps} neglects the shot noise component of the power
 spectrum, which is an acceptable omission for the large scales considered in
-this work. We use the {\bf Eisenstein and Hu 1998} model for the linear theory
+this work. We use the \citet{1998ApJ...496..605E} model for the linear theory
 matter power spectrum, $P_{\delta,\delta}(k, z)$. All basic cosmological
-calculations are performed using the code \texttt{colossus} {\bf Diemer 2018}.
+calculations are performed using the code \texttt{colossus} \citep{2018ApJS..239...35D}.
 
 For the cross-spectrum between two lines $i$ and $j$, we assume that
 \beq\label{eq:cross_spec}
@@ -189,8 +189,7 @@ F_{i,j} =
 \frac{\partial \hat{P}_{m}(\bm{k})}{\partial \theta_j}\text{,}
 \eeq
 where the sum over $l$ and $m$ each is over each \emph{pair} of lines. In
-order to compute the covariance matrix, we use the result that (cite {\bf
-something? Visbal?})
+order to compute the covariance matrix, we use the result that \citep[e.g.][]{2010JCAP...11..016V},
 \beq\label{eq:var_cov}
 \begin{split}
 \Var{\xps{i}{j}} &= \xps{i}{j}^2 + \pstot{i}\pstot{j} \\
@@ -204,10 +203,10 @@ interloping/extraloping lines.
 
 While in principle one can extract $\bi$ and $\Ii$ independently due to the
 $\mu$-dependence of the Kaiser effect, there are a number of observational
-challenges {\bf Dongwoo 2019}. We will therefore only consider the constraints
+challenges \citep{2019arXiv190500209C}. We will therefore only consider the constraints
 that can be placed on the product of the two, i.e., $B_i \equiv \bi \Ii$. The
 previous Fisher matrix can be converted to the equivalent one for constraints
-on $B_i$, $F'$, by the following relation (e.g. {\bf Coe 2009}):
+on $B_i$, $F'$, by the following relation \citep[e.g.][]{2009arXiv0906.4123C}:
 \beq\label{eq:fisher_transform}
 F' = M^{\mathsf{T}} F M\text{,}
 \eeq
