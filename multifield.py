@@ -4,6 +4,155 @@ import itertools
 from scipy.special import gamma
 import CO_data
 
+class multifield(object):
+    def __init__(self, z, Blist, Nlist, kmax, Vsurv, cosmo, kmin=1E-3, nint=1000,
+                 whitenoise=True, Vk=None, klist=None):
+        
+        if not whitenoise:
+            raise NotImplementedError()
+
+        # store some parameters
+        self.kmin, self.kmax = kmin, kmax
+        self.z, self.nint, self.Vk = z, nint, Vk
+        self.Vsurv, self.cosmo = Vsurv, cosmo
+
+        # ignore nint if a klist is provided
+        if klist is not None:
+            self.nint = len(klist)
+
+        # construct linear matter power spectrum
+        self.klist, self.Pklist = self._gen_lin_ps_(self.z, self.kmin, self.kmax, 
+                                                    self.nint, self.cosmo, klist)
+
+        # check Blist, Nlist, make sure lengths match
+        self.Blist, self.Nlist, self.nparam = self._check_BN_param_(Blist, Nlist)
+
+        # generate pairs of indices
+        self.pairlist, self.npair = self._gen_pairlist_(self.nparam)
+
+        # construct derivative vector
+        self.dPldBi = self._gen_dPdB_(self.Blist, self.Pklist, self.pairlist, self.npair, self.nparam, self.nint)
+
+        # construct cov, invcov matrices
+        self.cov, self.invcov = self._gen_cov_(self.Blist, self.Nlist, self.Pklist,
+                                               self.pairlist, self.nparam, self.npair, self.nint)
+
+        # construct fisher matrix
+        self.fmat = self._gen_fmat_(self.dPldBi, self.invcov, self.klist,
+                                    self.Vsurv, self.npair, self.nparam, self.nint)
+
+    def _gen_lin_ps_(self, z, kmin, kmax, nint, cosmo, klist=None):
+        """Generates a the linear power spectrum at redshift z.
+
+        Uses the input colossus cosmology to generate the linear matter
+        power spectrum at redshift z. Note that kmin and kmax are ignored if
+        klist is provided, but are still required arguments. If klist is not
+        given, then a klist will be generated with logarithmic spacing from kmin
+        to kmax, with a length of nint.
+    
+        Args:
+            z (float): The redshift at which to compute the power spectrum.
+            kmin (float): The minimum k at which to compute the power spectrum.
+                Ignored if klist is given.
+            kmax (float): The maximum k at which to compute the power spectrum.
+                Ignored if klist is given.
+            nint (int): The number of spacings for the klist. Ignored if klist is
+                given.
+            cosmo: A colossus cosmology object. Used to compute the matter power
+                spectrum.
+            klist (array, optional): A list of k values at which to compute the
+                matter power spectrum. Recommended to be in ascending order. Overrides
+                the kmin, kmax, and nint arguments.
+    
+        Returns:
+            klist (array): The k values [h/Mpc] at which the matter power spectrum is 
+                computed.
+            Pklist (array): The power spectrum values [(Mpc/h)^3].
+        """
+        if klist is None:
+            klist = np.logspace(np.log10(kmin), np.log10(kmax), nint)
+
+        Pklist = cosmo.matterPowerSpectrum(klist, z)
+
+        return klist, Pklist
+
+    def _check_BN_param_(self, Blist, Nlist):
+        # check Blist, Nlist, make sure lengths match
+        Blist = np.asarray(Blist)
+        Nlist = np.asarray(Nlist)
+        assert len(Blist) == len(Nlist), "Bias and noise lists are different length!"
+                                                    
+        nparam = len(Blist)
+        return Blist, Nlist, nparam
+
+    def _gen_pairlist_(self, nparam):
+        l = list(range(nparam))
+        c = itertools.combinations(l, 2)
+        pairlist = list(c)
+        npair = len(pairlist)
+        return pairlist, npair
+
+    def _gen_dPdB_(self, Blist, Pklist, pairlist, npair, nparam, nint):
+        dPldBi = np.zeros((nparam, npair, nint))
+        for i, (p1, p2) in enumerate(pairlist):
+            for j in range(nparam):
+                if j == p1:
+                    dPldBi[j][i] = Blist[p2] * Pklist
+                elif j == p2:
+                    dPldBi[j][i] = Blist[p1] * Pklist
+                else:
+                    dPldBi[j][i] = 0
+        return dPldBi
+
+    def _gen_cov_(self, Blist, Nlist, Pklist, pairlist, nparam, npair, nint):
+        cov = np.zeros((npair, npair, nint))
+
+        for i, (l1, l2) in enumerate(pairlist):
+            for j, (m1, m2) in enumerate(pairlist):
+                if (l1 == m1 and l2 == m2) or (l1 == m2 and l2 == m1):
+                    cov[i][j] = (Blist[l1]*Blist[l2]*Pklist)**2
+                    cov[i][j] += (Blist[l1]**2*Pklist + Nlist[l1]) * (Blist[l2]**2*Pklist + Nlist[l2])
+                elif l1 == m1 and l2 != m2:
+                    cov[i][j] = (Blist[l1]**2*Pklist + Nlist[l1])*Blist[l2]*Blist[m2]*Pklist
+                    cov[i][j] += Blist[l1]**2 * Blist[l2]*Blist[m2] * Pklist**2
+                elif l1 == m2 and l2 != m1:
+                    cov[i][j] = (Blist[l1]**2*Pklist + Nlist[l1])*Blist[l2]*Blist[m1]*Pklist
+                    cov[i][j] += Blist[l1]**2 * Blist[l2]*Blist[m1] * Pklist**2
+                elif l2 == m1 and l1 != m2:
+                    cov[i][j] = (Blist[l2]**2*Pklist + Nlist[l2])*Blist[l1]*Blist[m2]*Pklist
+                    cov[i][j] += Blist[l2]**2 * Blist[l1]*Blist[m2] * Pklist**2
+                elif l2 == m2 and l1 != m1:
+                    cov[i][j] = (Blist[l2]**2*Pklist + Nlist[l2])*Blist[l1]*Blist[m1]*Pklist
+                    cov[i][j] += Blist[l2]**2 * Blist[l1]*Blist[m1] * Pklist**2
+                else:
+                    cov[i][j] = 0.0
+
+        invcov = np.copy(cov)
+        for i in range(nint):
+            invcov[:,:,i] = np.linalg.inv(cov[:,:,i])
+
+        return cov, invcov
+
+    def _gen_fmat_(self, dPldBi, invcov, klist, Vsurv, npair, nparam, nint):
+        t1 = np.transpose(np.swapaxes(dPldBi, 0, 1))
+        t2 = np.transpose(invcov)
+        t3 = np.transpose(dPldBi)
+
+        fmat = np.matmul(np.matmul(t1, t2), t3)
+        fmat = np.transpose(fmat)
+        fmat = self._integrate_fmat_(klist, Vsurv, fmat, nparam, nint)
+
+        return fmat
+
+    def _integrate_fmat_(self, klist, Vsurv, fmat, nparam, nint):
+        k = np.reshape(klist, (1, 1, nint))
+        k = np.repeat(k, nparam, axis=0)
+        k = np.repeat(k, nparam, axis=1)
+
+        factor = np.square(k) * Vsurv / (2. * np.pi**2)
+
+        return np.trapz(np.multiply(factor, fmat), klist, axis=2)
+
 def fmat_term(z, i, j, ipairs, blist, Ilist, cov, nlines, cosmo):
     term = 0.0
     for l, (l1, l2) in enumerate(ipairs):
