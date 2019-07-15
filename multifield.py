@@ -518,17 +518,23 @@ def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256
     else:
         return cov
 
-class constant_N(object):
+class constant_N_mu(object):
     def __init__(self, N):
         self.N = N
     def __call__(self, k, mu):
         return np.full(np.shape(k), self.N)
 
+class constant_N(object):
+    def __init__(self, N):
+        self.N = N
+    def __call__(self, k):
+        return np.full(np.shape(k), self.N)
+
 if __name__ == '__main__':
     cosmo = CO_data.LT16_cosmo
 
-    N_const1 = constant_N(10)
-    N_const2 = constant_N(20)
+    N_const1 = constant_N_mu(10)
+    N_const2 = constant_N_mu(20)
     Nlist = [N_const1]
 
     k, mu, ipairs, cov = covariance(2, np.array([1, 2, 3, 4]), np.array([100, 100, 100, 100]), cosmo, 
@@ -538,7 +544,7 @@ if __name__ == '__main__':
     Vsurv = 508
     blist = 100*np.array([1, np.sqrt(2), np.sqrt(3)])
     Ilist = np.array([1, 1, 1])/100
-    Nlist = [constant_N(2E5)]
+    Nlist = [constant_N_mu(2E5)]
     k, mu, ipairs, cov = covariance(0.88, blist, Ilist, cosmo, Nfunclist=Nlist, returnk_and_pairs=True)
     fmat = fisher_multifield(0.88, blist, Ilist, Vsurv, cosmo, Nfunclist=Nlist)
     fmatp = convert_fisher(fmat, blist, Ilist)
