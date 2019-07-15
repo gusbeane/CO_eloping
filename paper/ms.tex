@@ -115,9 +115,8 @@ cross-spectra and auto-spectra.
 \subsection{Intrinsic Line Emission}\label{ssec:line_emission}
 The average intensity of an arbitrary line is calculated according
 to the simple model of \citet{2016ApJ...825..143L}, which is based upon
-\citet{2011ApJ...741...70L} and {\bf Pullen 2013}. The details are laid out in
-Appendix~\ref{app:co_int}, but in brief the model assumes a {\bf Schechter
-1976} form for the star formation rate function and a linear relationship
+\citet{2011ApJ...741...70L} and \citet{2013ApJ...768...15P}. The details are laid out in
+Appendix~\ref{app:co_int}, but in brief the model assumes a \citet{1976ApJ...203..297S} form for the star formation rate function and a linear relationship
 between a halo's luminosity and its star formation rate with constants of
 proportionality from \citet{2010JCAP...11..016V}.
 
@@ -168,8 +167,10 @@ calculations are performed using the code \texttt{colossus} \citep{2018ApJS..239
 
 For the cross-spectrum between two lines $i$ and $j$, we assume that
 \beq\label{eq:cross_spec}
-P_{i,j}(k, \mu, z) = r_{i,j}(k, z) \sqrt{P_{i,i}(k, \mu, z) P_{j,j}(k, \mu, z)}
+P_{i,j}(k, \mu, z) = r_{i,j}(k, z) \sqrt{P_{i,i}(k, \mu, z) P_{j,j}(k, \mu, z)}\text{,}
 \eeq
+where $r_{i,j}$ is the cross-correlation coefficient between line $i$ and $j$.
+We will only consider scales where $r_{i,j} = 1$.
 
 \subsection{Multi-line Formalism}\label{ssec:multi_line}
 Given a set of cross-spectra and their covariance matrix, we can determine the
@@ -206,12 +207,18 @@ that can be placed on the product of the two, i.e., $B_i \equiv \bi \Ii$. The
 previous Fisher matrix can be converted to the equivalent one for constraints
 on $B_i$, $F'$, by the following relation \citep[e.g.][]{2009arXiv0906.4123C}:
 \beq\label{eq:fisher_transform}
-F' = M^{\mathsf{T}} F M\text{,}
+F' = M^{\text{T}} F M\text{,}
 \eeq
 where
 \beq\label{eq:trans_matrix}
 M_{ij} = \frac{\partial \theta_i}{\partial B_j}\text{.}
 \eeq
+
+\subsection{Noise Components}\label{ssec:noise}
+We describe the implementation of each noise component.
+
+\subsubsection{Interloping and Extraloping Lines}\label{sssec:interlopers}
+
 
 \section{Three Field Approach}\label{sec:tf}
 We begin by considering the three field approach. We first start with this
