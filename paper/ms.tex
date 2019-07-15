@@ -165,29 +165,63 @@ this work. Our neglect to add the shot noise component is out of convenience con
 matter power spectrum, $P_{\delta,\delta}(k, z)$. All basic cosmological
 calculations are performed using the code \texttt{colossus} \citep{2018ApJS..239...35D}.
 
+Throughout this work we will only consider the angle-averaged power spectrum, that is:
+\beq\label{eq:int_ps}
+\begin{split}
+P_{i,i}(k, z) &= \avg{I_i}^2 \avg{b_i}^2 C_i(k) P_{\delta, \delta}(k, z)\\
+                   &\equiv B_i^2 C_i(k) P_{\delta, \delta}(k, z)\text{,}
+              % + P_{i, \text{shot}}\text{,}
+\end{split}
+\eeq
+where we have defined $C_i(k)$ to be the amplification of the power spectrum
+coming from the average over the angle-dependent terms in
+Equation~\eqref{eq:int_ps}, and $B_i$ to be the product of $\avg{b_i}$ and
+$\avg{I_i}$. Henceforth all power spectra will be assumed to be angle
+averaged.
+
 For the cross-spectrum between two lines $i$ and $j$, we assume that
 \beq\label{eq:cross_spec}
-P_{i,j}(k, \mu, z) = r_{i,j}(k, z) \sqrt{P_{i,i}(k, \mu, z) P_{j,j}(k, \mu, z)}\text{,}
+P_{i,j}(k, z) = r_{i,j}(k, z) \sqrt{P_{i,i}(k, z) P_{j,j}(k, z)}\text{,}
 \eeq
 where $r_{i,j}$ is the cross-correlation coefficient between line $i$ and $j$.
 We will only consider scales where $r_{i,j} = 1$.
 
 \subsection{Multi-line Formalism}\label{ssec:multi_line}
-Given a set of cross-spectra and their covariance matrix, we can determine the
-optimal constraints that can be placed on both the average bias $\avg{b_i}$
-and average intensity $\avg{I_i}$. For the set of parameters $\theta$
-containing each $\avg{b_i}$ and $\avg{I_i}$, we can write down the Fisher
-matrix as
+Given a set of cross-spectra and their covariance matrix, we can, in
+principle, determine the optimal constraints that can be placed on both the
+average bias $\avg{b_i}$ and average intensity $\avg{I_i}$. However, such a
+procedure requires measuring the angular dependence of the power spectrum
+({\bf cite}), which may be fairly challenging \citep{2019arXiv190500209C}.
+Therefore, after fixing the value of $b_i$ for each line $i$, we only consider
+the constraint that can be placed on each $B_i$. This is slightly
+inconsistent, since in principle we should first determine the constraint on
+$\bi$ and $\Ii$ and then convert this into a constraint on $B_i$. But our
+approximation is reasonable because {\bf of some reason}.
+
+We can write down the Fisher matrix as
 \beq\label{eq:fisher}
 F_{i,j} = 
 \int \frac{\text{d}^3k}{(2\pi)^3} V_{\text{surv}}
 % \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
 \sum_{l} \sum_{m}
-\frac{\partial \hat{P}_{l}(\bm{k})}{\partial \theta_i}
+\frac{\partial \hat{P}_{l}(\bm{k})}{\partial B_i}
 \left(\Cov{\hat{P}_{l}(\bm{k})}{\hat{P}_{m}(\bm{k})}\right)^{-1}
-\frac{\partial \hat{P}_{m}(\bm{k})}{\partial \theta_j}\text{,}
+\frac{\partial \hat{P}_{m}(\bm{k})}{\partial B_j}\text{,}
 \eeq
-where the sum over $l$ and $m$ each is over each \emph{pair} of lines. In
+where the sum over $l$ and $m$ each is over each \emph{pair} of lines. Since
+we will be considering only angle-averaged power spectra, we can use the
+angle-averaged form of the Fisher matrix:
+\beq\label{eq:fisher}
+F_{i,j} = 
+\int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}}
+% \int \frac{\text{d}k\,k^2}{2\pi^2} V_{\text{surv}} 
+\sum_{l} \sum_{m}
+\frac{\partial \hat{P}_{l}(k)}{\partial B_i}
+\left(\Cov{\hat{P}_{l}(k)}{\hat{P}_{m}(k)}\right)^{-1}
+\frac{\partial \hat{P}_{m}(k)}{\partial B_j}\text{.}
+\eeq
+
+In
 order to compute the covariance matrix, we use the result that \citep[e.g.][]{2010JCAP...11..016V},
 \beq\label{eq:var_cov}
 \begin{split}
@@ -199,20 +233,6 @@ order to compute the covariance matrix, we use the result that \citep[e.g.][]{20
 where $\pstot{i} = \ps{i} + N_i$. Note that $N_i$ contains contributions from
 instrument noise, residual foreground contamination, and
 interloping/extraloping lines.
-
-While in principle one can extract $\bi$ and $\Ii$ independently due to the
-$\mu$-dependence of the Kaiser effect, there are a number of observational
-challenges \citep{2019arXiv190500209C}. We will therefore only consider the constraints
-that can be placed on the product of the two, i.e., $B_i \equiv \bi \Ii$. The
-previous Fisher matrix can be converted to the equivalent one for constraints
-on $B_i$, $F'$, by the following relation \citep[e.g.][]{2009arXiv0906.4123C}:
-\beq\label{eq:fisher_transform}
-F' = M^{\text{T}} F M\text{,}
-\eeq
-where
-\beq\label{eq:trans_matrix}
-M_{ij} = \frac{\partial \theta_i}{\partial B_j}\text{.}
-\eeq
 
 \subsection{Noise Components}\label{ssec:noise}
 We describe the implementation of each noise component.
