@@ -233,10 +233,33 @@ order to compute the covariance matrix, we use the result that \citep[e.g.][]{20
 where $\pstot{i} = \ps{i} + N_i$. The computation of the noise $N_i$ is given in the next subsection.
 
 \subsection{Noise Components}\label{ssec:noise}
-We describe the implementation of each noise component.
+We describe the computation of each noise component. In principle the noise
+should consist of three components:
+\beq\label{eq:noise_comp}
+N_i = N_{i,\text{instrumental}} + N_{i,\text{interlopers}} + N_{i,\text{foreground}}\text{.}
+\eeq
+However, in this work we will ignore the foreground contribution. Our work
+should then be seen as a best-case scenario. {\bf add more words}
+
+\subsubsection{Instrumental Noise}\label{sssec:instrumental}
+{\bf Add.}
 
 \subsubsection{Interloping and Extraloping Lines}\label{sssec:interlopers}
-
+The noise for interloping and extraloping lines can be written as
+\citep{2016ApJ...825..143L, 2016ApJ...832..165C},
+\beq\label{eq:ptot_intlpr}
+N_{i,\text{interlopers}} = \sum_{j} \frac{1}{\apar(z_j) \aperp(z_j)^2} 
+            P_j\left(\frac{\kpar}{\apar(z_j)}, 
+                     \frac{\kperp}{\aperp(z_j)}\right)\text{,}
+\eeq
+where the sum on $j$ is over all interloping lines, $z_j$ is the
+emitted redshift of line $j$, and where,
+\begin{alignat}{2}
+\apar = \frac{H(z_i)}{H(z_j)} \frac{1+z_j}{1+z_i} \quad \quad &&
+\aperp = \frac{D_{A}(z_j)}{D_A(z_i)}\text{,}
+\end{alignat}
+where $z_i$ is the emitted redshift of line $i$ and $D_A(z)$ is the comoving
+angular diameter distance to redshift $z$.
 
 \section{Three Field Approach}\label{sec:tf}
 We begin by considering the three field approach. We first start with this
@@ -340,8 +363,8 @@ C_{1,1} = \sigma_{B_1}^2 &= \frac{1}{4V_k^2} \left( B_1^2 \frac{N_2N_3}{B_2^2B_3
 \eeq
 The symmetry of this result implies that,
 \beq \label{eq:frac_error_same}
-\frac{\sigma_{B_1}}{B_1} = \frac{\sigma_{B_2}}{B_2} = 
-\frac{\sigma_{B_3}}{B_3}\text{.}
+\frac{B_1}{\sigma_{B_1}} = \frac{B_2}{\sigma_{B_2}} = 
+\frac{B_3}{\sigma_{B_3}} \text{.}
 \eeq
 Unfortunately the surprising result that the fractional error on each line is
 the same only holds in the three field case.
