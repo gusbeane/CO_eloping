@@ -443,7 +443,7 @@ def intensity_power_spectrum(z, b, I, cosmo, kmin=1E-3, kmax=1, nk=256, nmu=256,
         return Pintensity
 
 def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256, nmu=256,
-                returnk_and_pairs=False):
+                returnk_and_pairs=False, angle_averaged=False):
 
     assert len(blist) == len(Ilist), "blist, and Ilist must be the same length"
     
@@ -454,28 +454,41 @@ def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256
     npairs = len(ipairs)
 
     # just to get k, mu... TODO: pull this out of PS func later
-    k, mu, _ = intensity_power_spectrum(z, blist[0], Ilist[0], cosmo, kmin=kmin, kmax=kmax,
-                                        nk=nk, nmu=nmu, returnk=True)
+    if angle_averaged:
+        k, _ = intensity_power_spectrum(z, blist[0], Ilist[0], cosmo, kmin=kmin, kmax=kmax,
+                                        nk=nk, nmu=nmu, returnk=True, angle_averaged=True)
+        xPSlist = np.zeros((nparam, nparam, nk))
+        cov = np.zeros((npairs, npairs, nk))
+
+
+    else:   
+        k, mu, _ = intensity_power_spectrum(z, blist[0], Ilist[0], cosmo, kmin=kmin, kmax=kmax,
+                                            nk=nk, nmu=nmu, returnk=True)
+        xPSlist = np.zeros((nparam, nparam, nk, nmu))
+        cov = np.zeros((npairs, npairs, nk, nmu))
+
 
     PSlist = np.array([intensity_power_spectrum(z, b, I, cosmo, kmin=kmin, kmax=kmax, 
-                                             nk=nk, nmu=nmu, returnk=False) for b,I in zip(blist, Ilist)])
+                                             nk=nk, nmu=nmu, returnk=False, angle_averaged=angle_averaged) 
+                                                for b,I in zip(blist, Ilist)])
 
-    xPSlist = np.zeros((nparam, nparam, nk, nmu))
     for i in range(nparam):
         for j in range(nparam):
             xPSlist[i][j] = intensity_cross_power_spectrum(z, blist[i], blist[j], Ilist[i], Ilist[j], 
                                                            cosmo, kmin=kmin, kmax=kmax, nk=nk, nmu=nmu,
-                                                           returnk=False)
+                                                           returnk=False, angle_averaged=angle_averaged)
 
     if Nfunclist is not None:
-        Nlist = np.array([ Nfunc(k, mu) for Nfunc in Nfunclist ])
+        if angle_averaged:
+            Nlist = np.array([ Nfunc(k) for Nfunc in Nfunclist ])
+        else:
+            Nlist = np.array([ Nfunc(k, mu) for Nfunc in Nfunclist ])
         Nlist = np.sum(Nlist, axis=0)
     else:
         Nlist = np.zeros(np.shape(k))
 
     PStotlist = np.add(PSlist, Nlist)
 
-    cov = np.zeros((npairs, npairs, nk, nmu))
     for l, (l1, l2) in enumerate(ipairs):
         for m, (m1, m2) in enumerate(ipairs):
             if l == m:
@@ -498,7 +511,10 @@ def covariance(z, blist, Ilist, cosmo, Nfunclist=None, kmin=1E-3, kmax=1, nk=256
                     cov[l][m] = 0.0
 
     if returnk_and_pairs:
-        return k, mu, ipairs, cov
+        if angle_averaged:
+            return k, ipairs, cov
+        else:
+            return k, mu, ipairs, cov
     else:
         return cov
 
