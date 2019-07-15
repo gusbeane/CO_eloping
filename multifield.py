@@ -4,6 +4,49 @@ import itertools
 from scipy.special import gamma
 import CO_data
 
+def fmat_term(z, i, j, ipairs, blist, Ilist, cov, nlines, cosmo):
+    term = 0.0
+    for l, (l1, l2) in enumerate(ipairs):
+        for m, (m1, m2) in enumerate(ipairs):
+            c = cov[l][m]
+            
+            if l1 == i:
+                p1 = intensity_cross_power_spectrum(z, blist[l1], blist[l2], Ilist[l1], Ilist[l2],
+                                                    cosmo, bderivative=True)
+            elif l1 + nlines == i:
+                p1 = intensity_cross_power_spectrum(z, blist[l1], blist[l2], Ilist[l1], Ilist[l2],
+                                                    cosmo, Iderivative=True)
+            elif l2 == i:
+                p1 = intensity_cross_power_spectrum(z, blist[l2], blist[l1], Ilist[l2], Ilist[l1],
+                                                    cosmo, bderivative=True)
+            elif l2 + nlines == i:
+                p1 = intensity_cross_power_spectrum(z, blist[l2], blist[l1], Ilist[l2], Ilist[l1],
+                                                    cosmo, Iderivative=True)
+            else:
+                p1 = 0
+
+            if m1 == j:
+                p2 = intensity_cross_power_spectrum(z, blist[m1], blist[m2], Ilist[m1], Ilist[m2],
+                                                    cosmo, bderivative=True)
+            elif m1 + nlines == j:
+                p2 = intensity_cross_power_spectrum(z, blist[m1], blist[m2], Ilist[m1], Ilist[m2],
+                                                    cosmo, Iderivative=True)
+            elif m2 == j:
+                p2 = intensity_cross_power_spectrum(z, blist[m2], blist[m1], Ilist[m2], Ilist[m1],
+                                                    cosmo, bderivative=True)
+            elif m2 + nlines == j:
+                p2 = intensity_cross_power_spectrum(z, blist[m2], blist[m1], Ilist[m2], Ilist[m1],
+                                                    cosmo, Iderivative=True)
+            else:
+                p2 = 0
+
+            integrand = np.multiply(np.multiply(p1, c), p2)
+            integrand = np.multiply(integrand, np.square(k))
+            print(l, l1, l2, m, m1, m2, integrand[0][0])
+            term = np.add(term, integrand)
+    term = np.trapz(term, mu[0,:], axis=1)
+    term = np.trapz(term, k[:,0], axis=0)
+    return term
 
 def fisher_multifield(z, blist, Ilist, Vsurv, cosmo, Nfunclist=None, 
                       kmin=1E-3, kmax=1, nk=256, nmu=256):
@@ -18,49 +61,53 @@ def fisher_multifield(z, blist, Ilist, Vsurv, cosmo, Nfunclist=None,
     fmat = np.zeros((nderiv, nderiv))
     for i in range(nderiv):
         for j in range(nderiv):
-            term = 0.0
-            for l, (l1, l2) in enumerate(ipairs):
-                if l1 != np.mod(i, nlines) and l2 != np.mod(i, nlines):
-                    continue
-                for m, (m1, m2) in enumerate(ipairs):
-                    if m1 != np.mod(j, nlines) and m2 != np.mod(j, nlines):
-                        continue
-                    
-                    c = cov[l][m]
+            fmat[i][j] = fmat_term(z, i, j, ipairs, blist, Ilist, cov, nlines, cosmo)
 
-                    if l1 == i:
-                        p1 = intensity_cross_power_spectrum(z, blist[l1], blist[l2], Ilist[l1], Ilist[l2],
-                                                            cosmo, bderivative=True)
-                    elif l1 + nlines == i:
-                        p1 = intensity_cross_power_spectrum(z, blist[l1], blist[l2], Ilist[l1], Ilist[l2],
-                                                            cosmo, Iderivative=True)
-                    elif l2 == i:
-                        p1 = intensity_cross_power_spectrum(z, blist[l2], blist[l1], Ilist[l2], Ilist[l1],
-                                                            cosmo, bderivative=True)
-                    elif l2 + nlines == i:
-                        p1 = intensity_cross_power_spectrum(z, blist[l2], blist[l1], Ilist[l2], Ilist[l1],
-                                                            cosmo, Iderivative=True)
+    # for i in range(nderiv):
+    #     for j in range(nderiv):
+    #         term = 0.0
+    #         for l, (l1, l2) in enumerate(ipairs):
+    #             for m, (m1, m2) in enumerate(ipairs):
                     
-                    if m1 == j:
-                        p2 = intensity_cross_power_spectrum(z, blist[m1], blist[m2], Ilist[m1], Ilist[m2],
-                                                            cosmo, bderivative=True)
-                    elif m1 + nlines == j:
-                        p2 = intensity_cross_power_spectrum(z, blist[m1], blist[m2], Ilist[m1], Ilist[m2],
-                                                            cosmo, Iderivative=True)
-                    elif m2 == j:
-                        p2 = intensity_cross_power_spectrum(z, blist[m2], blist[m1], Ilist[m2], Ilist[m1],
-                                                            cosmo, bderivative=True)
-                    elif m2 + nlines == j:
-                        p2 = intensity_cross_power_spectrum(z, blist[m2], blist[m1], Ilist[m2], Ilist[m1],
-                                                            cosmo, Iderivative=True)
+    #                 c = cov[l][m]
+
+    #                 if l1 == i:
+    #                     p1 = intensity_cross_power_spectrum(z, blist[l1], blist[l2], Ilist[l1], Ilist[l2],
+    #                                                         cosmo, bderivative=True)
+    #                 elif l1 + nlines == i:
+    #                     p1 = intensity_cross_power_spectrum(z, blist[l1], blist[l2], Ilist[l1], Ilist[l2],
+    #                                                         cosmo, Iderivative=True)
+    #                 elif l2 == i:
+    #                     p1 = intensity_cross_power_spectrum(z, blist[l2], blist[l1], Ilist[l2], Ilist[l1],
+    #                                                         cosmo, bderivative=True)
+    #                 elif l2 + nlines == i:
+    #                     p1 = intensity_cross_power_spectrum(z, blist[l2], blist[l1], Ilist[l2], Ilist[l1],
+    #                                                         cosmo, Iderivative=True)
+    #                 else:
+    #                     p1 = 0.
                     
-                    integrand = np.multiply(np.multiply(p1, c), p2)
-                    integrand = np.multiply(integrand, np.square(k))
-                    term = np.add(term, integrand)
+    #                 if m1 == j:
+    #                     p2 = intensity_cross_power_spectrum(z, blist[m1], blist[m2], Ilist[m1], Ilist[m2],
+    #                                                         cosmo, bderivative=True)
+    #                 elif m1 + nlines == j:
+    #                     p2 = intensity_cross_power_spectrum(z, blist[m1], blist[m2], Ilist[m1], Ilist[m2],
+    #                                                         cosmo, Iderivative=True)
+    #                 elif m2 == j:
+    #                     p2 = intensity_cross_power_spectrum(z, blist[m2], blist[m1], Ilist[m2], Ilist[m1],
+    #                                                         cosmo, bderivative=True)
+    #                 elif m2 + nlines == j:
+    #                     p2 = intensity_cross_power_spectrum(z, blist[m2], blist[m1], Ilist[m2], Ilist[m1],
+    #                                                         cosmo, Iderivative=True)
+    #                 else:
+    #                     p2 = 0.
+                    
+    #                 integrand = np.multiply(np.multiply(p1, c), p2)
+    #                 integrand = np.multiply(integrand, np.square(k))
+    #                 term = np.add(term, integrand)
             
-            term = np.trapz(term, mu[0,:], axis=1)
-            term = np.trapz(term, k[:,0], axis=0)
-            fmat[i][j] = term
+    #         term = np.trapz(term, mu[0,:], axis=1)
+    #         term = np.trapz(term, k[:,0], axis=0)
+    #         fmat[i][j] = term
 
     fmat *= Vsurv/(2.*np.pi)**2
     return fmat
@@ -373,5 +420,6 @@ if __name__ == '__main__':
     blist = 100*np.array([1, np.sqrt(2), np.sqrt(3)])
     Ilist = np.array([1, 1, 1])/100
     Nlist = [constant_N(2E5)]
+    k, mu, ipairs, cov = covariance(0.88, blist, Ilist, cosmo, Nfunclist=Nlist, returnk_and_pairs=True)
     fmat = fisher_multifield(0.88, blist, Ilist, Vsurv, cosmo, Nfunclist=Nlist)
     fmatp = convert_fisher(fmat, blist, Ilist)
